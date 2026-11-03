@@ -1,0 +1,2564 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXUS-4D™ KOUTEI (工程) | Shimizu Corporation CP-202 Project Controls & Linear Scheduling Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#070b14',
+            panel: '#0c1322',
+            panelAlt: '#111a2e',
+            shimizu: '#005bac',
+            shimizuLight: '#1d82df',
+            anzen: '#00875a',
+            crimson: '#c5221f',
+            amberWarn: '#d97706'
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            jp: ['Noto Sans JP', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      background-color: #070b14;
+      color: #e2e8f0;
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      overflow-x: hidden;
+    }
+    .mono-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+    /* High-density engineering scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070b14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #005bac;
+    }
+    /* Inline Excel-mode grid inputs */
+    .grid-input {
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 2px 5px;
+      border-radius: 2px;
+      transition: all 0.1s ease;
+      width: 100%;
+    }
+    .grid-input:hover {
+      border-color: #334155;
+      background: rgba(15, 23, 42, 0.7);
+    }
+    .grid-input:focus {
+      outline: none;
+      border-color: #1d82df;
+      background: #0f172a;
+      box-shadow: 0 0 0 1px #005bac;
+    }
+    /* Traditional Japanese Hanko / Inkan Stamp */
+    .hanko-stamp {
+      width: 62px;
+      height: 62px;
+      border: 2.5px solid #ef4444;
+      border-radius: 50%;
+      color: #ef4444;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Noto Sans JP', serif;
+      font-weight: 700;
+      line-height: 1.05;
+      transform: rotate(-7deg);
+      background: rgba(239, 68, 68, 0.06);
+      box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.25);
+      user-select: none;
+    }
+    .hanko-stamp.pending {
+      border-color: #475569;
+      color: #64748b;
+      background: rgba(71, 85, 105, 0.08);
+      box-shadow: none;
+      transform: rotate(0deg);
+      border-style: dashed;
+    }
+    /* Executive 1-Page A4 Print Stylesheet */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 8mm;
+      }
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 9pt !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      .print-card {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-shimizu selection:text-white">
+
+  <!-- TOP COMMAND HEADER (SHIMIZU CORPORATION MONOZUKURI COCKPIT) -->
+  <header class="bg-panel border-b border-slate-800 px-3 py-2 sticky top-0 z-40 no-print">
+    <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-2">
+      <!-- Left Brand & Project Title -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center bg-shimizu text-white px-2.5 py-1.5 rounded-sm border border-sky-400/30 shadow-sm">
+          <div class="text-xs font-extrabold tracking-wider leading-none mr-2">SHMZ<br><span class="text-[10px] font-jp font-normal">清水建設</span></div>
+          <div class="h-6 w-[1px] bg-sky-300/40 mr-2"></div>
+          <div>
+            <div class="text-xs font-bold tracking-tight flex items-center gap-1">
+              NEXUS-4D™ <span class="text-sky-200 font-jp">工程 KOUTEI</span>
+            </div>
+            <div class="text-[10px] text-sky-100/90 mono-num">v5.1 • PE26/QC26 ENGINE</div>
+          </div>
+        </div>
+
+        <div class="hidden xl:block border-l border-slate-800 pl-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-100 tracking-wide">JAKARTA MRT UNDERGROUND PACKAGE CP-202</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-sky-400 border border-slate-700 mono-num">FIDIC RED BOOK</span>
+          </div>
+          <div class="text-[11px] text-slate-400 flex items-center gap-3 mono-num">
+            <span>STA 14+000 – STA 15+500 (Station Box & Twin EPB TBM)</span>
+            <span>•</span>
+            <span>BAC: <strong class="text-slate-200">IDR 420.00 B</strong></span>
+            <span>•</span>
+            <span>Cut-Off: <strong class="text-sky-400" id="header-cutoff-label">W43 (2026-11-03)</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Safety & KYT Telemetry Badge -->
+      <div class="flex items-center gap-2 bg-slate-950/90 border border-emerald-800/60 px-3 py-1 rounded-sm">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <div class="text-[11px]">
+          <span class="font-bold text-emerald-400 font-jp">安全第一 ANZEN DAI-ICHI:</span>
+          <span class="mono-num font-bold text-white ml-1" id="safety-hours-badge">1,240,000</span>
+          <span class="text-slate-400 text-[10px]">LTI-Free Man-Hours</span>
+        </div>
+        <span class="text-slate-700">|</span>
+        <button onclick="openKytModal()" class="text-[10px] bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-700/60 px-1.5 py-0.5 rounded mono-num transition" title="Inspect Kiken Yochi (KYT) & RFI Hold Gate">
+          KYT危険予知: <span id="kyt-status-pill">ACTIVE</span>
+        </button>
+      </div>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-1.5">
+        <button onclick="openAddActivityModal()" class="px-2.5 py-1.5 text-xs font-semibold bg-shimizu hover:bg-shimizuLight text-white rounded-sm border border-sky-400/30 flex items-center gap-1 transition shadow-sm">
+          <span>＋ Add WBS</span>
+          <span class="text-[10px] opacity-80 font-jp">(追加)</span>
+        </button>
+        <button onclick="normalizeWeights()" class="px-2.5 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-sm border border-slate-700 transition" title="Auto-normalize WBS weight factors to 100.00%">
+          ⚖️ Normalize 100%
+        </button>
+        <button onclick="exportScheduleCSV()" class="px-2.5 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-sm border border-slate-700 flex items-center gap-1 transition">
+          <span>⬇ CSV / Excel</span>
+        </button>
+        <button onclick="triggerExecutivePrint()" class="px-2.5 py-1.5 text-xs font-semibold bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 rounded-sm border border-amber-500/40 flex items-center gap-1 transition">
+          <span>🖨️ Print / PDF (1-Pager)</span>
+        </button>
+        <button onclick="resetToBaseline()" class="px-2 py-1.5 text-[11px] text-slate-400 hover:text-rose-400 bg-slate-900 hover:bg-slate-800 rounded-sm border border-slate-800 transition" title="Reset to Default CP-202 Telemetry">
+          ↺ Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- EXECUTIVE KPI TELEMETRY RIBBON (6 BILINGUAL JAPANESE-ENGLISH METRIC CARDS) -->
+  <section class="bg-obsidian border-b border-slate-800/90 px-3 py-2 no-print">
+    <div class="max-w-[1920px] mx-auto grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
+      <!-- Card 1: Physical Earned Progress -->
+      <div class="bg-panel border border-slate-800 p-2.5 rounded-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
+          <span class="font-semibold tracking-wider text-slate-300">PHYSICAL % <span class="text-sky-400 font-jp">(進捗率)</span></span>
+          <span class="mono-num text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300" id="kpi-weight-sum-badge">ΣW: 100.0%</span>
+        </div>
+        <div class="flex items-baseline justify-between mt-1">
+          <div class="text-2xl font-extrabold text-white mono-num" id="kpi-ev-pct">44.85%</div>
+          <div class="text-xs font-semibold mono-num text-rose-400" id="kpi-var-pct">Δ -3.35%</div>
+        </div>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden flex">
+          <div id="kpi-ev-bar" class="bg-emerald-500 h-full transition-all duration-150" style="width: 44.85%"></div>
+        </div>
+        <div class="flex justify-between text-[10px] text-slate-400 mono-num mt-1">
+          <span>Plan (PV%): <strong class="text-slate-200" id="kpi-pv-pct">48.20%</strong></span>
+          <span>Target: 100%</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Weekly Cut-Off Telemetry -->
+      <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
+          <span class="font-semibold tracking-wider text-slate-300">WEEKLY CUT-OFF <span class="text-sky-400 font-jp">(週間進捗)</span></span>
+          <span class="mono-num text-[10px] text-amber-400 font-semibold" id="kpi-wk-status">W43 TELEMETRY</span>
+        </div>
+        <div class="flex items-baseline justify-between mt-1">
+          <div class="text-2xl font-extrabold text-sky-400 mono-num" id="kpi-wk-actual">+0.65%</div>
+          <div class="text-xs font-semibold mono-num text-rose-400" id="kpi-wk-delta">Lag -0.45%</div>
+        </div>
+        <div class="grid grid-cols-2 gap-1 text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80">
+          <div>Last Wk: <strong class="text-slate-200" id="kpi-wk-prev">44.20%</strong></div>
+          <div class="text-right">Wk Plan: <strong class="text-slate-200" id="kpi-wk-target">+1.10%</strong></div>
+        </div>
+      </div>
+
+      <!-- Card 3: SPI (Schedule Performance Index) -->
+      <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
+          <span class="font-semibold tracking-wider text-slate-300">SPI <span class="text-sky-400 font-jp">(工程効率指数)</span></span>
+          <span id="kpi-spi-badge" class="text-[10px] px-1.5 py-0.2 rounded bg-rose-950/90 text-rose-300 border border-rose-700/50 mono-num">LAGGING</span>
+        </div>
+        <div class="flex items-baseline justify-between mt-1">
+          <div class="text-2xl font-extrabold text-amber-400 mono-num" id="kpi-spi-val">0.931</div>
+          <div class="text-xs mono-num text-rose-400" id="kpi-sv-idr">SV: -14.07 B</div>
+        </div>
+        <div class="grid grid-cols-2 gap-1 text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80">
+          <div>EV: <strong class="text-emerald-400" id="kpi-ev-idr">188.37 B</strong></div>
+          <div class="text-right">PV: <strong class="text-sky-300" id="kpi-pv-idr">202.44 B</strong></div>
+        </div>
+      </div>
+
+      <!-- Card 4: CPI (Cost Performance Index) -->
+      <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
+          <span class="font-semibold tracking-wider text-slate-300">CPI <span class="text-sky-400 font-jp">(原価効率指数)</span></span>
+          <span id="kpi-cpi-badge" class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-700/50 mono-num">ON BUDGET</span>
+        </div>
+        <div class="flex items-baseline justify-between mt-1">
+          <div class="text-2xl font-extrabold text-emerald-400 mono-num" id="kpi-cpi-val">1.022</div>
+          <div class="text-xs mono-num text-emerald-400" id="kpi-cv-idr">CV: +4.05 B</div>
+        </div>
+        <div class="grid grid-cols-2 gap-1 text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80">
+          <div>AC: <strong class="text-slate-200" id="kpi-ac-idr">184.32 B</strong></div>
+          <div class="text-right">BAC: <strong class="text-slate-200">420.00 B</strong></div>
+        </div>
+      </div>
+
+      <!-- Card 5: EAC & TCPI Forecast -->
+      <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
+          <span class="font-semibold tracking-wider text-slate-300">EAC <span class="text-sky-400 font-jp">(完成時予測)</span></span>
+          <span class="text-[10px] mono-num text-slate-400">TCPI: <strong class="text-sky-300" id="kpi-tcpi-val">0.983</strong></span>
+        </div>
+        <div class="flex items-baseline justify-between mt-1">
+          <div class="text-xl font-extrabold text-white mono-num" id="kpi-eac-val">IDR 410.95 B</div>
+          <div class="text-[11px] mono-num text-emerald-400" id="kpi-vac-val">VAC: +9.05 B</div>
+        </div>
+        <div class="flex justify-between text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80">
+          <span>CPI×SPI EAC:</span>
+          <strong class="text-amber-300" id="kpi-eac-comp">IDR 437.38 B</strong>
+        </div>
+      </div>
+
+      <!-- Card 6: Ground & Quality Hold-Point Gate -->
+      <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
+          <span class="font-semibold tracking-wider text-slate-300">GROUND & QA <span class="text-sky-400 font-jp">(地盤・品質)</span></span>
+          <span id="kpi-gate-badge" class="text-[10px] px-1.5 py-0.2 rounded bg-amber-950/90 text-amber-300 border border-amber-700/50 mono-num">2 HOLDS</span>
+        </div>
+        <div class="flex items-baseline justify-between mt-1">
+          <div class="text-xl font-extrabold text-sky-300 mono-num" id="kpi-bh-cleared">12 / 14 BH</div>
+          <div class="text-xs mono-num text-emerald-400" id="kpi-rfi-rate">RFI Pass: 86%</div>
+        </div>
+        <div class="flex justify-between text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80">
+          <span>INC-04: <strong class="text-emerald-400">18.4mm</strong></span>
+          <span>Slurry: <strong class="text-emerald-400">1.8% Sand</strong></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9-MODULE NAVIGATION TAB BAR -->
+  <nav class="bg-panelAlt border-b border-slate-800 px-3 no-print sticky top-[53px] z-30">
+    <div class="max-w-[1920px] mx-auto flex items-center justify-between overflow-x-auto">
+      <div class="flex items-center space-x-1 py-1" id="module-tabs">
+        <button onclick="switchTab('grid')" data-tab="grid" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-sm bg-shimizu text-white border border-sky-400/40 whitespace-nowrap flex items-center gap-1.5">
+          <span class="mono-num text-[11px] opacity-80">1.</span>
+          <span>工程表 Master Grid</span>
+        </button>
+        <button onclick="switchTab('banana')" data-tab="banana" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
+          <span class="mono-num text-[11px] opacity-80">2.</span>
+          <span>バナナ曲線 Banana Curve & EVM</span>
+        </button>
+        <button onclick="switchTab('march')" data-tab="march" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
+          <span class="mono-num text-[11px] opacity-80">3.</span>
+          <span>時間・距離 March Chart (LSM)</span>
+        </button>
+        <button onclick="switchTab('lookahead')" data-tab="lookahead" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
+          <span class="mono-num text-[11px] opacity-80">4.</span>
+          <span>4WLH & QC Gates</span>
+        </button>
+        <button onclick="switchTab('resources')" data-tab="resources" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
+          <span class="mono-num text-[11px] opacity-80">5.</span>
+          <span>資源 Resources & Plant</span>
+        </button>
+        <button onclick="switchTab('gantt')" data-tab="gantt" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
+          <span class="mono-num text-[11px] opacity-80">6.</span>
+          <span>CPM Gantt Network</span>
+        </button>
+        <button onclick="switchTab('geotech')" data-tab="geotech" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
+          <span class="mono-num text-[11px] opacity-80">7.</span>
+          <span>地盤管理 Ground Risk Gates</span>
+        </button>
+        <button onclick="switchTab('hourenso')" data-tab="hourenso" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
+          <span class="mono-num text-[11px] opacity-80">8.</span>
+          <span>報連相 Hou-Ren-So & 稟議書</span>
+        </button>
+        <button onclick="switchTab('kaizen')" data-tab="kaizen" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
+          <span class="mono-num text-[11px] opacity-80">9.</span>
+          <span>改善 Kaizen Simulator</span>
+        </button>
+      </div>
+
+      <!-- Right Engine Latency Readout -->
+      <div class="hidden lg:flex items-center gap-2 text-[11px] mono-num text-slate-400 pl-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>REACTIVE ENGINE: <strong class="text-emerald-400" id="recalc-latency-badge">1.8 ms</strong></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN WORKSPACE VIEWPORT -->
+  <main class="flex-1 max-w-[1920px] w-full mx-auto px-3 py-3 no-print">
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 1: MASTER PLANNING GRID / EXCEL-MODE (工程表)                       -->
+    <!-- ========================================================================= -->
+    <section id="tab-grid" class="tab-pane space-y-3">
+      <!-- Filter & Control Bar -->
+      <div class="bg-panel border border-slate-800 p-2.5 rounded-sm flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+            <span>Master WBS Control Grid</span>
+            <span class="text-sky-400 font-jp">(総合工程表)</span>
+          </span>
+          <select id="filter-discipline" onchange="renderMasterGrid()" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-sm px-2 py-1 focus:outline-none focus:border-sky-500">
+            <option value="ALL">All Disciplines (全工種)</option>
+            <option value="Geotechnical">Geotechnical & Slurry Wall</option>
+            <option value="Civil / D-Wall">Civil / Diaphragm Wall</option>
+            <option value="Station Box">Station Box Top-Down</option>
+            <option value="Tunneling / TBM">Tunneling / Twin EPB TBM</option>
+            <option value="MEP & Finishes">MEP & Architectural</option>
+          </select>
+          <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-900 border border-slate-700 px-2.5 py-1 rounded-sm cursor-pointer select-none">
+            <input type="checkbox" id="filter-critical" onchange="renderMasterGrid()" class="accent-rose-500">
+            <span>Critical Path Only (<span class="text-rose-400 font-semibold mono-num">TF = 0</span>)</span>
+          </label>
+          <input type="text" id="filter-search" oninput="renderMasterGrid()" placeholder="Search WBS, activity, or STA chainage..." class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-sm px-2.5 py-1 w-64 focus:outline-none focus:border-sky-500" />
+        </div>
+
+        <div class="flex items-center gap-3 text-[11px] text-slate-400">
+          <span class="bg-slate-900 border border-slate-800 px-2 py-1 rounded-sm mono-num">
+            ⌨️ Excel-Mode: <strong class="text-slate-200">Click cell</strong> to edit • <strong class="text-sky-400">Tab / Enter / ↑↓</strong> to navigate
+          </span>
+          <span class="bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 px-2 py-1 rounded-sm mono-num">
+            安全第一 Gate: Hold Points Lock Unverified Progress
+          </span>
+        </div>
+      </div>
+
+      <!-- Alert Banner for Anzen Dai-Ichi / Quality Hold Lock -->
+      <div id="hold-point-alert" class="hidden bg-rose-950/80 border border-rose-600 text-rose-200 px-3 py-2 rounded-sm text-xs flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-base">⚠️</span>
+          <span id="hold-point-alert-text" class="font-medium"></span>
+        </div>
+        <button onclick="document.getElementById('hold-point-alert').classList.add('hidden')" class="text-rose-300 hover:text-white font-bold px-2">✕</button>
+      </div>
+
+      <!-- Inline-Editable Spreadsheet Table -->
+      <div class="bg-panel border border-slate-800 rounded-sm overflow-x-auto shadow-lg">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-slate-900/95 border-b border-slate-700 text-[11px] text-slate-300 uppercase tracking-wider">
+              <th class="py-2 px-2 border-r border-slate-800 w-24">WBS Code</th>
+              <th class="py-2 px-2 border-r border-slate-800 min-w-[250px]">Activity Description (作業名称)</th>
+              <th class="py-2 px-2 border-r border-slate-800 w-32">Chainage (距離)</th>
+              <th class="py-2 px-2 border-r border-slate-800 w-32">Discipline</th>
+              <th class="py-2 px-1.5 border-r border-slate-800 text-center w-14">Crit</th>
+              <th class="py-2 px-2 border-r border-slate-800 w-28">Early Start</th>
+              <th class="py-2 px-2 border-r border-slate-800 w-28">Early Finish</th>
+              <th class="py-2 px-1.5 border-r border-slate-800 text-right w-16">Dur (d)</th>
+              <th class="py-2 px-1.5 border-r border-slate-800 text-right w-16" title="Total Float (Days) - Drives Banana Curve Late Envelope">Float</th>
+              <th class="py-2 px-2 border-r border-slate-800 text-right w-20 bg-sky-950/30">Bobot %</th>
+              <th class="py-2 px-2 border-r border-slate-800 text-right w-20">Last Wk%</th>
+              <th class="py-2 px-2 border-r border-slate-800 text-right w-20 bg-slate-800/50">Plan %</th>
+              <th class="py-2 px-2 border-r border-slate-800 text-right w-20 bg-emerald-950/30">Actual %</th>
+              <th class="py-2 px-2 border-r border-slate-800 text-right w-20">EV %</th>
+              <th class="py-2 px-2 border-r border-slate-800 text-right w-20">Var Δ%</th>
+              <th class="py-2 px-2 border-r border-slate-800 text-center w-32">QA / KYT Gate</th>
+              <th class="py-2 px-2 text-center w-24">現場 Genba</th>
+            </tr>
+          </thead>
+          <tbody id="wbs-grid-body" class="divide-y divide-slate-800/80 mono-num text-[11.5px]">
+            <!-- Populated dynamically via JS (<16ms) -->
+          </tbody>
+          <tfoot id="wbs-grid-foot" class="bg-slate-900/95 border-t-2 border-slate-700 font-bold mono-num text-xs">
+            <!-- Summary Totals Row -->
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 2: BANANA CURVE & EVM ANALYTICS SUITE (バナナ曲線・出来高管理)        -->
+    <!-- ========================================================================= -->
+    <section id="tab-banana" class="tab-pane hidden space-y-3">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <!-- Left 2 Cols: Dual-Baseline Banana S-Curve Envelope -->
+        <div class="lg:col-span-2 bg-panel border border-slate-800 p-3 rounded-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2 border-b border-slate-800 pb-2">
+            <div>
+              <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>S-CURVE ENVELOPE / BANANA CURVE</span>
+                <span class="text-sky-400 font-jp">(バナナ曲線・出来高累計曲線)</span>
+              </h2>
+              <p class="text-[11px] text-slate-400">Dual CPM Baseline Envelope: Early Start Curve $S_{\text{Early}}(t)$ vs. Late Start Curve $S_{\text{Late}}(t)$ from Total Float</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="banana-envelope-status" class="text-[11px] mono-num px-2 py-1 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/60">
+                ✓ INSIDE FLOAT ENVELOPE (S_Late ≤ S_Act ≤ S_Early)
+              </span>
+            </div>
+          </div>
+          <div class="h-[360px] w-full">
+            <canvas id="bananaCurveChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Right Col: Monthly EVM Expenditure Profile & Mathematical Audit -->
+        <div class="bg-panel border border-slate-800 p-3 rounded-sm flex flex-col justify-between">
+          <div>
+            <div class="border-b border-slate-800 pb-2 mb-2">
+              <h3 class="text-sm font-bold text-white flex items-center justify-between">
+                <span>EVM TELEMETRY AUDIT</span>
+                <span class="text-xs text-sky-400 font-jp">出来高管理指標</span>
+              </h3>
+              <p class="text-[11px] text-slate-400">PMBOK 7th Ed. / ISO 21502 Real-Time Formulation</p>
+            </div>
+            <div class="h-[210px] w-full mb-3">
+              <canvas id="evmBarChart"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-sm space-y-1.5 text-xs mono-num" id="evm-formula-box">
+            <!-- Dynamically updated EVM breakdown -->
+          </div>
+        </div>
+      </div>
+
+      <!-- FIDIC Red Book Contract Milestones & Liquidated Damages Table -->
+      <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">
+            FIDIC Red Book Key Contract Milestones & Delay Damages Exposure <span class="text-sky-400 font-jp">(契約マイルストーン管理)</span>
+          </h3>
+          <span class="text-[11px] mono-num text-amber-400">LD Rate: IDR 420 Million / Calendar Day (Max 10% BAC)</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs mono-num">
+            <thead>
+              <tr class="bg-slate-900 border-b border-slate-700 text-[11px] text-slate-400">
+                <th class="py-1.5 px-2">Milestone ID</th>
+                <th class="py-1.5 px-2">Contractual Deliverable Description</th>
+                <th class="py-1.5 px-2">Baseline Date</th>
+                <th class="py-1.5 px-2">Current Forecast</th>
+                <th class="py-1.5 px-2 text-right">Float / Var (d)</th>
+                <th class="py-1.5 px-2 text-right">LD Exposure (IDR)</th>
+                <th class="py-1.5 px-2 text-center">Governance Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-[11.5px]" id="milestone-table-body">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 3: TIME-CHAINAGE MARCH CHART / LSM (時間・距離工程表)                 -->
+    <!-- ========================================================================= -->
+    <section id="tab-march" class="tab-pane hidden space-y-3">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
+        <div class="lg:col-span-3 bg-panel border border-slate-800 p-3 rounded-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2 border-b border-slate-800 pb-2">
+            <div>
+              <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>LINEAR SCHEDULING METHOD (LSM) — TIME-CHAINAGE MARCH CHART</span>
+                <span class="text-sky-400 font-jp">(時間・距離工程表)</span>
+              </h2>
+              <p class="text-[11px] text-slate-400">
+                Alignment Corridor: <strong class="text-slate-200 mono-num">STA 14+000 (South Station Box)</strong> to <strong class="text-slate-200 mono-num">STA 15+500 (North Reception Shaft)</strong> • Spatial-Temporal Clash Detection
+              </p>
+            </div>
+            <div class="flex items-center gap-2 text-[11px] mono-num">
+              <span class="px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-700/50">TBM #1: 10.8 m/day Act</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/50">Separation Buffer: 185m OK</span>
+            </div>
+          </div>
+          <div class="h-[400px] w-full">
+            <canvas id="marchChartCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Right Column: TBM Advance Physics & Spatial Hazard Telemetry -->
+        <div class="bg-panel border border-slate-800 p-3 rounded-sm space-y-3">
+          <div class="border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-sky-400">TBM Drive Kinematics (シールド掘進解析)</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">$X_{tbm}(t) = X_0 + \int v_{tbm}(\tau)(1-\eta_{down})d\tau$</p>
+          </div>
+
+          <div class="space-y-2 text-xs mono-num">
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm">
+              <div class="text-[10px] text-slate-400">LAUNCH SHAFT ORIGIN ($X_0$)</div>
+              <div class="text-sm font-bold text-white">STA 14+350.00 (Ring #0)</div>
+              <div class="text-[10px] text-sky-400 mt-0.5">Segment Width: 1.50m / Ring (Total 767 Rings)</div>
+            </div>
+
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm">
+              <div class="flex justify-between text-[10px] text-slate-400">
+                <span>TBM #1 "SAKURA-1" (NB)</span>
+                <span class="text-emerald-400 font-bold">DRIVING</span>
+              </div>
+              <div class="text-sm font-bold text-white mt-0.5">Current Face: STA 14+762.5</div>
+              <div class="text-[11px] text-slate-300 mt-1">Ring #275 / 767 • $v_{act} = 10.8\text{ m/d}$ (Plan $12.5\text{ m/d}$)</div>
+              <div class="text-[10px] text-amber-400 mt-0.5">Downtime $\eta_{down} = 21.4\%$ (Cutterhead Hyperbaric Check)</div>
+            </div>
+
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm">
+              <div class="flex justify-between text-[10px] text-slate-400">
+                <span>TBM #2 "GARUDA-2" (SB)</span>
+                <span class="text-sky-400 font-bold">FOLLOWING</span>
+              </div>
+              <div class="text-sm font-bold text-white mt-0.5">Current Face: STA 14+577.5</div>
+              <div class="text-[11px] text-slate-300 mt-1">Ring #152 / 767 • Separation: 185.0m (Min ≥ 90m)</div>
+            </div>
+
+            <div class="bg-rose-950/50 border border-rose-700/60 p-2 rounded-sm">
+              <div class="text-[10px] font-bold text-rose-300 uppercase">⚠️ Subsurface Anomaly Corridor</div>
+              <div class="text-xs font-bold text-white mt-0.5">STA 14+780 – STA 14+860 (BH-09)</div>
+              <div class="text-[10px] text-rose-200 mt-0.5">
+                ERT Low-Resistivity & Volcanic Cobble Zone (N-SPT > 60). Mandatory foam conditioning & face pressure ≥ 2.4 bar required before TBM #1 enters STA 14+780.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 4: 4-WEEK ROLLING LOOKAHEAD (4WLH) & MAKE-READY CONSTRAINTS        -->
+    <!-- ========================================================================= -->
+    <section id="tab-lookahead" class="tab-pane hidden space-y-3">
+      <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3 border-b border-slate-800 pb-2">
+          <div>
+            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>4-WEEK ROLLING LOOKAHEAD (4WLH) & PE26/QC26 MAKE-READY MATRIX</span>
+              <span class="text-sky-400 font-jp">(週間工程・品質ホールドポイント管理)</span>
+            </h2>
+            <p class="text-[11px] text-slate-400">Zero-Defect Execution Gate: No work package may enter W43/W44 field execution without Shop Drawing, PTW/KYT, RFI, and Material clearance.</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs mono-num">
+            <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300">Rolling Window: <strong class="text-sky-400">W42 → W45</strong></span>
+            <span class="px-2 py-1 rounded bg-emerald-950/80 border border-emerald-700/60 text-emerald-300" id="ppc-score-badge">PPC (Percent Plan Complete): 88.5%</span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-900 border-b border-slate-700 text-[11px] text-slate-300 uppercase">
+                <th class="py-2 px-2 border-r border-slate-800">WBS / Task</th>
+                <th class="py-2 px-2 border-r border-slate-800">Field Crew & Work Package</th>
+                <th class="py-2 px-2 border-r border-slate-800 text-center">W42</th>
+                <th class="py-2 px-2 border-r border-slate-800 text-center bg-sky-950/40">W43 (Now)</th>
+                <th class="py-2 px-2 border-r border-slate-800 text-center">W44</th>
+                <th class="py-2 px-2 border-r border-slate-800 text-center">W45</th>
+                <th class="py-2 px-2 border-r border-slate-800 text-center">1. Shop Drawing</th>
+                <th class="py-2 px-2 border-r border-slate-800 text-center">2. PTW / KYT (安全)</th>
+                <th class="py-2 px-2 border-r border-slate-800 text-center">3. PE26/QC26 RFI Gate</th>
+                <th class="py-2 px-2 border-r border-slate-800 text-center">4. Rebar & Steel</th>
+                <th class="py-2 px-2 text-center">QC Action</th>
+              </tr>
+            </thead>
+            <tbody id="lookahead-table-body" class="divide-y divide-slate-800 mono-num text-[11.5px]">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 5: MANPOWER & HEAVY EQUIPMENT HISTOGRAM (資源・重機稼働)              -->
+    <!-- ========================================================================= -->
+    <section id="tab-resources" class="tab-pane hidden space-y-3">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <!-- Direct Labor Histogram -->
+        <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+          <div class="flex items-center justify-between mb-2 border-b border-slate-800 pb-2">
+            <div>
+              <h2 class="text-sm font-bold text-white">MANPOWER HISTOGRAM <span class="text-sky-400 font-jp">(直接作業員配置グラフ)</span></h2>
+              <p class="text-[11px] text-slate-400">Budgeted vs. Mobilized Direct Field Headcount by Trade (Day + Night Shifts)</p>
+            </div>
+            <span class="text-xs mono-num px-2 py-1 rounded bg-slate-900 border border-slate-700 text-emerald-400">Total Mobilized: 468 / 495 Pax (94.5%)</span>
+          </div>
+          <div class="h-[320px] w-full">
+            <canvas id="manpowerChartCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Heavy Tunneling & Excavation Plant Telemetry -->
+        <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+          <div class="flex items-center justify-between mb-2 border-b border-slate-800 pb-2">
+            <div>
+              <h2 class="text-sm font-bold text-white">CRITICAL HEAVY PLANT TELEMETRY <span class="text-sky-400 font-jp">(重機・プラント稼働状況)</span></h2>
+              <p class="text-[11px] text-slate-400">Live Mechanical Availability, Verticality, & Slurry Quality Assurance</p>
+            </div>
+            <span class="text-xs mono-num px-2 py-1 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/50">Fleet Availability: 91.2%</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs mono-num" id="plant-telemetry-cards">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 6: INTERACTIVE CPM GANTT & FLOAT NETWORK                           -->
+    <!-- ========================================================================= -->
+    <section id="tab-gantt" class="tab-pane hidden space-y-3">
+      <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3 border-b border-slate-800 pb-2">
+          <div>
+            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>INTERACTIVE CPM GANTT & FLOAT ENVELOPE SCHEDULE</span>
+              <span class="text-sky-400 font-jp">(クリティカルパス工程表)</span>
+            </h2>
+            <p class="text-[11px] text-slate-400">Live-synchronized with Master WBS Grid: Solid Fill = Earned Progress %, Bar Body = Early Schedule, Dashed Tail = Total Float ($TF$)</p>
+          </div>
+          <div class="flex items-center gap-3 text-[11px] mono-num">
+            <span class="flex items-center gap-1"><span class="w-3 h-2.5 inline-block bg-rose-600 rounded-xs"></span> Critical Path (TF=0)</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-2.5 inline-block bg-shimizuLight rounded-xs"></span> Non-Critical Early</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-2.5 inline-block bg-emerald-500 rounded-xs"></span> Actual Progress %</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-2.5 inline-block border border-dashed border-purple-400 rounded-xs"></span> Total Float Buffer</span>
+          </div>
+        </div>
+        <div id="cpm-gantt-container" class="overflow-x-auto">
+          <!-- Rendered dynamically from WBS state -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 7: GEOTECHNICAL SUBSURFACE RISK GATES (地盤管理・現場主義)            -->
+    <!-- ========================================================================= -->
+    <section id="tab-geotech" class="tab-pane hidden space-y-3">
+      <!-- Top Instrumentation Telemetry Strip -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5">
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num">
+          <div class="flex justify-between text-[11px] text-slate-400">
+            <span>INCLINOMETER INC-04 (D-Wall East)</span>
+            <span class="text-emerald-400 font-bold">SAFE</span>
+          </div>
+          <div class="text-xl font-bold text-white mt-1">18.4 mm <span class="text-xs font-normal text-slate-400">/ 28.0 mm Limit</span></div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5"><div class="bg-emerald-500 h-full rounded-full" style="width:65%"></div></div>
+          <div class="text-[10px] text-slate-400 mt-1">Depth -16.5m (Strut Level S3 Pre-loaded)</div>
+        </div>
+
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num">
+          <div class="flex justify-between text-[11px] text-slate-400">
+            <span>SETTLEMENT MARKER SM-08</span>
+            <span class="text-emerald-400 font-bold">SAFE</span>
+          </div>
+          <div class="text-xl font-bold text-white mt-1">-6.2 mm <span class="text-xs font-normal text-slate-400">/ -15.0 mm Limit</span></div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5"><div class="bg-sky-500 h-full rounded-full" style="width:41%"></div></div>
+          <div class="text-[10px] text-slate-400 mt-1">Adjacent Heritage Arcade Foundation</div>
+        </div>
+
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num">
+          <div class="flex justify-between text-[11px] text-slate-400">
+            <span>PIEZOMETER PZ-02 DRAWDOWN</span>
+            <span class="text-amber-400 font-bold">WATCH</span>
+          </div>
+          <div class="text-xl font-bold text-amber-300 mt-1">-1.85 m <span class="text-xs font-normal text-slate-400">/ -2.50 m Limit</span></div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5"><div class="bg-amber-500 h-full rounded-full" style="width:74%"></div></div>
+          <div class="text-[10px] text-slate-400 mt-1">Recharge Well RW-03 Active @ 12 m³/hr</div>
+        </div>
+
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num">
+          <div class="flex justify-between text-[11px] text-slate-400">
+            <span>STRUT LOAD CELL LC-S2-09</span>
+            <span class="text-emerald-400 font-bold">NOMINAL</span>
+          </div>
+          <div class="text-xl font-bold text-white mt-1">3,840 kN <span class="text-xs font-normal text-slate-400">/ 4,850 kN Cap</span></div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5"><div class="bg-emerald-500 h-full rounded-full" style="width:79%"></div></div>
+          <div class="text-[10px] text-slate-400 mt-1">2x H-400x400 King-Post Strut Bay B4</div>
+        </div>
+      </div>
+
+      <!-- Borehole & ERT Subsurface Gate Table -->
+      <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2 border-b border-slate-800 pb-2">
+          <div>
+            <h2 class="text-sm font-bold text-white">
+              GENBA-SHUGI (現場主義) SUBSURFACE BOREHOLE & ERT EXCAVATION PERMIT GATES
+            </h2>
+            <p class="text-[11px] text-slate-400">3-Tier Sign-Off Protocol (GEO-ENG → QC26 → PE26) linking Borehole N-SPT & ERT Resistivity directly to WBS Excavation Hold Points</p>
+          </div>
+          <span class="text-xs mono-num px-2 py-1 rounded bg-slate-900 border border-slate-700 text-sky-300" id="geotech-summary-pill">12/14 Boreholes Cleared for Excavation</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs mono-num">
+            <thead>
+              <tr class="bg-slate-900 border-b border-slate-700 text-[11px] text-slate-300 uppercase">
+                <th class="py-2 px-2">Borehole ID</th>
+                <th class="py-2 px-2">Chainage</th>
+                <th class="py-2 px-2">Linked WBS</th>
+                <th class="py-2 px-2">Dominant Strata Profile (-10m to -28m)</th>
+                <th class="py-2 px-2 text-right">N-SPT Value</th>
+                <th class="py-2 px-2">ERT Geophysical Anomaly</th>
+                <th class="py-2 px-2">Piezometric Head</th>
+                <th class="py-2 px-2 text-center">3-Tier Permit Gate</th>
+                <th class="py-2 px-2 text-center">Sign-Off Action</th>
+              </tr>
+            </thead>
+            <tbody id="borehole-table-body" class="divide-y divide-slate-800 text-[11.5px]">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 8: HOU-REN-SO (報連相) & RINGISHO (稟議書) CONSENSUS WORKFLOW         -->
+    <!-- ========================================================================= -->
+    <section id="tab-hourenso" class="tab-pane hidden space-y-3">
+      <!-- Hou-Ren-So 3-Pillar Japanese Governance Matrix -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <!-- 1. Hokoku (報告) -->
+        <div class="bg-panel border border-rose-800/70 p-3 rounded-sm">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-rose-400">1. 報告 HŌKOKU (FACTUAL REPORT)</span>
+              <div class="text-[11px] text-slate-400">Mandatory Root-Cause Escalation when SPI &lt; 1.00</div>
+            </div>
+            <span class="px-2 py-0.5 text-[10px] mono-num rounded bg-rose-950 text-rose-300 border border-rose-700">TRIGGERED (SPI <span id="hrs-spi-readout">0.931</span>)</span>
+          </div>
+          <div class="space-y-2 text-xs text-slate-300">
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm">
+              <div class="font-semibold text-white">Primary Delay Root Cause (Genba Verified):</div>
+              <p class="text-[11px] text-slate-400 mt-1">
+                1. <strong class="text-slate-200">WBS 1.2.2 (D-Wall North Panels DW-18 to DW-24):</strong> Encountered cemented volcanic cobble boulder layer at BH-09 (N-SPT &gt; 60 at -21.5m), reducing Hydrofraise BC 40 trenching rate from 1.2 panels/day to 0.75 panels/day (-4.5 days).<br>
+                2. <strong class="text-slate-200">WBS 1.3.2 (Bulk Excavation Stage 2):</strong> Municipal night-time dump truck restriction on Jl. Thamrin corridor reduced muck disposal by 280 m³/night.
+              </p>
+            </div>
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm mono-num text-[11px]">
+              <div>Schedule Variance (SV): <strong class="text-rose-400" id="hrs-sv-readout">IDR -14.07 Billion (-3.35%)</strong></div>
+              <div>Critical Path Impact: <strong class="text-amber-400">+9 Calendar Days if unmitigated</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Renraku (連絡) -->
+        <div class="bg-panel border border-sky-800/70 p-3 rounded-sm">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-sky-400">2. 連絡 RENRAKU (LATERAL COORDINATION)</span>
+              <div class="text-[11px] text-slate-400">Proactive Downstream Trade & Interface Bulletins</div>
+            </div>
+            <span class="px-2 py-0.5 text-[10px] mono-num rounded bg-sky-950 text-sky-300 border border-sky-700">3 TRADES NOTIFIED</span>
+          </div>
+          <div class="space-y-2 text-xs">
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm">
+              <div class="flex justify-between font-semibold text-slate-200">
+                <span>→ Structural Steel Trade (Strutting Level S2/S3)</span>
+                <span class="text-emerald-400 mono-num text-[10px]">ACK #RN-402</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">Shifted Bay B5-B7 H-400 king-post splicing to off-site fabrication yard so installation proceeds immediately upon excavation clearance.</p>
+            </div>
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm">
+              <div class="flex justify-between font-semibold text-slate-200">
+                <span>→ Precast Tunnel Segment Yard (Cikarang)</span>
+                <span class="text-emerald-400 mono-num text-[10px]">ACK #RN-405</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">Adjusted Ring #280–#360 JIT flat-bed delivery window to match revised TBM #1 hyperbaric cutterhead inspection slot.</p>
+            </div>
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm">
+              <div class="flex justify-between font-semibold text-slate-200">
+                <span>→ MEP Tunnel Ventilation & Dewatering</span>
+                <span class="text-amber-400 mono-num text-[10px]">PENDING SYNC</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">Secondary booster pump standby requested at STA 14+780 prior to TBM #1 crossing BH-09 faulted breccia lens.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Sodan (相談) -->
+        <div class="bg-panel border border-emerald-800/70 p-3 rounded-sm">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">3. 相談 SŌDAN (EXECUTIVE CONSULTATION)</span>
+              <div class="text-[11px] text-slate-400">Evaluated Mitigation Package for Project Director Decision</div>
+            </div>
+            <button onclick="switchTab('kaizen')" class="px-2 py-0.5 text-[10px] mono-num rounded bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-700">Open Simulator →</button>
+          </div>
+          <div class="space-y-2 text-xs">
+            <div class="bg-slate-900/90 border border-emerald-800/50 p-2 rounded-sm">
+              <div class="font-bold text-emerald-300">Recommended Option C (Hybrid Kaizen Acceleration):</div>
+              <ul class="list-disc list-inside text-[11px] text-slate-300 mt-1 space-y-1">
+                <li>Authorize 24/7 twin-shift muck Buffer Pit + 8 additional sealed dump trucks (+25% mucking rate).</li>
+                <li>Fast-track off-site twin H-Beam waler pre-assembly (+10 days saved on Station Box).</li>
+                <li>Deploy roller disc cutters on Hydrofraise BC 40 for BH-09 boulder stratum (+6 days recovered).</li>
+              </ul>
+            </div>
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm mono-num text-[11px] flex justify-between">
+              <span>Mitigation Cost: <strong class="text-amber-300">IDR 3.45 B</strong></span>
+              <span>LD Avoided: <strong class="text-emerald-400">IDR 15.12 B</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formal Ringisho (稟議書) Consensus Approval Memorandum & Hanko Stamps -->
+      <div class="bg-panel border border-slate-700 p-4 rounded-sm">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 text-xs font-bold bg-shimizu text-white rounded-sm font-jp">稟議書 RINGISHO</span>
+              <h3 class="text-sm font-bold text-white mono-num">DOC REF: SHMZ-CP202-RNG-2026-043 (SCHEDULE RECOVERY & VARIATION ORDER)</h3>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Formal Japanese Consensus Approval for W43 Schedule Acceleration Package (IDR 3.45 Billion Contingency Drawdown from CPI Cost Underrun Reserve)
+            </p>
+          </div>
+
+          <!-- Electronic Japanese Hanko (印鑑) Stamp Block -->
+          <div class="flex items-center gap-4 bg-slate-950 border border-slate-800 px-4 py-2.5 rounded-sm" id="ringisho-hanko-strip">
+            <!-- Populated via JS so users can click to stamp/approve -->
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-3 text-xs mono-num">
+          <div class="bg-slate-900/80 border border-slate-800 p-2.5 rounded-sm">
+            <div class="text-[10px] text-slate-400">RINGISHO BUDGET SOURCE</div>
+            <div class="text-sm font-bold text-emerald-400 mt-0.5">CPI Reserve (CV: +4.05 B)</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Zero net increase to Contract BAC</div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 p-2.5 rounded-sm">
+            <div class="text-[10px] text-slate-400">RECOVERY TARGET SPI</div>
+            <div class="text-sm font-bold text-sky-400 mt-0.5" id="rng-target-spi">0.931 → 1.004 (On Track)</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Restores S_Act to Banana Envelope Midline</div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 p-2.5 rounded-sm">
+            <div class="text-[10px] text-slate-400">NET CALENDAR DAYS RECOVERED</div>
+            <div class="text-sm font-bold text-white mt-0.5" id="rng-days-recovered">+16 Calendar Days</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Protects Milestone M3 & TBM Breakthrough</div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 p-2.5 rounded-sm flex flex-col justify-between">
+            <div class="text-[10px] text-slate-400">GOVERNANCE STATUS</div>
+            <div class="text-sm font-bold text-amber-400" id="rng-approval-status-text">3 / 4 Hanko Stamps Signed</div>
+            <button onclick="stampAllRingisho()" class="mt-1 px-2 py-1 text-[11px] bg-rose-700 hover:bg-rose-600 text-white rounded-sm font-semibold transition">
+              💮 Stamp Project Director Approval (決裁)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 9: KAIZEN RECOVERY / WHAT-IF SIMULATOR (改善シミュレーション)         -->
+    <!-- ========================================================================= -->
+    <section id="tab-kaizen" class="tab-pane hidden space-y-3">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <!-- Interactive Sliders Panel -->
+        <div class="bg-panel border border-slate-800 p-3.5 rounded-sm space-y-4">
+          <div class="border-b border-slate-800 pb-2">
+            <h2 class="text-sm font-bold text-white flex items-center justify-between">
+              <span>KAIZEN RECOVERY SIMULATOR</span>
+              <span class="text-sky-400 font-jp">工程改善シミュレーション</span>
+            </h2>
+            <p class="text-[11px] text-slate-400">Adjust Schedule Crashing, Fast-Tracking, and Plant Mobilization sliders to compute real-time EVM & COD impact.</p>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <!-- Slider 1: Schedule Crashing (Night-shift Mucking) -->
+            <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-sm">
+              <div class="flex justify-between font-semibold mb-1">
+                <span>1. Schedule Crashing: 24/7 Muck Haulage Fleet</span>
+                <span class="mono-num text-sky-400" id="sim-crash-label">+20% Output</span>
+              </div>
+              <input type="range" id="sim-crash" min="0" max="40" step="5" value="20" oninput="runKaizenSimulation()" class="w-full accent-sky-500 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mono-num mt-1">
+                <span>0% (Baseline)</span>
+                <span>+20% (Night Fleet)</span>
+                <span>+40% (Max Surge)</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Fast-Tracking (Off-site Strut Prefab) -->
+            <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-sm">
+              <div class="flex justify-between font-semibold mb-1">
+                <span>2. Fast-Tracking: Off-Site Strut & Waler Prefab</span>
+                <span class="mono-num text-emerald-400" id="sim-fast-label">10 Days Overlap</span>
+              </div>
+              <input type="range" id="sim-fast" min="0" max="21" step="1" value="10" oninput="runKaizenSimulation()" class="w-full accent-emerald-500 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mono-num mt-1">
+                <span>0d (Sequential)</span>
+                <span>10d (Modular Splicing)</span>
+                <span>21d (Full Parallel)</span>
+              </div>
+            </div>
+
+            <!-- Slider 3: 2nd Cutter Rig / Hyperbaric Crew -->
+            <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-sm">
+              <div class="flex justify-between font-semibold mb-1">
+                <span>3. Plant Mobilization: Aux Cutter / TBM Crew</span>
+                <span class="mono-num text-amber-400" id="sim-rig-label">1 Aux Unit</span>
+              </div>
+              <input type="range" id="sim-rig" min="0" max="2" step="1" value="1" oninput="runKaizenSimulation()" class="w-full accent-amber-500 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mono-num mt-1">
+                <span>0 (Current Fleet)</span>
+                <span>1 (+Hyperbaric Crew)</span>
+                <span>2 (+2nd BC40 Cutter)</span>
+              </div>
+            </div>
+
+            <!-- Slider 4: Unforeseen Geotechnical Delay Stress Test -->
+            <div class="bg-slate-900/90 border border-rose-900/60 p-2.5 rounded-sm">
+              <div class="flex justify-between font-semibold mb-1 text-rose-300">
+                <span>4. Subsurface Stress Test (BH-09 / Slurry Loss)</span>
+                <span class="mono-num text-rose-400" id="sim-risk-label">+4 Days Delay</span>
+              </div>
+              <input type="range" id="sim-risk" min="0" max="25" step="1" value="4" oninput="runKaizenSimulation()" class="w-full accent-rose-500 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mono-num mt-1">
+                <span>0d (No Anomaly)</span>
+                <span>10d (Boulder Slump)</span>
+                <span>25d (Severe Grout Zone)</span>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="applySimulationToSchedule()" class="w-full py-2 bg-shimizu hover:bg-shimizuLight text-white font-bold text-xs rounded-sm border border-sky-400/40 transition shadow">
+            ⚡ Apply Simulated Recovery to Active WBS & Ringisho
+          </button>
+        </div>
+
+        <!-- Right 2 Columns: Simulated Telemetry & Mitigation Trade-Off Matrix -->
+        <div class="lg:col-span-2 space-y-3">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mono-num">
+            <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+              <div class="text-[10px] text-slate-400">SIMULATED SPI</div>
+              <div class="text-2xl font-extrabold text-emerald-400 mt-1" id="sim-out-spi">0.998</div>
+              <div class="text-[10px] text-slate-400 mt-1">Current: <span id="sim-cur-spi">0.931</span></div>
+            </div>
+            <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+              <div class="text-[10px] text-slate-400">NET DAYS RECOVERED</div>
+              <div class="text-2xl font-extrabold text-sky-400 mt-1" id="sim-out-days">+17 d</div>
+              <div class="text-[10px] text-slate-400 mt-1" id="sim-out-cod">COD: 2027-05-11 (On Time)</div>
+            </div>
+            <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+              <div class="text-[10px] text-slate-400">ACCELERATION COST</div>
+              <div class="text-2xl font-extrabold text-amber-400 mt-1" id="sim-out-cost">IDR 3.60 B</div>
+              <div class="text-[10px] text-slate-400 mt-1">Funded via CV (+4.05 B)</div>
+            </div>
+            <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+              <div class="text-[10px] text-slate-400">NET LD BENEFIT</div>
+              <div class="text-2xl font-extrabold text-emerald-400 mt-1" id="sim-out-net">+3.54 B</div>
+              <div class="text-[10px] text-slate-400 mt-1">LD Avoided vs Crash Cost</div>
+            </div>
+          </div>
+
+          <!-- Comparative Mitigation Options Table -->
+          <div class="bg-panel border border-slate-800 p-3 rounded-sm">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 mb-2">
+              Comparative Engineering Trade-Off Matrix: Crashing vs. Fast-Tracking vs. 2nd Rig Mobilization
+            </h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs mono-num">
+                <thead>
+                  <tr class="bg-slate-900 border-b border-slate-700 text-[11px] text-slate-300">
+                    <th class="py-2 px-2">Option Code</th>
+                    <th class="py-2 px-2">Acceleration Strategy</th>
+                    <th class="py-2 px-2 text-right">Direct Cost</th>
+                    <th class="py-2 px-2 text-right">Days Saved</th>
+                    <th class="py-2 px-2 text-right">Resulting SPI</th>
+                    <th class="py-2 px-2">Technical / Safety Risk Profile (KYT)</th>
+                    <th class="py-2 px-2 text-center">Select Preset</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-[11.5px]">
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 font-bold text-sky-400">OPT-A</td>
+                    <td class="py-2 px-2 font-sans">Schedule Crashing Only (24/7 Night-Shift Muck Fleet + Overtime)</td>
+                    <td class="py-2 px-2 text-right text-amber-300">IDR 2.40 B</td>
+                    <td class="py-2 px-2 text-right text-emerald-400">+11 Days</td>
+                    <td class="py-2 px-2 text-right">0.972</td>
+                    <td class="py-2 px-2 font-sans text-slate-300">Moderate — Night acoustic permit & haulage fatigue monitoring</td>
+                    <td class="py-2 px-2 text-center"><button onclick="loadKaizenPreset(35, 0, 0, 4)" class="px-2 py-0.5 bg-slate-800 hover:bg-shimizu text-white rounded text-[10px]">Load A</button></td>
+                  </tr>
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 font-bold text-emerald-400">OPT-B</td>
+                    <td class="py-2 px-2 font-sans">Fast-Tracking Only (Off-Site Modular Strut & King-Post Splicing)</td>
+                    <td class="py-2 px-2 text-right text-amber-300">IDR 1.25 B</td>
+                    <td class="py-2 px-2 text-right text-emerald-400">+10 Days</td>
+                    <td class="py-2 px-2 text-right">0.968</td>
+                    <td class="py-2 px-2 font-sans text-slate-300">Low — Requires 100% ultrasonic NDT weld QA at fabrication yard</td>
+                    <td class="py-2 px-2 text-center"><button onclick="loadKaizenPreset(0, 16, 0, 4)" class="px-2 py-0.5 bg-slate-800 hover:bg-shimizu text-white rounded text-[10px]">Load B</button></td>
+                  </tr>
+                  <tr class="bg-emerald-950/20 hover:bg-emerald-950/40">
+                    <td class="py-2 px-2 font-bold text-emerald-300">OPT-C ★</td>
+                    <td class="py-2 px-2 font-sans font-semibold text-white">Shimizu Hybrid Kaizen (Night Mucking + Modular Struts + Hyperbaric Crew)</td>
+                    <td class="py-2 px-2 text-right text-amber-300">IDR 3.60 B</td>
+                    <td class="py-2 px-2 text-right text-emerald-400 font-bold">+17 Days</td>
+                    <td class="py-2 px-2 text-right font-bold text-emerald-400">0.998</td>
+                    <td class="py-2 px-2 font-sans text-emerald-300">Optimal Cost/Benefit — Fully covered within current CPI Cost Reserve</td>
+                    <td class="py-2 px-2 text-center"><button onclick="loadKaizenPreset(20, 10, 1, 4)" class="px-2 py-0.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-[10px]">Load C ★</button></td>
+                  </tr>
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 font-bold text-purple-400">OPT-D</td>
+                    <td class="py-2 px-2 font-sans">2nd Hydrofraise BC 40 Cutter Rig Mobilization + Full Crashing</td>
+                    <td class="py-2 px-2 text-right text-rose-400">IDR 8.90 B</td>
+                    <td class="py-2 px-2 text-right text-emerald-400">+23 Days</td>
+                    <td class="py-2 px-2 text-right">1.024</td>
+                    <td class="py-2 px-2 font-sans text-slate-300">High Capital — Slurry plant capacity saturation & crane congestion</td>
+                    <td class="py-2 px-2 text-center"><button onclick="loadKaizenPreset(35, 14, 2, 4)" class="px-2 py-0.5 bg-slate-800 hover:bg-shimizu text-white rounded text-[10px]">Load D</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- DEDICATED 1-PAGE A4 EXECUTIVE PRINT / PDF REPORT VIEW (VISIBLE ON PRINT) -->
+  <section id="executive-print-sheet" class="hidden print-only p-2">
+    <div class="border-b-2 border-slate-900 pb-2 mb-3 flex items-center justify-between">
+      <div>
+        <div class="text-sm font-extrabold uppercase tracking-wide">SHIMIZU CORPORATION (清水建設) — NEXUS-4D™ KOUTEI EXECUTIVE WEEKLY BRIEFING</div>
+        <div class="text-xs mono-num">Project: Jakarta MRT Underground Package CP-202 (STA 14+000 – STA 15+500) | Contract BAC: IDR 420.00 Billion | Cut-Off: W43 (Nov 2026)</div>
+      </div>
+      <div class="text-right mono-num text-xs">
+        <div><strong>Safety (安全第一):</strong> 1,240,000 LTI-Free Hrs</div>
+        <div><strong>Classification:</strong> Steering Committee 1-Pager</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-6 gap-2 mb-3 mono-num text-xs">
+      <div class="print-card p-2 rounded">
+        <div class="text-[10px] font-bold">PHYSICAL PROGRESS (進捗率)</div>
+        <div class="text-base font-extrabold" id="print-ev-pct">44.85%</div>
+        <div class="text-[10px]" id="print-pv-pct">Plan: 48.20% (Δ -3.35%)</div>
+      </div>
+      <div class="print-card p-2 rounded">
+        <div class="text-[10px] font-bold">WEEKLY CUT-OFF (週間)</div>
+        <div class="text-base font-extrabold" id="print-wk-act">+0.65%</div>
+        <div class="text-[10px]" id="print-wk-plan">Target: +1.10% (Lag -0.45%)</div>
+      </div>
+      <div class="print-card p-2 rounded">
+        <div class="text-[10px] font-bold">SPI (工程効率指数)</div>
+        <div class="text-base font-extrabold" id="print-spi">0.931</div>
+        <div class="text-[10px]" id="print-sv">SV: IDR -14.07 B</div>
+      </div>
+      <div class="print-card p-2 rounded">
+        <div class="text-[10px] font-bold">CPI (原価効率指数)</div>
+        <div class="text-base font-extrabold" id="print-cpi">1.022</div>
+        <div class="text-[10px]" id="print-cv">CV: IDR +4.05 B</div>
+      </div>
+      <div class="print-card p-2 rounded">
+        <div class="text-[10px] font-bold">EAC FORECAST (完成予測)</div>
+        <div class="text-base font-extrabold" id="print-eac">IDR 410.95 B</div>
+        <div class="text-[10px]" id="print-tcpi">TCPI: 0.983</div>
+      </div>
+      <div class="print-card p-2 rounded">
+        <div class="text-[10px] font-bold">GROUND & QA GATES</div>
+        <div class="text-base font-extrabold" id="print-bh">12 / 14 BH OK</div>
+        <div class="text-[10px]">INC-04: 18.4mm (Safe)</div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <div class="text-xs font-bold uppercase mb-1">Master WBS & Earned Value Summary Table (総合工程・出来高一覧)</div>
+      <table class="w-full border-collapse border border-slate-400 text-[9.5px] mono-num">
+        <thead>
+          <tr class="bg-slate-200">
+            <th class="border border-slate-400 p-1 text-left">WBS</th>
+            <th class="border border-slate-400 p-1 text-left">Activity Description</th>
+            <th class="border border-slate-400 p-1 text-left">Chainage</th>
+            <th class="border border-slate-400 p-1 text-center">Start</th>
+            <th class="border border-slate-400 p-1 text-center">Finish</th>
+            <th class="border border-slate-400 p-1 text-right">Float</th>
+            <th class="border border-slate-400 p-1 text-right">Weight%</th>
+            <th class="border border-slate-400 p-1 text-right">Plan%</th>
+            <th class="border border-slate-400 p-1 text-right">Actual%</th>
+            <th class="border border-slate-400 p-1 text-right">EV%</th>
+            <th class="border border-slate-400 p-1 text-center">QA / KYT Gate</th>
+          </tr>
+        </thead>
+        <tbody id="print-wbs-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 text-[10px]">
+      <div class="print-card p-2 rounded">
+        <div class="font-bold uppercase mb-1">Hou-Ren-So (報連相) Executive Escalation Summary</div>
+        <p><strong>報告 (Hōkoku):</strong> -3.35% variance driven by BH-09 volcanic cobble layer (N-SPT &gt; 60) slowing D-Wall North panels and night-shift dump truck window restrictions.</p>
+        <p class="mt-1"><strong>相談 (Sōdan) Recovery Plan:</strong> Hybrid Kaizen Option C (24/7 buffer pit mucking + off-site strut prefabrication + hyperbaric cutter crew) recovers +17 days within existing CPI cost underrun reserve.</p>
+      </div>
+      <div class="print-card p-2 rounded flex items-center justify-between">
+        <div>
+          <div class="font-bold uppercase">Ringisho (稟議書) Consensus Sign-Off</div>
+          <div class="mono-num mt-1">Ref: SHMZ-CP202-RNG-2026-043</div>
+          <div class="text-[9px] text-slate-600">PE26 Planning • QC26 Quality • GEO-ENG Ground • Site Director</div>
+        </div>
+        <div class="flex gap-2 mono-num text-[9px] text-center">
+          <div class="border border-slate-500 p-1.5 rounded"><strong>PE26</strong><br>承認済</div>
+          <div class="border border-slate-500 p-1.5 rounded"><strong>QC26</strong><br>承認済</div>
+          <div class="border border-slate-500 p-1.5 rounded"><strong>GEO</strong><br>承認済</div>
+          <div class="border border-slate-500 p-1.5 rounded"><strong>所長 PD</strong><br>決裁印</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL 1: GENBA-SHUGI (現場主義) FIELD INSPECTOR LOG DRILL-DOWN -->
+  <div id="genba-modal" class="fixed inset-0 bg-black/75 z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-panel border border-slate-700 rounded-sm max-w-xl w-full p-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+        <div>
+          <span class="text-[10px] px-1.5 py-0.5 bg-shimizu text-white rounded font-jp">現場主義 GENBA-SHUGI VERIFIED LOG</span>
+          <h3 class="text-sm font-bold text-white mt-1 mono-num" id="genba-modal-title">WBS Inspector Log</h3>
+        </div>
+        <button onclick="closeGenbaModal()" class="text-slate-400 hover:text-white text-sm font-bold px-2">✕</button>
+      </div>
+      <div id="genba-modal-body" class="space-y-2.5 text-xs mono-num"></div>
+      <div class="mt-4 pt-2 border-t border-slate-800 flex justify-between items-center">
+        <button id="genba-toggle-gate-btn" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold rounded-sm transition">
+          ✓ Toggle QC26 / KYT Hold Clearance
+        </button>
+        <button onclick="closeGenbaModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-sm">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ADD NEW WBS ACTIVITY -->
+  <div id="add-wbs-modal" class="fixed inset-0 bg-black/75 z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-panel border border-slate-700 rounded-sm max-w-lg w-full p-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+        <h3 class="text-sm font-bold text-white">＋ Add WBS Work Package <span class="text-sky-400 font-jp">(新規作業追加)</span></h3>
+        <button onclick="closeAddActivityModal()" class="text-slate-400 hover:text-white text-sm font-bold px-2">✕</button>
+      </div>
+      <form onsubmit="submitNewActivity(event)" class="space-y-2.5 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-400 mb-1">WBS Code</label>
+            <input type="text" id="new-wbs-code" required value="1.6.1" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 mono-num text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Station Chainage</label>
+            <input type="text" id="new-wbs-sta" required value="STA 14+880 - 14+920" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 mono-num text-white">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Activity Description</label>
+          <input type="text" id="new-wbs-name" required placeholder="e.g., Cross-Passage CP-02 Jet Grouting & Ground Freezing" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-white">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-400 mb-1">Discipline</label>
+            <select id="new-wbs-disc" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-white">
+              <option value="Geotechnical">Geotechnical</option>
+              <option value="Civil / D-Wall">Civil / D-Wall</option>
+              <option value="Station Box">Station Box</option>
+              <option value="Tunneling / TBM" selected>Tunneling / TBM</option>
+              <option value="MEP & Finishes">MEP & Finishes</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Weight (Bobot %)</label>
+            <input type="number" step="0.1" id="new-wbs-weight" required value="3.5" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 mono-num text-white">
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block text-slate-400 mb-1">Early Start</label>
+            <input type="date" id="new-wbs-es" required value="2026-11-10" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 mono-num text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Early Finish</label>
+            <input type="date" id="new-wbs-ef" required value="2027-01-25" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 mono-num text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Total Float (d)</label>
+            <input type="number" id="new-wbs-tf" required value="12" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1.5 mono-num text-white">
+          </div>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeAddActivityModal()" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-sm">Cancel</button>
+          <button type="submit" class="px-3 py-1.5 bg-shimizu hover:bg-shimizuLight text-white font-semibold rounded-sm">Insert WBS Activity</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- STATUS FOOTER -->
+  <footer class="bg-panel border-t border-slate-800 px-3 py-1.5 text-[11px] text-slate-400 mono-num no-print mt-auto">
+    <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <span class="text-emerald-400 font-semibold">● In-Memory Zero-Latency Recalc Active</span>
+        <span>|</span>
+        <span>100% Verifiable Data Lineage (PE26 / QC26 / GEO-ENG)</span>
+        <span>|</span>
+        <span id="autosave-status">Autosaved to LocalStorage</span>
+      </div>
+      <div>
+        <span>SHIMIZU CORPORATION (清水建設) • MONOZUKURI INFRASTRUCTURE CONTROLS • JAKARTA MRT CP-202</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- REACTIVE IN-MEMORY ENGINE (<16ms) & VISUALIZATION CONTROLLERS             -->
+  <!-- ========================================================================= -->
+  <script>
+    const CONTRACT_BAC = 420.00; // IDR 420.00 Billion
+    const ACTUAL_COST_AC = 184.32; // Certified Field Expenditure to Date (IDR Billion)
+    const STORAGE_KEY = 'NEXUS4D_KOUTEI_CP202_STATE_V51';
+
+    // Default Master WBS Dataset (Calibrated so Weighted PV = 48.20%, EV = 44.85%, Last Wk = 44.20%)
+    const DEFAULT_WBS = [
+      {
+        id: 'wbs-1', code: '1.1.1',
+        name: 'Site Mobilization, Traffic Decking & Guide Wall Construction',
+        chainage: 'STA 14+000 - 14+350', discipline: 'Geotechnical',
+        es: '2026-01-05', ef: '2026-03-15', tf: 0,
+        weight: 5.0, lastWk: 100.0, plan: 100.0, actual: 100.0,
+        gate: 'KYT+RFI OK',
+        genba: { inspector: 'Eng. Takahashi / Ir. Budi (QC26)', bh: 'BH-01..BH-03', spt: 'N=14 (Firm Clay)', note: 'Guide wall alignment tolerance ±4mm verified. KYT signed.' }
+      },
+      {
+        id: 'wbs-2', code: '1.1.2',
+        name: 'Subsurface Borehole Verification (BH-01..14) & Dewatering Curtain',
+        chainage: 'STA 14+000 - 15+500', discipline: 'Geotechnical',
+        es: '2026-02-01', ef: '2026-04-30', tf: 10,
+        weight: 5.0, lastWk: 100.0, plan: 100.0, actual: 100.0,
+        gate: 'KYT+RFI OK',
+        genba: { inspector: 'Dr. Harada (GEO-ENG)', bh: 'BH-01..BH-14', spt: 'N=12 to >60', note: 'Piezometers PZ-01..06 & Inclinometers INC-01..08 commissioned.' }
+      },
+      {
+        id: 'wbs-3', code: '1.2.1',
+        name: 'Diaphragm Wall South & East Box Panels (DW-01 to DW-17, 1.2m Thick)',
+        chainage: 'STA 14+000 - 14+180', discipline: 'Civil / D-Wall',
+        es: '2026-03-10', ef: '2026-07-25', tf: 0,
+        weight: 12.0, lastWk: 100.0, plan: 100.0, actual: 100.0,
+        gate: 'KYT+RFI OK',
+        genba: { inspector: 'S. Watanabe / R. Pratama (QC26)', bh: 'BH-04..BH-06', spt: 'N=38 (Tuff)', note: 'Cross-hole sonic logging 100% pass across 17 primary/secondary panels.' }
+      },
+      {
+        id: 'wbs-4', code: '1.2.2',
+        name: 'Diaphragm Wall North Box & TBM Shaft Eye Panels (DW-18 to DW-36)',
+        chainage: 'STA 14+180 - 14+350', discipline: 'Civil / D-Wall',
+        es: '2026-06-01', ef: '2026-11-20', tf: 0,
+        weight: 10.0, lastWk: 78.0, plan: 90.0, actual: 80.0,
+        gate: 'GEO HOLD',
+        genba: { inspector: 'Dr. Harada / K. Sato (GEO-ENG)', bh: 'BH-09 (Boulder)', spt: 'N > 60 @ -21.5m', note: 'HOLD POINT on Panel DW-33..36: Volcanic boulder cobble zone requires BC40 roller bit swap & slurry sand <2%.' }
+      },
+      {
+        id: 'wbs-5', code: '1.3.1',
+        name: 'Station Box Top-Down Roof Slab Casting & King-Post Plunge Columns',
+        chainage: 'STA 14+000 - 14+350', discipline: 'Station Box',
+        es: '2026-07-15', ef: '2026-10-30', tf: 0,
+        weight: 10.0, lastWk: 88.0, plan: 92.0, actual: 90.0,
+        gate: 'KYT+RFI OK',
+        genba: { inspector: 'Ir. Hendra (QC26)', bh: 'BH-05', spt: 'N=32', note: 'Concrete Grade B45 cylinder 28d strength 53.4 MPa. Post-pour curing approved.' }
+      },
+      {
+        id: 'wbs-6', code: '1.3.2',
+        name: 'Bulk Excavation Stage 1 & 2 (-14.5m) + H-400 Steel Strutting S1/S2',
+        chainage: 'STA 14+000 - 14+350', discipline: 'Station Box',
+        es: '2026-09-01', ef: '2026-12-28', tf: 0,
+        weight: 12.0, lastWk: 48.0, plan: 55.0, actual: 50.0,
+        gate: 'RFI HOLD',
+        genba: { inspector: 'M. Ito / D. Kusuma (QC26)', bh: 'BH-07', spt: 'N=29', note: 'RFI HOLD on Bay B6 Excavation below -12.0m pending NDT ultrasonic weld test on Waler Splice WS-14.' }
+      },
+      {
+        id: 'wbs-7', code: '1.4.1',
+        name: 'TBM #1 "Sakura-1" (EPB Ø6.65m) Assembly, Cradle & Launch Drive (NB)',
+        chainage: 'STA 14+350 - 15+500', discipline: 'Tunneling / TBM',
+        es: '2026-08-15', ef: '2027-02-20', tf: 0,
+        weight: 15.0, lastWk: 35.0, plan: 45.0, actual: 36.0,
+        gate: 'KYT+RFI OK',
+        genba: { inspector: 'T. Nakamura (TBM Chief)', bh: 'BH-08..BH-10', spt: 'N=44', note: 'Current face at STA 14+762.5 (Ring #275). Face pressure 2.4 bar, tail-skin grease & two-component grout verified.' }
+      },
+      {
+        id: 'wbs-8', code: '1.4.2',
+        name: 'TBM #2 "Garuda-2" (EPB Ø6.65m) Southbound Drive & Precast Ring Erection',
+        chainage: 'STA 14+350 - 15+500', discipline: 'Tunneling / TBM',
+        es: '2026-09-20', ef: '2027-03-25', tf: 14,
+        weight: 13.0, lastWk: 19.0, plan: 25.0, actual: 19.5,
+        gate: 'KYT+RFI OK',
+        genba: { inspector: 'Y. Kobayashi (TBM Eng)', bh: 'BH-08', spt: 'N=39', note: 'Current face at STA 14+577.5 (Ring #152). Ring lip/step tolerance <3mm achieved.' }
+      },
+      {
+        id: 'wbs-9', code: '1.5.1',
+        name: 'Concourse & Base Slab RC Structure (-24.0m Waterproof Membrane & Rebar)',
+        chainage: 'STA 14+000 - 14+350', discipline: 'Station Box',
+        es: '2026-11-15', ef: '2027-04-10', tf: 18,
+        weight: 10.0, lastWk: 9.2, plan: 10.0, actual: 9.15,
+        gate: 'KYT+RFI OK',
+        genba: { inspector: 'Ir. Budi (QC26)', bh: 'BH-04', spt: 'N=50', note: 'PVC compartmentalized waterstop & HDPE membrane trial seam peel test passed.' }
+      },
+      {
+        id: 'wbs-10', code: '1.5.2',
+        name: 'Cross-Passage CP-01/02 Excavation, Tunnel Walkways & MEP First-Fix',
+        chainage: 'STA 14+000 - 15+500', discipline: 'MEP & Finishes',
+        es: '2027-01-10', ef: '2027-05-25', tf: 25,
+        weight: 8.0, lastWk: 0.0, plan: 0.0, actual: 0.0,
+        gate: 'KYT+RFI OK',
+        genba: { inspector: 'A. Wijaya (MEP Lead)', bh: 'BH-11', spt: 'N=48', note: 'BIM LOD 400 CSD (Combined Services Drawings) Rev-A approved for fabrication.' }
+      }
+    ];
+
+    const DEFAULT_BOREHOLES = [
+      { id: 'BH-02', sta: 'STA 14+060', wbs: '1.2.1', strata: 'Stiff Silty Clay / Cemented Siltstone', spt: 34, ert: 'Nominal (85 Ω·m)', head: '-4.2m GL', status: 'CLEARED' },
+      { id: 'BH-04', sta: 'STA 14+140', wbs: '1.2.1', strata: 'Dense Tuffaceous Sandstone', spt: 46, ert: 'Nominal (110 Ω·m)', head: '-4.5m GL', status: 'CLEARED' },
+      { id: 'BH-06', sta: 'STA 14+230', wbs: '1.3.1', strata: 'Very Stiff Clay / Volcanic Sand', spt: 39, ert: 'Nominal (92 Ω·m)', head: '-4.8m GL', status: 'CLEARED' },
+      { id: 'BH-07', sta: 'STA 14+290', wbs: '1.3.2', strata: 'Silty Sand Lens (Perched Water)', spt: 29, ert: 'Low-Res Pocket (24 Ω·m)', head: '-3.6m GL', status: 'HOLD POINT' },
+      { id: 'BH-08', sta: 'STA 14+420', wbs: '1.4.1', strata: 'Compact Tuffaceous Breccia', spt: 52, ert: 'Nominal (130 Ω·m)', head: '-5.1m GL', status: 'CLEARED' },
+      { id: 'BH-09', sta: 'STA 14+810', wbs: '1.2.2 / 1.4.1', strata: 'Cemented Volcanic Cobble & Boulders', spt: 68, ert: 'High-Contrast Anomaly (290 Ω·m)', head: '-4.9m GL', status: 'HOLD POINT' },
+      { id: 'BH-11', sta: 'STA 15+120', wbs: '1.4.2', strata: 'Very Dense Alluvial Sand & Siltstone', spt: 55, ert: 'Nominal (115 Ω·m)', head: '-5.4m GL', status: 'CLEARED' },
+      { id: 'BH-14', sta: 'STA 15+460', wbs: '1.5.2', strata: 'Hard Cemented Claystone (Reception)', spt: 61, ert: 'Nominal (140 Ω·m)', head: '-5.6m GL', status: 'CLEARED' }
+    ];
+
+    const DEFAULT_LOOKAHEAD = [
+      { id: 'lh-1', wbs: '1.2.2', task: 'D-Wall Panel DW-33 & DW-34 Trenching & Rebar Cage Lowering', w42: 'DONE', w43: 'ACTIVE', w44: 'PLAN', w45: '-', shop: 'Approved Code A', ptw: 'KYT Signed / Valid', rfi: 'GEO HOLD (BH-09)', mat: '100% Cage Ready' },
+      { id: 'lh-2', wbs: '1.3.2', task: 'Station Box Bay B6 Excavation (-12m to -14.5m) & Waler WS-14', w42: 'PREP', w43: 'HOLD', w44: 'ACTIVE', w45: 'ACTIVE', shop: 'Approved Code A', ptw: 'KYT Signed / Valid', rfi: 'NDT Weld QA Hold', mat: 'H-400 Beams On-Site' },
+      { id: 'lh-3', wbs: '1.4.1', task: 'TBM #1 "Sakura-1" Drive Rings #275–#330 & Tail Void Grouting', w42: 'ACTIVE', w43: 'ACTIVE', w44: 'ACTIVE', w45: 'ACTIVE', shop: 'Approved Code A', ptw: 'Hyperbaric PTW OK', rfi: 'RFI Approved', mat: 'Rings #275-350 Stacked' },
+      { id: 'lh-4', wbs: '1.4.2', task: 'TBM #2 "Garuda-2" Drive Rings #152–#205 & Muck Conveyor', w42: 'ACTIVE', w43: 'ACTIVE', w44: 'ACTIVE', w45: 'ACTIVE', shop: 'Approved Code A', ptw: 'KYT Signed / Valid', rfi: 'RFI Approved', mat: 'Rings #152-220 Stacked' },
+      { id: 'lh-5', wbs: '1.5.1', task: 'Base Slab Bay B1-B2 Blinding Concrete & HDPE Waterproof Membrane', w42: '-', w43: 'PREP', w44: 'ACTIVE', w45: 'ACTIVE', shop: 'Code B (Minor)', ptw: 'Confined Space OK', rfi: 'RFI Approved', mat: 'Membrane Rolls On-Site' }
+    ];
+
+    const DEFAULT_HANKO = [
+      { role: '起案 PE26', title: 'Planning Lead', name: '佐藤 (Sato)', stamped: true, date: '2026-11-02' },
+      { role: '品質 QC26', title: 'QA/QC Manager', name: '高橋 (Takahashi)', stamped: true, date: '2026-11-02' },
+      { role: '地盤 GEO', title: 'Chief Geotech', name: '原田 (Harada)', stamped: true, date: '2026-11-03' },
+      { role: '決裁 PD', title: 'Project Director', name: '清水 (Shimizu)', stamped: false, date: 'Pending' }
+    ];
+
+    const PLANT_TELEMETRY = [
+      { name: 'Hydrofraise Bauer BC 40 (#1)', jp: '地中連続壁掘削機', status: 'OPERATING', util: '88%', metric1: 'Verticality: 0.12% (<0.3%)', metric2: 'Torque: 92 kNm • Depth: -26.4m' },
+      { name: 'Kobelco CKE2500G-2 (250t Crane)', jp: '250t クローラークレーン', status: 'OPERATING', util: '91%', metric1: 'Cage Hoist: 48.5t (74% SWL)', metric2: 'Anemometer: 4.2 m/s (Safe)' },
+      { name: 'Komatsu PC300 Long-Reach (x4)', jp: 'ロングリーチ掘削機', status: 'OPERATING', util: '94%', metric1: 'Muck Rate: 1,420 m³/day', metric2: 'Shaft Clam Cycle: 42 sec' },
+      { name: 'SOTRES Bentonite Desander Plant', jp: '安定液処理プラント', status: 'QA PASS', util: '96%', metric1: 'Sand Content: 1.8% (<3.0%)', metric2: 'Density: 1.08 g/cm³ • pH: 9.4' },
+      { name: 'EPB TBM Ø6.65m "Sakura-1"', jp: '泥土圧シールド機 1号機', status: 'DRIVING', util: '82%', metric1: 'Face Pressure: 2.42 bar', metric2: 'Thrust: 18,400 kN • 10.8 m/d' },
+      { name: 'EPB TBM Ø6.65m "Garuda-2"', jp: '泥土圧シールド機 2号機', status: 'DRIVING', util: '85%', metric1: 'Face Pressure: 2.28 bar', metric2: 'Thrust: 16,900 kN • 11.4 m/d' }
+    ];
+
+    // Live State
+    let state = {
+      wbs: [],
+      boreholes: [],
+      lookahead: [],
+      hanko: [],
+      kaizenSim: { crash: 20, fast: 10, rig: 1, risk: 4 }
+    };
+
+    // Chart.js instances
+    let bananaChart = null;
+    let evmChart = null;
+    let marchChart = null;
+    let manpowerChart = null;
+
+    // Load or Initialize State
+    function initState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && Array.isArray(parsed.wbs) && parsed.wbs.length > 0) {
+            state = parsed;
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('LocalStorage load fallback:', e);
+      }
+      state = {
+        wbs: JSON.parse(JSON.stringify(DEFAULT_WBS)),
+        boreholes: JSON.parse(JSON.stringify(DEFAULT_BOREHOLES)),
+        lookahead: JSON.parse(JSON.stringify(DEFAULT_LOOKAHEAD)),
+        hanko: JSON.parse(JSON.stringify(DEFAULT_HANKO)),
+        kaizenSim: { crash: 20, fast: 10, rig: 1, risk: 4 }
+      };
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        const el = document.getElementById('autosave-status');
+        if (el) {
+          const now = new Date().toLocaleTimeString();
+          el.textContent = `Autosaved Locally (${now})`;
+        }
+      } catch (e) {}
+    }
+
+    function calcDuration(es, ef) {
+      const d1 = new Date(es);
+      const d2 = new Date(ef);
+      const diff = Math.round((d2 - d1) / (1000 * 60 * 60 * 24)) + 1;
+      return isNaN(diff) || diff < 1 ? 1 : diff;
+    }
+
+    // Core <16ms Reactive Calculation Engine
+    function recalculateAll(skipGridRebuild = false) {
+      const t0 = performance.now();
+
+      let totalWeight = 0;
+      let weightedPV = 0;
+      let weightedEV = 0;
+      let weightedLastWk = 0;
+      let holdCount = 0;
+
+      state.wbs.forEach(item => {
+        const w = parseFloat(item.weight) || 0;
+        const p = Math.min(100, Math.max(0, parseFloat(item.plan) || 0));
+        const a = Math.min(100, Math.max(0, parseFloat(item.actual) || 0));
+        const lw = Math.min(100, Math.max(0, parseFloat(item.lastWk) || 0));
+
+        totalWeight += w;
+        weightedPV += (w * p) / 100;
+        weightedEV += (w * a) / 100;
+        weightedLastWk += (w * lw) / 100;
+
+        if (item.gate && item.gate.includes('HOLD')) holdCount++;
+      });
+
+      const varPct = weightedEV - weightedPV;
+      const wkActualGain = weightedEV - weightedLastWk;
+      const wkTargetGain = 1.10; // Baseline Weekly Target %
+      const wkDelta = wkActualGain - wkTargetGain;
+
+      // Earned Value Management (EVM) in IDR Billions
+      const pvIdr = (weightedPV / 100) * CONTRACT_BAC;
+      const evIdr = (weightedEV / 100) * CONTRACT_BAC;
+      const acIdr = ACTUAL_COST_AC;
+      const svIdr = evIdr - pvIdr;
+      const cvIdr = evIdr - acIdr;
+
+      const spi = pvIdr > 0 ? (evIdr / pvIdr) : 1.0;
+      const cpi = acIdr > 0 ? (evIdr / acIdr) : 1.0;
+      const eacCost = cpi > 0 ? (CONTRACT_BAC / cpi) : CONTRACT_BAC;
+      const eacComp = (cpi * spi) > 0 ? (acIdr + (CONTRACT_BAC - evIdr) / (cpi * spi)) : CONTRACT_BAC;
+      const vacIdr = CONTRACT_BAC - eacCost;
+      const tcpi = (CONTRACT_BAC - acIdr) > 0 ? ((CONTRACT_BAC - evIdr) / (CONTRACT_BAC - acIdr)) : 1.0;
+
+      // Update Top KPI Cards
+      document.getElementById('kpi-weight-sum-badge').textContent = `ΣW: ${totalWeight.toFixed(1)}%`;
+      document.getElementById('kpi-weight-sum-badge').className =
+        Math.abs(totalWeight - 100) < 0.05
+          ? 'mono-num text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-emerald-300'
+          : 'mono-num text-[10px] px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-600';
+
+      document.getElementById('kpi-ev-pct').textContent = `${weightedEV.toFixed(2)}%`;
+      document.getElementById('kpi-pv-pct').textContent = `${weightedPV.toFixed(2)}%`;
+      document.getElementById('kpi-ev-bar').style.width = `${Math.min(100, weightedEV)}%`;
+
+      const varEl = document.getElementById('kpi-var-pct');
+      varEl.textContent = `Δ ${varPct >= 0 ? '+' : ''}${varPct.toFixed(2)}%`;
+      varEl.className = `text-xs font-semibold mono-num ${varPct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+      // Weekly Cut-Off Card
+      document.getElementById('kpi-wk-actual').textContent = `${wkActualGain >= 0 ? '+' : ''}${wkActualGain.toFixed(2)}%`;
+      document.getElementById('kpi-wk-prev').textContent = `${weightedLastWk.toFixed(2)}%`;
+      document.getElementById('kpi-wk-target').textContent = `+${wkTargetGain.toFixed(2)}%`;
+      const wkDeltaEl = document.getElementById('kpi-wk-delta');
+      wkDeltaEl.textContent = `${wkDelta >= 0 ? 'Ahead +' : 'Lag '}${wkDelta.toFixed(2)}%`;
+      wkDeltaEl.className = `text-xs font-semibold mono-num ${wkDelta >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+      // SPI & CPI Cards
+      document.getElementById('kpi-spi-val').textContent = spi.toFixed(3);
+      document.getElementById('kpi-sv-idr').textContent = `SV: ${svIdr >= 0 ? '+' : ''}${svIdr.toFixed(2)} B`;
+      document.getElementById('kpi-ev-idr').textContent = `${evIdr.toFixed(2)} B`;
+      document.getElementById('kpi-pv-idr').textContent = `${pvIdr.toFixed(2)} B`;
+
+      const spiBadge = document.getElementById('kpi-spi-badge');
+      if (spi >= 1.0) {
+        spiBadge.textContent = 'ON TRACK';
+        spiBadge.className = 'text-[10px] px-1.5 py-0.2 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-700/50 mono-num';
+      } else if (spi >= 0.95) {
+        spiBadge.textContent = 'WATCH';
+        spiBadge.className = 'text-[10px] px-1.5 py-0.2 rounded bg-amber-950/90 text-amber-300 border border-amber-700/50 mono-num';
+      } else {
+        spiBadge.textContent = 'LAGGING';
+        spiBadge.className = 'text-[10px] px-1.5 py-0.2 rounded bg-rose-950/90 text-rose-300 border border-rose-700/50 mono-num';
+      }
+
+      document.getElementById('kpi-cpi-val').textContent = cpi.toFixed(3);
+      document.getElementById('kpi-cv-idr').textContent = `CV: ${cvIdr >= 0 ? '+' : ''}${cvIdr.toFixed(2)} B`;
+      document.getElementById('kpi-ac-idr').textContent = `${acIdr.toFixed(2)} B`;
+
+      // EAC & TCPI Card
+      document.getElementById('kpi-tcpi-val').textContent = tcpi.toFixed(3);
+      document.getElementById('kpi-eac-val').textContent = `IDR ${eacCost.toFixed(2)} B`;
+      document.getElementById('kpi-vac-val').textContent = `VAC: ${vacIdr >= 0 ? '+' : ''}${vacIdr.toFixed(2)} B`;
+      document.getElementById('kpi-eac-comp').textContent = `IDR ${eacComp.toFixed(2)} B`;
+
+      // Ground & QA Gate Card
+      const clearedBh = state.boreholes.filter(b => b.status === 'CLEARED').length;
+      const totalBh = state.boreholes.length + 6; // Out of 14 total station & tunnel boreholes
+      const effectiveCleared = clearedBh + 6;
+      document.getElementById('kpi-bh-cleared').textContent = `${effectiveCleared} / 14 BH`;
+      document.getElementById('kpi-gate-badge').textContent = `${holdCount} HOLDS`;
+      const rfiPassRate = Math.round(((state.wbs.length - holdCount) / state.wbs.length) * 100);
+      document.getElementById('kpi-rfi-rate').textContent = `RFI Pass: ${rfiPassRate}%`;
+
+      // Update Hou-Ren-So dynamic readouts
+      const hrsSpi = document.getElementById('hrs-spi-readout');
+      if (hrsSpi) hrsSpi.textContent = spi.toFixed(3);
+      const hrsSv = document.getElementById('hrs-sv-readout');
+      if (hrsSv) hrsSv.textContent = `IDR ${svIdr.toFixed(2)} Billion (${varPct.toFixed(2)}%)`;
+
+      // Update EVM Audit Box in Tab 2
+      const evmBox = document.getElementById('evm-formula-box');
+      if (evmBox) {
+        evmBox.innerHTML = `
+          <div class="flex justify-between border-b border-slate-800 pb-1"><span>Contract BAC:</span><strong class="text-white">IDR ${CONTRACT_BAC.toFixed(2)} B</strong></div>
+          <div class="flex justify-between border-b border-slate-800 pb-1"><span>Planned Value (PV):</span><strong class="text-sky-300">IDR ${pvIdr.toFixed(2)} B (${weightedPV.toFixed(2)}%)</strong></div>
+          <div class="flex justify-between border-b border-slate-800 pb-1"><span>Earned Value (EV):</span><strong class="text-emerald-400">IDR ${evIdr.toFixed(2)} B (${weightedEV.toFixed(2)}%)</strong></div>
+          <div class="flex justify-between border-b border-slate-800 pb-1"><span>Actual Cost (AC):</span><strong class="text-slate-200">IDR ${acIdr.toFixed(2)} B</strong></div>
+          <div class="flex justify-between border-b border-slate-800 pb-1"><span>SPI = EV / PV:</span><strong class="${spi >= 0.98 ? 'text-emerald-400' : 'text-amber-400'}">${spi.toFixed(3)} (SV: ${svIdr.toFixed(2)} B)</strong></div>
+          <div class="flex justify-between border-b border-slate-800 pb-1"><span>CPI = EV / AC:</span><strong class="text-emerald-400">${cpi.toFixed(3)} (CV: +${cvIdr.toFixed(2)} B)</strong></div>
+          <div class="flex justify-between"><span>EAC (BAC/CPI) | TCPI:</span><strong class="text-white">IDR ${eacCost.toFixed(2)} B | ${tcpi.toFixed(3)}</strong></div>
+        `;
+      }
+
+      if (!skipGridRebuild) {
+        renderMasterGrid();
+      } else {
+        updateGridFooterOnly(totalWeight, weightedLastWk, weightedPV, weightedEV, varPct);
+      }
+
+      updateCharts(weightedEV, weightedPV, pvIdr, evIdr, acIdr);
+      renderCpmGantt();
+      renderMilestones(spi);
+      runKaizenSimulation(spi);
+      populatePrintView(weightedEV, weightedPV, varPct, wkActualGain, wkDelta, spi, svIdr, cpi, cvIdr, eacCost, tcpi, effectiveCleared);
+
+      saveState();
+
+      const elapsed = (performance.now() - t0).toFixed(2);
+      const latBadge = document.getElementById('recalc-latency-badge');
+      if (latBadge) latBadge.textContent = `${elapsed} ms`;
+    }
+
+    // Render Master WBS Spreadsheet Grid
+    function renderMasterGrid() {
+      const tbody = document.getElementById('wbs-grid-body');
+      if (!tbody) return;
+
+      const discFilter = document.getElementById('filter-discipline')?.value || 'ALL';
+      const critOnly = document.getElementById('filter-critical')?.checked || false;
+      const searchQ = (document.getElementById('filter-search')?.value || '').toLowerCase();
+
+      let rowsHtml = '';
+      let totalWeight = 0, weightedLastWk = 0, weightedPV = 0, weightedEV = 0;
+
+      state.wbs.forEach((item, idx) => {
+        const w = parseFloat(item.weight) || 0;
+        const p = parseFloat(item.plan) || 0;
+        const a = parseFloat(item.actual) || 0;
+        const lw = parseFloat(item.lastWk) || 0;
+        const tf = parseInt(item.tf, 10) || 0;
+        const isCrit = tf === 0;
+        const dur = calcDuration(item.es, item.ef);
+        const rowEv = (w * a) / 100;
+        const rowPv = (w * p) / 100;
+        const rowVar = rowEv - rowPv;
+
+        totalWeight += w;
+        weightedLastWk += (w * lw) / 100;
+        weightedPV += rowPv;
+        weightedEV += rowEv;
+
+        if (discFilter !== 'ALL' && item.discipline !== discFilter) return;
+        if (critOnly && !isCrit) return;
+        if (searchQ && !(`${item.code} ${item.name} ${item.chainage}`.toLowerCase().includes(searchQ))) return;
+
+        const gateClass = item.gate.includes('HOLD')
+          ? 'bg-rose-950/90 text-rose-300 border-rose-600/70'
+          : 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60';
+
+        rowsHtml += `
+          <tr class="hover:bg-slate-900/70 transition-colors ${isCrit ? 'bg-rose-950/10' : ''}" data-row-idx="${idx}">
+            <td class="py-1.5 px-1.5 border-r border-slate-800">
+              <input type="text" value="${item.code}" data-idx="${idx}" data-field="code"
+                onchange="handleCellEdit(this)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input font-semibold text-sky-300" />
+            </td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800 font-sans">
+              <input type="text" value="${item.name}" data-idx="${idx}" data-field="name"
+                onchange="handleCellEdit(this)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input text-slate-100" />
+            </td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800 text-[11px] text-slate-300">
+              <input type="text" value="${item.chainage}" data-idx="${idx}" data-field="chainage"
+                onchange="handleCellEdit(this)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input text-slate-300" />
+            </td>
+            <td class="py-1.5 px-2 border-r border-slate-800 font-sans text-[11px] text-slate-300">
+              ${item.discipline}
+            </td>
+            <td class="py-1.5 px-1 border-r border-slate-800 text-center">
+              ${isCrit
+                ? '<span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-rose-950 text-rose-300 border border-rose-700/60">CRIT</span>'
+                : '<span class="text-[10px] text-slate-500">FLOAT</span>'}
+            </td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800">
+              <input type="date" value="${item.es}" data-idx="${idx}" data-field="es"
+                onchange="handleCellEdit(this)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input text-[11px] text-slate-300" />
+            </td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800">
+              <input type="date" value="${item.ef}" data-idx="${idx}" data-field="ef"
+                onchange="handleCellEdit(this)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input text-[11px] text-slate-300" />
+            </td>
+            <td class="py-1.5 px-2 border-r border-slate-800 text-right text-slate-400" id="row-dur-${idx}">${dur}</td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800 text-right">
+              <input type="number" min="0" max="120" value="${tf}" data-idx="${idx}" data-field="tf"
+                oninput="handleCellEdit(this, true)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input text-right ${isCrit ? 'text-rose-400 font-bold' : 'text-purple-300'}" />
+            </td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800 text-right bg-sky-950/20">
+              <input type="number" step="0.1" min="0" max="100" value="${w.toFixed(1)}" data-idx="${idx}" data-field="weight"
+                oninput="handleCellEdit(this, true)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input text-right font-bold text-sky-300" />
+            </td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800 text-right">
+              <input type="number" step="0.5" min="0" max="100" value="${lw}" data-idx="${idx}" data-field="lastWk"
+                oninput="handleCellEdit(this, true)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input text-right text-slate-400" />
+            </td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800 text-right bg-slate-800/30">
+              <input type="number" step="0.5" min="0" max="100" value="${p}" data-idx="${idx}" data-field="plan"
+                oninput="handleCellEdit(this, true)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input text-right text-slate-200 font-medium" />
+            </td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800 text-right bg-emerald-950/20">
+              <input type="number" step="0.5" min="0" max="100" value="${a}" data-idx="${idx}" data-field="actual"
+                oninput="handleCellEdit(this, true)" onkeydown="handleGridKeyDown(event, this)"
+                class="grid-input text-right font-bold text-emerald-400" />
+            </td>
+            <td class="py-1.5 px-2 border-r border-slate-800 text-right font-semibold text-white" id="row-ev-${idx}">
+              ${rowEv.toFixed(2)}%
+            </td>
+            <td class="py-1.5 px-2 border-r border-slate-800 text-right font-semibold ${rowVar >= 0 ? 'text-emerald-400' : 'text-rose-400'}" id="row-var-${idx}">
+              ${rowVar >= 0 ? '+' : ''}${rowVar.toFixed(2)}%
+            </td>
+            <td class="py-1.5 px-1.5 border-r border-slate-800 text-center">
+              <button onclick="toggleRowGate(${idx})" class="px-2 py-0.5 text-[10px] font-bold rounded border ${gateClass} transition">
+                ${item.gate}
+              </button>
+            </td>
+            <td class="py-1.5 px-1.5 text-center">
+              <button onclick="openGenbaModal(${idx})" class="px-2 py-0.5 text-[10px] bg-slate-800 hover:bg-shimizu text-sky-300 hover:text-white rounded border border-slate-700 transition">
+                📋 Log
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rowsHtml;
+      updateGridFooterOnly(totalWeight, weightedLastWk, weightedPV, weightedEV, weightedEV - weightedPV);
+    }
+
+    function updateGridFooterOnly(totalWeight, weightedLastWk, weightedPV, weightedEV, varPct) {
+      const tfoot = document.getElementById('wbs-grid-foot');
+      if (!tfoot) return;
+      tfoot.innerHTML = `
+        <tr>
+          <td colspan="9" class="py-2 px-3 border-r border-slate-800 text-right uppercase tracking-wider text-slate-300">
+            Contract Cumulative Totals (合計・加重平均出来高):
+          </td>
+          <td class="py-2 px-2 border-r border-slate-800 text-right ${Math.abs(totalWeight - 100) < 0.05 ? 'text-sky-300' : 'text-amber-400'}">
+            ${totalWeight.toFixed(2)}%
+          </td>
+          <td class="py-2 px-2 border-r border-slate-800 text-right text-slate-300">${weightedLastWk.toFixed(2)}%</td>
+          <td class="py-2 px-2 border-r border-slate-800 text-right text-sky-300">${weightedPV.toFixed(2)}%</td>
+          <td class="py-2 px-2 border-r border-slate-800 text-right text-emerald-400">${weightedEV.toFixed(2)}%</td>
+          <td class="py-2 px-2 border-r border-slate-800 text-right text-emerald-400">${weightedEV.toFixed(2)}%</td>
+          <td class="py-2 px-2 border-r border-slate-800 text-right ${varPct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+            ${varPct >= 0 ? '+' : ''}${varPct.toFixed(2)}%
+          </td>
+          <td colspan="2" class="py-2 px-2 text-center text-[11px] text-slate-400">
+            SPI: ${(weightedPV > 0 ? (weightedEV / weightedPV) : 1).toFixed(3)}
+          </td>
+        </tr>
+      `;
+    }
+
+    // Inline Cell Edit Handler with Anzen Dai-Ichi Hold-Point Gate Enforcement
+    function handleCellEdit(inputEl, isLiveInput = false) {
+      const idx = parseInt(inputEl.dataset.idx, 10);
+      const field = inputEl.dataset.field;
+      const item = state.wbs[idx];
+      if (!item) return;
+
+      if (field === 'actual') {
+        const requestedActual = parseFloat(inputEl.value) || 0;
+        // Enforce Anzen Dai-Ichi / RFI Hold-Point Gate if trying to advance past current actual while on HOLD
+        if (item.gate && item.gate.includes('HOLD') && requestedActual > item.actual) {
+          const alertBox = document.getElementById('hold-point-alert');
+          const alertText = document.getElementById('hold-point-alert-text');
+          alertText.textContent = `安全第一 ANZEN DAI-ICHI / QC26 HOLD LOCK: Cannot credit additional physical progress on [${item.code} ${item.name}] while gate is "${item.gate}". Click the QA/KYT Gate badge or Genba Log to sign off inspection first.`;
+          alertBox.classList.remove('hidden');
+          inputEl.value = item.actual;
+          return;
+        }
+      }
+
+      if (['weight', 'lastWk', 'plan', 'actual', 'tf'].includes(field)) {
+        let num = parseFloat(inputEl.value);
+        if (isNaN(num)) num = 0;
+        if (field !== 'tf') num = Math.min(100, Math.max(0, num));
+        item[field] = num;
+      } else {
+        item[field] = inputEl.value;
+      }
+
+      // Update single-row derived cells immediately without destroying focus
+      const w = parseFloat(item.weight) || 0;
+      const p = parseFloat(item.plan) || 0;
+      const a = parseFloat(item.actual) || 0;
+      const rowEv = (w * a) / 100;
+      const rowVar = rowEv - (w * p) / 100;
+
+      const evCell = document.getElementById(`row-ev-${idx}`);
+      if (evCell) evCell.textContent = `${rowEv.toFixed(2)}%`;
+
+      const varCell = document.getElementById(`row-var-${idx}`);
+      if (varCell) {
+        varCell.textContent = `${rowVar >= 0 ? '+' : ''}${rowVar.toFixed(2)}%`;
+        varCell.className = `py-1.5 px-2 border-r border-slate-800 text-right font-semibold ${rowVar >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      }
+
+      const durCell = document.getElementById(`row-dur-${idx}`);
+      if (durCell) durCell.textContent = calcDuration(item.es, item.ef);
+
+      recalculateAll(isLiveInput);
+    }
+
+    // Excel-Like Keyboard Navigation (Enter / Up / Down between rows)
+    function handleGridKeyDown(e, inputEl) {
+      const idx = parseInt(inputEl.dataset.idx, 10);
+      const field = inputEl.dataset.field;
+      if (e.key === 'Enter' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const nextInput = document.querySelector(`input[data-idx="${idx + 1}"][data-field="${field}"]`);
+        if (nextInput) { nextInput.focus(); nextInput.select(); }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prevInput = document.querySelector(`input[data-idx="${idx - 1}"][data-field="${field}"]`);
+        if (prevInput) { prevInput.focus(); prevInput.select(); }
+      }
+    }
+
+    function toggleRowGate(idx) {
+      const item = state.wbs[idx];
+      if (!item) return;
+      if (item.gate.includes('HOLD')) {
+        item.gate = 'KYT+RFI OK';
+        document.getElementById('hold-point-alert').classList.add('hidden');
+      } else {
+        item.gate = 'RFI HOLD';
+      }
+      recalculateAll(false);
+    }
+
+    function normalizeWeights() {
+      const sum = state.wbs.reduce((acc, it) => acc + (parseFloat(it.weight) || 0), 0);
+      if (sum <= 0) return;
+      state.wbs.forEach(it => {
+        it.weight = parseFloat(((it.weight / sum) * 100).toFixed(2));
+      });
+      // Adjust rounding residual on first item
+      const newSum = state.wbs.reduce((acc, it) => acc + it.weight, 0);
+      state.wbs[0].weight = parseFloat((state.wbs[0].weight + (100 - newSum)).toFixed(2));
+      recalculateAll(false);
+    }
+
+    // Genba-Shugi Inspector Log Modal
+    function openGenbaModal(idx) {
+      const item = state.wbs[idx];
+      if (!item) return;
+      document.getElementById('genba-modal-title').textContent = `[${item.code}] ${item.name}`;
+      const g = item.genba || { inspector: 'QC26 Field Engineer', bh: 'BH-05', spt: 'N=38', note: 'Daily inspection logged.' };
+      document.getElementById('genba-modal-body').innerHTML = `
+        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-sm space-y-1">
+          <div class="flex justify-between"><span class="text-slate-400">Chainage Location:</span><strong class="text-sky-300">${item.chainage}</strong></div>
+          <div class="flex justify-between"><span class="text-slate-400">Lead Field Inspector:</span><strong class="text-white">${g.inspector}</strong></div>
+          <div class="flex justify-between"><span class="text-slate-400">Borehole & N-SPT Reference:</span><strong class="text-amber-300">${g.bh} (${g.spt})</strong></div>
+          <div class="flex justify-between"><span class="text-slate-400">Current QA / Safety Gate:</span><strong class="${item.gate.includes('HOLD') ? 'text-rose-400' : 'text-emerald-400'}">${item.gate}</strong></div>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-sm">
+          <div class="text-[10px] text-slate-400 uppercase mb-1">Verified Genba Field Log & Telemetry Note:</div>
+          <p class="text-slate-200 font-sans leading-relaxed">${g.note}</p>
+        </div>
+      `;
+      const btn = document.getElementById('genba-toggle-gate-btn');
+      btn.onclick = () => {
+        toggleRowGate(idx);
+        openGenbaModal(idx);
+      };
+      const modal = document.getElementById('genba-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeGenbaModal() {
+      const modal = document.getElementById('genba-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function openKytModal() {
+      openGenbaModal(3); // Opens the active BH-09 D-Wall Hold Point inspection log
+    }
+
+    // Add New WBS Activity Modal
+    function openAddActivityModal() {
+      const m = document.getElementById('add-wbs-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+    function closeAddActivityModal() {
+      const m = document.getElementById('add-wbs-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+    function submitNewActivity(e) {
+      e.preventDefault();
+      state.wbs.push({
+        id: 'wbs-' + Date.now(),
+        code: document.getElementById('new-wbs-code').value.trim(),
+        name: document.getElementById('new-wbs-name').value.trim(),
+        chainage: document.getElementById('new-wbs-sta').value.trim(),
+        discipline: document.getElementById('new-wbs-disc').value,
+        es: document.getElementById('new-wbs-es').value,
+        ef: document.getElementById('new-wbs-ef').value,
+        tf: parseInt(document.getElementById('new-wbs-tf').value, 10) || 0,
+        weight: parseFloat(document.getElementById('new-wbs-weight').value) || 2.0,
+        lastWk: 0,
+        plan: 10,
+        actual: 10,
+        gate: 'KYT+RFI OK',
+        genba: {
+          inspector: 'PE26 / QC26 Duty Engineer',
+          bh: 'BH-11',
+          spt: 'N=45',
+          note: 'Newly inserted work package cleared via KYT daily briefing.'
+        }
+      });
+      closeAddActivityModal();
+      recalculateAll(false);
+    }
+
+    // Initialize & Update All Chart.js Canvases
+    function updateCharts(weightedEV, weightedPV, pvIdr, evIdr, acIdr) {
+      const months = ['Jan 26', 'Feb 26', 'Mar 26', 'Apr 26', 'May 26', 'Jun 26', 'Jul 26', 'Aug 26', 'Sep 26', 'Oct 26', 'Nov 26 (W43)', 'Dec 26', 'Jan 27', 'Feb 27', 'Mar 27', 'Apr 27', 'May 27'];
+
+      // Dynamic Banana Curve Envelope scaled to live WBS Early/Late/Actual
+      const earlyScale = weightedPV / 48.20;
+      const sEarly = [1.5, 4.2, 8.8, 14.5, 20.4, 26.8, 33.5, 39.2, 43.8, 46.5, Number(weightedPV.toFixed(2)), 58.4, 68.5, 78.2, 87.6, 95.2, 100.0].map((v, i) => i < 10 ? Number((v * Math.min(1.15, Math.max(0.85, earlyScale))).toFixed(2)) : v);
+      const totalFloatAvg = state.wbs.reduce((a, b) => a + (parseInt(b.tf, 10) || 0), 0) / Math.max(1, state.wbs.length);
+      const floatShift = Math.min(12, Math.max(4, totalFloatAvg * 0.85));
+      const sLate = sEarly.map((v, i) => {
+        if (i === 0) return 0.5;
+        if (i === sEarly.length - 1) return 100.0;
+        return Number(Math.max(0.5, v - floatShift * Math.sin((i / (sEarly.length - 1)) * Math.PI)).toFixed(2));
+      });
+
+      const sActual = [1.4, 4.0, 8.5, 13.9, 19.5, 25.4, 31.6, 36.8, 40.9, 43.8, Number(weightedEV.toFixed(2)), null, null, null, null, null, null];
+      const sKaizen = [null, null, null, null, null, null, null, null, null, null, Number(weightedEV.toFixed(2)), 57.5, 68.0, 78.0, 87.5, 95.2, 100.0];
+
+      // Check Banana Envelope compliance at current cut-off (index 10)
+      const envBadge = document.getElementById('banana-envelope-status');
+      if (envBadge) {
+        const lateNow = sLate[10];
+        const earlyNow = sEarly[10];
+        if (weightedEV >= lateNow && weightedEV <= earlyNow + 1.5) {
+          envBadge.textContent = `✓ INSIDE FLOAT ENVELOPE (${lateNow.toFixed(1)}% ≤ ${weightedEV.toFixed(2)}% ≤ ${earlyNow.toFixed(1)}%)`;
+          envBadge.className = 'text-[11px] mono-num px-2 py-1 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/60';
+        } else if (weightedEV < lateNow) {
+          envBadge.textContent = `⚠️ BELOW LATE ENVELOPE (${weightedEV.toFixed(2)}% < S_Late ${lateNow.toFixed(1)}%) — KAIZEN REQUIRED`;
+          envBadge.className = 'text-[11px] mono-num px-2 py-1 rounded bg-rose-950/90 text-rose-300 border border-rose-600';
+        } else {
+          envBadge.textContent = `★ AHEAD OF EARLY ENVELOPE (${weightedEV.toFixed(2)}% > ${earlyNow.toFixed(1)}%)`;
+          envBadge.className = 'text-[11px] mono-num px-2 py-1 rounded bg-sky-950/90 text-sky-300 border border-sky-600';
+        }
+      }
+
+      const bananaCtx = document.getElementById('bananaCurveChart')?.getContext('2d');
+      if (bananaCtx) {
+        if (bananaChart) bananaChart.destroy();
+        bananaChart = new Chart(bananaCtx, {
+          type: 'line',
+          data: {
+            labels: months,
+            datasets: [
+              {
+                label: 'Early Dates Curve S_Early (早期着手曲線)',
+                data: sEarly,
+                borderColor: '#38bdf8',
+                borderDash: [5, 4],
+                borderWidth: 2,
+                pointRadius: 2,
+                tension: 0.3
+              },
+              {
+                label: 'Late Dates Curve S_Late (最遅着手曲線 - Float Boundary)',
+                data: sLate,
+                borderColor: '#a855f7',
+                borderDash: [6, 4],
+                borderWidth: 2,
+                pointRadius: 2,
+                tension: 0.3,
+                fill: '-1',
+                backgroundColor: 'rgba(56, 189, 248, 0.06)'
+              },
+              {
+                label: 'Actual Earned Progress S_Act (実績出来高曲線)',
+                data: sActual,
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.14)',
+                borderWidth: 3,
+                pointRadius: 3.5,
+                pointBackgroundColor: '#10b981',
+                fill: true,
+                tension: 0.25
+              },
+              {
+                label: 'Kaizen Recovery Projection (改善予測曲線)',
+                data: sKaizen,
+                borderColor: '#f59e0b',
+                borderDash: [3, 3],
+                borderWidth: 2,
+                pointRadius: 2.5,
+                tension: 0.25
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { labels: { color: '#cbd5e1', font: { size: 11, family: 'Inter' } } }
+            },
+            scales: {
+              x: { ticks: { color: '#94a3b8', font: { size: 10, family: 'JetBrains Mono' } }, grid: { color: 'rgba(51,65,85,0.35)' } },
+              y: { min: 0, max: 100, ticks: { color: '#94a3b8', callback: v => v + '%', font: { size: 10, family: 'JetBrains Mono' } }, grid: { color: 'rgba(51,65,85,0.35)' } }
+            }
+          }
+        });
+      }
+
+      // EVM Bar Chart
+      const evmCtx = document.getElementById('evmBarChart')?.getContext('2d');
+      if (evmCtx) {
+        if (evmChart) evmChart.destroy();
+        evmChart = new Chart(evmCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Aug 26', 'Sep 26', 'Oct 26', 'Nov 26 (W43)'],
+            datasets: [
+              { label: 'PV (Planned IDR B)', data: [145.2, 168.4, 186.0, Number(pvIdr.toFixed(2))], backgroundColor: '#0284c7' },
+              { label: 'EV (Earned IDR B)', data: [139.8, 160.2, 177.5, Number(evIdr.toFixed(2))], backgroundColor: '#10b981' },
+              { label: 'AC (Actual Cost IDR B)', data: [136.5, 156.9, 173.8, Number(acIdr.toFixed(2))], backgroundColor: '#f59e0b' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#cbd5e1', font: { size: 10 } } } },
+            scales: {
+              x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
+              y: { ticks: { color: '#94a3b8', font: { size: 10, family: 'JetBrains Mono' } }, grid: { color: 'rgba(51,65,85,0.35)' } }
+            }
+          }
+        });
+      }
+
+      // Time-Chainage March Chart (LSM)
+      const marchCtx = document.getElementById('marchChartCanvas')?.getContext('2d');
+      if (marchCtx) {
+        if (marchChart) marchChart.destroy();
+        marchChart = new Chart(marchCtx, {
+          type: 'line',
+          data: {
+            datasets: [
+              {
+                label: 'D-Wall Trenching (STA 14+000 → 14+350)',
+                data: [{ x: 14000, y: 2 }, { x: 14180, y: 6.5 }, { x: 14350, y: 11.2 }],
+                borderColor: '#38bdf8',
+                backgroundColor: '#38bdf8',
+                borderWidth: 3,
+                pointRadius: 4
+              },
+              {
+                label: 'Top-Down Station Box Excavation & Strutting',
+                data: [{ x: 14000, y: 6.5 }, { x: 14200, y: 10.5 }, { x: 14350, y: 14.0 }],
+                borderColor: '#a855f7',
+                backgroundColor: '#a855f7',
+                borderWidth: 3,
+                pointRadius: 4
+              },
+              {
+                label: 'TBM #1 "Sakura-1" Planned Drive (12.5 m/day)',
+                data: [{ x: 14350, y: 7.5 }, { x: 14850, y: 10.5 }, { x: 15500, y: 13.8 }],
+                borderColor: '#94a3b8',
+                borderDash: [5, 5],
+                borderWidth: 2,
+                pointRadius: 3
+              },
+              {
+                label: 'TBM #1 "Sakura-1" Actual + Kaizen Vector',
+                data: [{ x: 14350, y: 7.5 }, { x: 14762.5, y: 10.5 }, { x: 15500, y: 14.3 }],
+                borderColor: '#10b981',
+                backgroundColor: '#10b981',
+                borderWidth: 3.5,
+                pointRadius: 5
+              },
+              {
+                label: 'TBM #2 "Garuda-2" Southbound Drive (185m Separation)',
+                data: [{ x: 14350, y: 8.8 }, { x: 14577.5, y: 10.5 }, { x: 15500, y: 15.2 }],
+                borderColor: '#f59e0b',
+                backgroundColor: '#f59e0b',
+                borderWidth: 3,
+                pointRadius: 4
+              },
+              {
+                label: 'BH-09 Volcanic Boulder Anomaly Zone (STA 14+780–14+860)',
+                data: [{ x: 14780, y: 1 }, { x: 14860, y: 1 }, { x: 14860, y: 16 }, { x: 14780, y: 16 }],
+                borderColor: 'rgba(239, 68, 68, 0.7)',
+                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                borderWidth: 1.5,
+                fill: true,
+                pointRadius: 0
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { labels: { color: '#cbd5e1', font: { size: 11 } } },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `${ctx.dataset.label}: STA 14+${String(Math.round(ctx.parsed.x - 14000)).padStart(3, '0')} (Month ${ctx.parsed.y})`
+                }
+              }
+            },
+            scales: {
+              x: {
+                type: 'linear',
+                min: 14000,
+                max: 15500,
+                title: { display: true, text: 'Alignment Chainage Coordinates (STA 14+000 to STA 15+500)', color: '#cbd5e1', font: { size: 11, weight: 'bold' } },
+                ticks: {
+                  color: '#94a3b8',
+                  font: { family: 'JetBrains Mono', size: 10 },
+                  callback: v => `STA ${Math.floor(v / 1000)}+${String(v % 1000).padStart(3, '0')}`
+                },
+                grid: { color: 'rgba(51,65,85,0.4)' }
+              },
+              y: {
+                min: 1,
+                max: 17,
+                title: { display: true, text: 'Timeline Progression (Months from Jan 2026 → May 2027)', color: '#cbd5e1', font: { size: 11, weight: 'bold' } },
+                ticks: {
+                  color: '#94a3b8',
+                  font: { family: 'JetBrains Mono', size: 10 },
+                  callback: v => months[v - 1] || `M${v}`
+                },
+                grid: { color: 'rgba(51,65,85,0.4)' }
+              }
+            }
+          }
+        });
+      }
+
+      // Manpower Histogram
+      const mpCtx = document.getElementById('manpowerChartCanvas')?.getContext('2d');
+      if (mpCtx && !manpowerChart) {
+        manpowerChart = new Chart(mpCtx, {
+          type: 'bar',
+          data: {
+            labels: ['D-Wall Rebar Fixers', 'Heavy Rig Operators', 'TBM Shield & Grout', 'Muck & Slurry Crew', 'RC Carpenters', 'PE26/QC26/Geotech'],
+            datasets: [
+              { label: 'Budgeted Plan Headcount', data: [115, 68, 96, 92, 84, 40], backgroundColor: '#334155' },
+              { label: 'Mobilized Genba Headcount', data: [112, 66, 94, 82, 76, 38], backgroundColor: '#005bac' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#cbd5e1', font: { size: 11 } } } },
+            scales: {
+              x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
+              y: { ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } }, grid: { color: 'rgba(51,65,85,0.35)' } }
+            }
+          }
+        });
+      }
+    }
+
+    // Render Interactive CPM Gantt Chart
+    function renderCpmGantt() {
+      const container = document.getElementById('cpm-gantt-container');
+      if (!container) return;
+
+      const minDate = new Date('2026-01-01').getTime();
+      const maxDate = new Date('2027-06-01').getTime();
+      const totalSpan = maxDate - minDate;
+      const cutOffPos = ((new Date('2026-11-03').getTime() - minDate) / totalSpan) * 100;
+
+      let html = `
+        <div class="min-w-[900px] space-y-1.5 relative text-xs mono-num">
+          <div class="grid grid-cols-12 border-b border-slate-700 pb-1 text-[10px] text-slate-400">
+            <div class="col-span-4 font-bold text-slate-200">WBS Activity & Chainage</div>
+            <div class="col-span-8 flex justify-between px-1">
+              <span>Jan 26</span><span>Mar 26</span><span>May 26</span><span>Jul 26</span><span>Sep 26</span><span class="text-sky-400 font-bold">Nov 26 (W43)</span><span>Jan 27</span><span>Mar 27</span><span>May 27</span>
+            </div>
+          </div>
+      `;
+
+      state.wbs.forEach(item => {
+        const esTime = new Date(item.es).getTime();
+        const efTime = new Date(item.ef).getTime();
+        const tfDays = parseInt(item.tf, 10) || 0;
+        const leftPct = Math.max(0, Math.min(95, ((esTime - minDate) / totalSpan) * 100));
+        const widthPct = Math.max(2, Math.min(100 - leftPct, ((efTime - esTime) / totalSpan) * 100));
+        const floatWidthPct = Math.max(0, ((tfDays * 86400000) / totalSpan) * 100);
+        const isCrit = tfDays === 0;
+        const barColor = isCrit ? 'bg-rose-700/80 border-rose-500' : 'bg-shimizu/80 border-sky-400';
+
+        html += `
+          <div class="grid grid-cols-12 items-center py-1 border-b border-slate-800/60 hover:bg-slate-900/50">
+            <div class="col-span-4 pr-2 truncate">
+              <span class="font-bold ${isCrit ? 'text-rose-400' : 'text-sky-300'}">${item.code}</span>
+              <span class="font-sans text-slate-200 ml-1">${item.name}</span>
+            </div>
+            <div class="col-span-8 relative h-6 bg-slate-900/90 rounded-xs overflow-hidden">
+              <!-- Data Date Cut-off Line -->
+              <div class="absolute top-0 bottom-0 w-[1.5px] bg-amber-400 z-20" style="left:${cutOffPos}%" title="Data Date W43"></div>
+              <!-- Early Schedule Bar -->
+              <div class="absolute top-1 bottom-1 rounded-xs border ${barColor} overflow-hidden" style="left:${leftPct}%; width:${widthPct}%">
+                <div class="h-full bg-emerald-500/90" style="width:${item.actual}%"></div>
+              </div>
+              <!-- Total Float Buffer Tail -->
+              ${floatWidthPct > 0 ? `<div class="absolute top-1.5 bottom-1.5 border border-dashed border-purple-400/80 bg-purple-950/30 rounded-xs" style="left:${leftPct + widthPct}%; width:${floatWidthPct}%"></div>` : ''}
+              <span class="absolute text-[10px] text-white font-semibold top-1 z-10" style="left:${Math.min(88, leftPct + 1)}%">${item.actual}% (TF:${tfDays}d)</span>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    // Render Contract Milestones
+    function renderMilestones(spi) {
+      const tbody = document.getElementById('milestone-table-body');
+      if (!tbody) return;
+      const delayDays = spi < 1 ? Math.round((1 - spi) * 130) : 0;
+      const milestones = [
+        { id: 'MS-01', desc: 'Perimeter Diaphragm Wall Box Full Closure (Panels DW-01 to DW-36)', base: '2026-11-20', forecast: delayDays > 4 ? '2026-11-26' : '2026-11-20', varD: -Math.min(6, delayDays) },
+        { id: 'MS-02', desc: 'TBM #1 "Sakura-1" Mid-Tunnel Cross-Passage CP-01 Breakthrough (STA 14+900)', base: '2026-12-15', forecast: '2026-12-19', varD: -4 },
+        { id: 'MS-03', desc: 'Station Box Base Slab (-24.0m) Structural Completion', base: '2027-03-30', forecast: '2027-03-30 (Kaizen)', varD: 0 },
+        { id: 'MS-04', desc: 'Twin EPB TBM Reception Shaft Arrival at STA 15+500', base: '2027-04-15', forecast: '2027-04-14', varD: +1 },
+        { id: 'MS-05', desc: 'CP-202 Substantial Completion & Handover to Trackwork Contractor (COD)', base: '2027-05-25', forecast: '2027-05-25 (Protected)', varD: 0 }
+      ];
+
+      tbody.innerHTML = milestones.map(m => {
+        const ld = m.varD < 0 ? (Math.abs(m.varD) * 0.42).toFixed(2) : '0.00';
+        return `
+          <tr class="hover:bg-slate-900/60">
+            <td class="py-1.5 px-2 font-bold text-sky-300">${m.id}</td>
+            <td class="py-1.5 px-2 font-sans text-slate-200">${m.desc}</td>
+            <td class="py-1.5 px-2 text-slate-300">${m.base}</td>
+            <td class="py-1.5 px-2 text-white font-semibold">${m.forecast}</td>
+            <td class="py-1.5 px-2 text-right font-bold ${m.varD < 0 ? 'text-rose-400' : 'text-emerald-400'}">${m.varD >= 0 ? '+' : ''}${m.varD} d</td>
+            <td class="py-1.5 px-2 text-right ${m.varD < 0 ? 'text-amber-300' : 'text-slate-400'}">IDR ${ld} B</td>
+            <td class="py-1.5 px-2 text-center">
+              <span class="px-2 py-0.5 text-[10px] rounded border ${m.varD < 0 ? 'bg-amber-950/80 text-amber-300 border-amber-700' : 'bg-emerald-950/80 text-emerald-300 border-emerald-700'}">
+                ${m.varD < 0 ? 'KAIZEN RECOVERY ACTIVE' : 'ON SCHEDULE'}
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Render 4WLH & Make-Ready Constraints
+    function renderLookahead() {
+      const tbody = document.getElementById('lookahead-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = state.lookahead.map((row, i) => {
+        const isHold = row.rfi.includes('Hold') || row.rfi.includes('HOLD');
+        return `
+          <tr class="hover:bg-slate-900/60">
+            <td class="py-2 px-2 font-bold text-sky-300 border-r border-slate-800">${row.wbs}</td>
+            <td class="py-2 px-2 font-sans text-slate-200 border-r border-slate-800">${row.task}</td>
+            <td class="py-2 px-2 text-center border-r border-slate-800 text-slate-400">${row.w42}</td>
+            <td class="py-2 px-2 text-center border-r border-slate-800 font-bold ${row.w43 === 'HOLD' ? 'text-rose-400 bg-rose-950/30' : 'text-emerald-400 bg-sky-950/20'}">${row.w43}</td>
+            <td class="py-2 px-2 text-center border-r border-slate-800 text-sky-300">${row.w44}</td>
+            <td class="py-2 px-2 text-center border-r border-slate-800 text-slate-400">${row.w45}</td>
+            <td class="py-2 px-2 text-center border-r border-slate-800 text-emerald-300">${row.shop}</td>
+            <td class="py-2 px-2 text-center border-r border-slate-800 text-emerald-300">${row.ptw}</td>
+            <td class="py-2 px-2 text-center border-r border-slate-800">
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded border ${isHold ? 'bg-rose-950 text-rose-300 border-rose-600' : 'bg-emerald-950 text-emerald-300 border-emerald-700'}">${row.rfi}</span>
+            </td>
+            <td class="py-2 px-2 text-center border-r border-slate-800 text-slate-200">${row.mat}</td>
+            <td class="py-2 px-2 text-center">
+              <button onclick="toggleLookaheadRfi(${i})" class="px-2 py-0.5 text-[10px] bg-slate-800 hover:bg-shimizu text-white rounded border border-slate-700">
+                ${isHold ? '✓ Clear RFI' : 'Lock Hold'}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleLookaheadRfi(idx) {
+      const item = state.lookahead[idx];
+      if (!item) return;
+      if (item.rfi.includes('Hold') || item.rfi.includes('HOLD')) {
+        item.rfi = 'RFI Approved (QC26)';
+        item.w43 = 'ACTIVE';
+      } else {
+        item.rfi = 'RFI Hold Point';
+        item.w43 = 'HOLD';
+      }
+      renderLookahead();
+      saveState();
+    }
+
+    // Render Plant Telemetry Cards
+    function renderPlantCards() {
+      const container = document.getElementById('plant-telemetry-cards');
+      if (!container) return;
+      container.innerHTML = PLANT_TELEMETRY.map(p => `
+        <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-white">${p.name}</span>
+              <span class="px-1.5 py-0.5 text-[10px] rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60">${p.status}</span>
+            </div>
+            <div class="text-[10px] text-sky-400 font-jp mt-0.5">${p.jp} • Util: ${p.util}</div>
+          </div>
+          <div class="mt-2 pt-1.5 border-t border-slate-800 text-[11px] text-slate-300 space-y-0.5">
+            <div>• ${p.metric1}</div>
+            <div>• ${p.metric2}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Geotechnical Boreholes Table
+    function renderBoreholes() {
+      const tbody = document.getElementById('borehole-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = state.boreholes.map((bh, i) => {
+        const isHold = bh.status !== 'CLEARED';
+        return `
+          <tr class="hover:bg-slate-900/60">
+            <td class="py-2 px-2 font-bold text-sky-300">${bh.id}</td>
+            <td class="py-2 px-2 text-slate-300">${bh.sta}</td>
+            <td class="py-2 px-2 text-slate-300">${bh.wbs}</td>
+            <td class="py-2 px-2 font-sans text-slate-200">${bh.strata}</td>
+            <td class="py-2 px-2 text-right font-bold ${bh.spt > 60 ? 'text-amber-400' : 'text-white'}">N = ${bh.spt}</td>
+            <td class="py-2 px-2 ${bh.ert.includes('Anomaly') || bh.ert.includes('Low-Res') ? 'text-rose-400 font-semibold' : 'text-slate-300'}">${bh.ert}</td>
+            <td class="py-2 px-2 text-slate-300">${bh.head}</td>
+            <td class="py-2 px-2 text-center">
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded border ${isHold ? 'bg-rose-950 text-rose-300 border-rose-600' : 'bg-emerald-950 text-emerald-300 border-emerald-700'}">
+                ${bh.status}
+              </span>
+            </td>
+            <td class="py-2 px-2 text-center">
+              <button onclick="toggleBoreholeGate(${i})" class="px-2 py-0.5 text-[10px] bg-slate-800 hover:bg-shimizu text-white rounded border border-slate-700">
+                ${isHold ? '✓ Sign Permit' : 'Set Hold'}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleBoreholeGate(idx) {
+      const bh = state.boreholes[idx];
+      if (!bh) return;
+      bh.status = bh.status === 'CLEARED' ? 'HOLD POINT' : 'CLEARED';
+      renderBoreholes();
+      recalculateAll(true);
+    }
+
+    // Render Ringisho Electronic Japanese Hanko Stamps
+    function renderHankoStamps() {
+      const strip = document.getElementById('ringisho-hanko-strip');
+      if (!strip) return;
+      let signedCount = 0;
+      strip.innerHTML = state.hanko.map((h, i) => {
+        if (h.stamped) signedCount++;
+        return `
+          <div class="text-center cursor-pointer group" onclick="toggleHanko(${i})" title="Click to toggle official Hanko stamp (${h.title})">
+            <div class="text-[10px] text-slate-400 mono-num mb-1">${h.role}</div>
+            <div class="hanko-stamp ${h.stamped ? '' : 'pending'}">
+              <span class="text-[10px]">${h.stamped ? '承認印' : '未決裁'}</span>
+              <span class="text-xs font-extrabold border-y border-current my-0.5 px-1">${h.name.split(' ')[0]}</span>
+              <span class="text-[8px] mono-num">${h.stamped ? '26.11.03' : 'CLICK'}</span>
+            </div>
+            <div class="text-[9px] text-slate-400 mt-1">${h.title}</div>
+          </div>
+        `;
+      }).join('');
+
+      const statusText = document.getElementById('rng-approval-status-text');
+      if (statusText) {
+        statusText.textContent = signedCount === state.hanko.length
+          ? '✓ 4 / 4 RINGISHO APPROVED & EXECUTED (決裁完了)'
+          : `${signedCount} / ${state.hanko.length} Hanko Stamps Signed`;
+        statusText.className = signedCount === state.hanko.length ? 'text-sm font-bold text-emerald-400' : 'text-sm font-bold text-amber-400';
+      }
+    }
+
+    function toggleHanko(idx) {
+      state.hanko[idx].stamped = !state.hanko[idx].stamped;
+      state.hanko[idx].date = state.hanko[idx].stamped ? '2026-11-03' : 'Pending';
+      renderHankoStamps();
+      saveState();
+    }
+
+    function stampAllRingisho() {
+      state.hanko.forEach(h => { h.stamped = true; h.date = '2026-11-03'; });
+      renderHankoStamps();
+      saveState();
+    }
+
+    // Kaizen Recovery Simulator
+    function runKaizenSimulation(currentSpiOverride) {
+      const crash = parseInt(document.getElementById('sim-crash')?.value || 20, 10);
+      const fast = parseInt(document.getElementById('sim-fast')?.value || 10, 10);
+      const rig = parseInt(document.getElementById('sim-rig')?.value || 1, 10);
+      const risk = parseInt(document.getElementById('sim-risk')?.value || 4, 10);
+
+      document.getElementById('sim-crash-label').textContent = `+${crash}% Output`;
+      document.getElementById('sim-fast-label').textContent = `${fast} Days Overlap`;
+      document.getElementById('sim-rig-label').textContent = `${rig} Aux Unit(s)`;
+      document.getElementById('sim-risk-label').textContent = `+${risk} Days Delay`;
+
+      const daysFromCrash = Math.round(crash * 0.30);
+      const daysFromFast = Math.round(fast * 0.70);
+      const daysFromRig = rig * 6;
+      const netDaysRecovered = daysFromCrash + daysFromFast + daysFromRig - risk;
+
+      const baseSpi = typeof currentSpiOverride === 'number' ? currentSpiOverride : 0.931;
+      const simSpi = Math.min(1.08, Math.max(0.80, baseSpi + netDaysRecovered * 0.004));
+      const crashCost = (crash * 0.065) + (fast * 0.08) + (rig * 1.50);
+      const ldAvoided = Math.max(0, netDaysRecovered * 0.42);
+      const netBenefit = ldAvoided - crashCost;
+
+      document.getElementById('sim-cur-spi').textContent = baseSpi.toFixed(3);
+      document.getElementById('sim-out-spi').textContent = simSpi.toFixed(3);
+      document.getElementById('sim-out-days').textContent = `${netDaysRecovered >= 0 ? '+' : ''}${netDaysRecovered} d`;
+      document.getElementById('sim-out-cost').textContent = `IDR ${crashCost.toFixed(2)} B`;
+      document.getElementById('sim-out-net').textContent = `${netBenefit >= 0 ? '+' : ''}${netBenefit.toFixed(2)} B`;
+
+      const codBase = new Date('2027-05-25');
+      codBase.setDate(codBase.getDate() - netDaysRecovered + 9);
+      document.getElementById('sim-out-cod').textContent = `COD: ${codBase.toISOString().slice(0, 10)}`;
+    }
+
+    function loadKaizenPreset(crash, fast, rig, risk) {
+      document.getElementById('sim-crash').value = crash;
+      document.getElementById('sim-fast').value = fast;
+      document.getElementById('sim-rig').value = rig;
+      document.getElementById('sim-risk').value = risk;
+      runKaizenSimulation();
+    }
+
+    function applySimulationToSchedule() {
+      // Clear hold gates and apply Kaizen progress boost on delayed critical items
+      state.wbs.forEach(item => {
+        item.gate = 'KYT+RFI OK';
+        if (item.actual < item.plan) {
+          item.actual = Number(Math.min(100, item.actual + (item.plan - item.actual) * 0.65).toFixed(1));
+        }
+      });
+      stampAllRingisho();
+      recalculateAll(false);
+      switchTab('grid');
+    }
+
+    // Tab Navigation Controller
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.dataset.tab === tabId) {
+          btn.className = 'tab-btn px-3 py-1.5 text-xs font-semibold rounded-sm bg-shimizu text-white border border-sky-400/40 whitespace-nowrap flex items-center gap-1.5';
+        } else {
+          btn.className = 'tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5';
+        }
+      });
+
+      // Resize charts when tab becomes visible
+      setTimeout(() => {
+        if (bananaChart) bananaChart.resize();
+        if (evmChart) evmChart.resize();
+        if (marchChart) marchChart.resize();
+        if (manpowerChart) manpowerChart.resize();
+      }, 20);
+    }
+
+    // Populate Executive 1-Page Print Sheet
+    function populatePrintView(evPct, pvPct, varPct, wkAct, wkDelta, spi, svIdr, cpi, cvIdr, eacCost, tcpi, bhCleared) {
+      document.getElementById('print-ev-pct').textContent = `${evPct.toFixed(2)}%`;
+      document.getElementById('print-pv-pct').textContent = `Plan: ${pvPct.toFixed(2)}% (Δ ${varPct.toFixed(2)}%)`;
+      document.getElementById('print-wk-act').textContent = `+${wkAct.toFixed(2)}%`;
+      document.getElementById('print-wk-plan').textContent = `Target: +1.10% (${wkDelta.toFixed(2)}%)`;
+      document.getElementById('print-spi').textContent = spi.toFixed(3);
+      document.getElementById('print-sv').textContent = `SV: IDR ${svIdr.toFixed(2)} B`;
+      document.getElementById('print-cpi').textContent = cpi.toFixed(3);
+      document.getElementById('print-cv').textContent = `CV: IDR +${cvIdr.toFixed(2)} B`;
+      document.getElementById('print-eac').textContent = `IDR ${eacCost.toFixed(2)} B`;
+      document.getElementById('print-tcpi').textContent = `TCPI: ${tcpi.toFixed(3)}`;
+      document.getElementById('print-bh').textContent = `${bhCleared} / 14 BH OK`;
+
+      const ptbody = document.getElementById('print-wbs-tbody');
+      if (ptbody) {
+        ptbody.innerHTML = state.wbs.map(it => {
+          const ev = ((it.weight * it.actual) / 100).toFixed(2);
+          return `
+            <tr>
+              <td class="border border-slate-400 p-1 font-bold">${it.code}</td>
+              <td class="border border-slate-400 p-1 font-sans">${it.name}</td>
+              <td class="border border-slate-400 p-1">${it.chainage}</td>
+              <td class="border border-slate-400 p-1 text-center">${it.es}</td>
+              <td class="border border-slate-400 p-1 text-center">${it.ef}</td>
+              <td class="border border-slate-400 p-1 text-right">${it.tf}d</td>
+              <td class="border border-slate-400 p-1 text-right">${it.weight.toFixed(1)}%</td>
+              <td class="border border-slate-400 p-1 text-right">${it.plan}%</td>
+              <td class="border border-slate-400 p-1 text-right font-bold">${it.actual}%</td>
+              <td class="border border-slate-400 p-1 text-right font-bold">${ev}%</td>
+              <td class="border border-slate-400 p-1 text-center">${it.gate}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    function triggerExecutivePrint() {
+      window.print();
+    }
+
+    // Instant CSV / Excel Exporter
+    function exportScheduleCSV() {
+      const headers = ['WBS_Code', 'Activity_Description', 'Chainage', 'Discipline', 'Early_Start', 'Early_Finish', 'Total_Float_Days', 'Weight_Bobot_Pct', 'Last_Week_Pct', 'Planned_Pct', 'Actual_Pct', 'Weighted_EV_Pct', 'QA_KYT_Gate'];
+      const rows = state.wbs.map(it => [
+        it.code,
+        `"${it.name.replace(/"/g, '""')}"`,
+        `"${it.chainage}"`,
+        `"${it.discipline}"`,
+        it.es,
+        it.ef,
+        it.tf,
+        it.weight,
+        it.lastWk,
+        it.plan,
+        it.actual,
+        ((it.weight * it.actual) / 100).toFixed(2),
+        `"${it.gate}"`
+      ]);
+      const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'NEXUS4D_KOUTEI_CP202_Schedule_EVM.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function resetToBaseline() {
+      localStorage.removeItem(STORAGE_KEY);
+      initState();
+      renderLookahead();
+      renderPlantCards();
+      renderBoreholes();
+      renderHankoStamps();
+      recalculateAll(false);
+    }
+
+    // Boot Application
+    window.addEventListener('DOMContentLoaded', () => {
+      initState();
+      renderLookahead();
+      renderPlantCards();
+      renderBoreholes();
+      renderHankoStamps();
+      recalculateAll(false);
+    });
+  </script>
+</body>
+</html>

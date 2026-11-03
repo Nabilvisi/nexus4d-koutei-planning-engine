@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "name": "nexus4d-koutei-planning-engine",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/nexus4d-planning-engine", "destination": "/index.html" },
+    { "source": "/nexus4d-planning-engine/index.html", "destination": "/index.html" }
+  ]
+}
