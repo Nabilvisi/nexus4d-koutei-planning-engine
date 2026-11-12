@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXUS-4D™ KOUTEI (工程) | Shimizu Corporation CP-202 Project Controls & Linear Scheduling Engine</title>
+  <title>NEXUS-4D™ KOUTEI (工程) v6.0 | Shimizu Corporation CP-202 Project Controls & 4D Digital Twin Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -157,7 +159,7 @@
             <div class="text-xs font-bold tracking-tight flex items-center gap-1">
               NEXUS-4D™ <span class="text-sky-200 font-jp">工程 KOUTEI</span>
             </div>
-            <div class="text-[10px] text-sky-100/90 mono-num">v5.4 • AI &amp; FORENSIC PE26/QC26 ENGINE</div>
+            <div class="text-[10px] text-sky-100/90 mono-num">v6.0 • ENTERPRISE MULTI-ROLE &amp; 4D DIGITAL TWIN PLATFORM</div>
           </div>
         </div>
 
@@ -190,6 +192,32 @@
         </button>
       </div>
 
+      <!-- PILLAR 2: RBAC PERSONA SWITCHER & PILLAR 4: CORRIDOR NAVIGATION TOGGLE -->
+      <div class="flex items-center gap-2">
+        <!-- Role Persona Selector -->
+        <div class="flex items-center gap-1.5 bg-slate-950/90 border border-slate-700/80 px-2 py-1 rounded-sm text-xs mono-num shadow-inner">
+          <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+            ROLE 権限:
+          </span>
+          <select id="role-switcher-select" onchange="switchRole(this.value)" class="bg-slate-900 text-sky-300 font-bold border border-slate-700 rounded-sm px-2 py-0.5 text-xs focus:outline-none focus:border-sky-400 cursor-pointer">
+            <option value="shimizu" selected>👷 Shimizu General Contractor (PE26/QC26 - Full Access)</option>
+            <option value="consultant">🧐 Supervision Consultant (QA/QC &amp; DCMA-14 Audit)</option>
+            <option value="client">🏛️ Employer / Client (Executive Cockpit)</option>
+          </select>
+        </div>
+
+        <!-- Corridor Portfolio Navigation Toggle -->
+        <div class="flex items-center bg-slate-950/90 p-0.5 rounded-sm border border-slate-700/80 text-xs mono-num">
+          <button id="btn-mode-single" onclick="switchCorridorMode('single')" class="px-2.5 py-1 font-bold rounded-sm bg-shimizu text-white transition flex items-center gap-1 shadow-sm" title="Single Package Mode: CP-202 Harmoni - Mangga Besar">
+            <span>📍 CP-202 Single</span>
+          </button>
+          <button id="btn-mode-portfolio" onclick="switchCorridorMode('portfolio')" class="px-2.5 py-1 font-medium text-slate-300 hover:text-white rounded-sm transition flex items-center gap-1" title="Corridor Portfolio Mode: Jakarta MRT Phase 2A (5.8 km)">
+            <span>🌐 Corridor Portfolio</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Right Action Controls -->
       <div class="flex items-center gap-1.5">
         <button onclick="openAiCopilotModal()" class="px-2.5 py-1.5 text-xs font-extrabold bg-emerald-600/90 hover:bg-emerald-500 text-white rounded-sm border border-emerald-300/60 shadow-[0_0_12px_rgba(16,185,129,0.4)] flex items-center gap-1.5 transition mono-num" title="Open Shimizu AI Monozukuri Copilot & Predictive Schedule Intelligence">
@@ -218,6 +246,359 @@
       </div>
     </div>
   </header>
+
+  <!-- ========================================================================= -->
+  <!-- PILLAR 3: FAIL-CLOSED ANZEN DAI-ICHI STOP-WORK EMERGENCY BANNER            -->
+  <!-- ========================================================================= -->
+  <div id="stop-work-banner" class="hidden bg-gradient-to-r from-red-950 via-rose-900 to-red-950 border-y-2 border-red-500 text-white px-4 py-2.5 shadow-[0_0_35px_rgba(239,68,68,0.55)] z-40 animate-pulse no-print">
+    <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-3 text-xs mono-num">
+      <div class="flex items-center gap-3">
+        <span class="px-2.5 py-1 bg-red-600 text-white font-extrabold rounded-sm tracking-wider text-[11px] flex items-center gap-1.5 shadow-md">
+          <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+          🚨 STOP-WORK ORDER
+        </span>
+        <span class="font-bold text-sm tracking-wide text-red-100">
+          ANZEN DAI-ICHI (安全第一) FAIL-CLOSED HOLD: INC-04 DEFLECTION <span id="banner-inc-val" class="text-yellow-300 font-extrabold underline text-base">26.5 mm</span> EXCEEDS 25.0 mm ALARM LIMIT AT STA 14+220
+        </span>
+        <span class="text-red-300 text-[11px] hidden xl:inline">| Station Box Excavation Tier 3 &amp; D-Wall DW-18 Operations Frozen</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openWebhookDispatchModal()" class="px-3 py-1 bg-white hover:bg-slate-100 text-red-950 font-extrabold rounded-sm shadow transition flex items-center gap-1.5">
+          <span>📡 View Emergency Webhook Dispatch</span>
+        </button>
+        <button onclick="resolveGeotechAnomaly()" class="px-3 py-1 bg-red-800 hover:bg-red-700 text-white font-bold rounded-sm border border-red-400 transition flex items-center gap-1">
+          <span>✓ Resolve &amp; Clear Hold</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- PILLAR 4: PORTFOLIO MULTI-PACKAGE COCKPIT (CP-201, CP-202, CP-203)          -->
+  <!-- ========================================================================= -->
+  <section id="section-portfolio-cockpit" class="hidden bg-obsidian border-b border-slate-800/90 px-3 py-3 no-print">
+    <div class="max-w-[1920px] mx-auto space-y-3">
+      <!-- Corridor Header & Sub-Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+        <div class="flex items-center gap-2.5">
+          <div class="px-2 py-0.5 bg-shimizu/20 border border-sky-500/50 text-sky-300 text-xs font-bold rounded-sm mono-num">
+            JAKARTA MRT PHASE 2A
+          </div>
+          <div>
+            <h2 class="text-sm font-extrabold text-white tracking-wide flex items-center gap-2">
+              <span>NORTH-SOUTH CORRIDOR PORTFOLIO COCKPIT (BUNDARAN HI – KOTA • 5.8 KM)</span>
+              <span class="text-xs text-sky-400 font-jp">(ポートフォリオ統括管理)</span>
+            </h2>
+            <p class="text-[11px] text-slate-400 mono-num">
+              Multi-Package Unified Project Controls: Aggregated Physical EVM, Budget Allocation &amp; 4-Shield TBM Fleet Tracking
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] mono-num text-emerald-400 bg-emerald-950/80 border border-emerald-700/60 px-2 py-0.5 rounded">
+            ● 3 PACKAGES MONITORED • ALL PACKAGES ACTIVE
+          </span>
+          <button onclick="switchCorridorMode('single')" class="px-2.5 py-1 text-xs bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 rounded-sm transition mono-num">
+            ← Back to CP-202 Deep View
+          </button>
+        </div>
+      </div>
+
+      <!-- Portfolio Aggregate KPI Ribbon (6 Macro Cards) -->
+      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
+        <!-- Card 1: Combined Line Progress -->
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span class="font-semibold text-slate-300">LINE PROGRESS (加重進捗)</span>
+            <span class="text-[10px] text-sky-400 mono-num">Σ EV / Σ BAC</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-2xl font-extrabold text-white mono-num" id="port-kpi-ev-pct">58.40%</div>
+            <div class="text-xs font-semibold mono-num text-emerald-400" id="port-kpi-delta">+1.20% W/W</div>
+          </div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden flex">
+            <div id="port-kpi-ev-bar" class="bg-sky-500 h-full transition-all duration-300" style="width: 58.40%"></div>
+          </div>
+          <div class="text-[10px] text-slate-400 mono-num mt-1 flex justify-between">
+            <span>Baseline Plan: <strong class="text-slate-200">59.85%</strong></span>
+            <span>Target: 100%</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Total Portfolio Budget -->
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span class="font-semibold text-slate-300">PORTFOLIO BAC (総予算)</span>
+            <span class="text-[10px] text-slate-400 mono-num">JICA ODA LOAN</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-xl font-extrabold text-white mono-num" id="port-kpi-bac">IDR 1.110 T</div>
+            <div class="text-xs font-semibold mono-num text-sky-300">3 Packages</div>
+          </div>
+          <div class="text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80 flex justify-between">
+            <span>Portfolio EV: <strong class="text-emerald-400" id="port-kpi-ev-val">IDR 648.21 B</strong></span>
+            <span>AC: <strong class="text-slate-200">IDR 632.02 B</strong></span>
+          </div>
+        </div>
+
+        <!-- Card 3: Combined Portfolio SPI -->
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span class="font-semibold text-slate-300">PORTFOLIO SPI (全体工程指数)</span>
+            <span class="text-[10px] px-1 rounded bg-amber-950 text-amber-300 border border-amber-700/50 mono-num">STEADY</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-2xl font-extrabold text-amber-400 mono-num" id="port-kpi-spi">0.958</div>
+            <div class="text-xs font-semibold mono-num text-amber-400" id="port-kpi-sv">SV: -15.8 B</div>
+          </div>
+          <div class="text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80 flex justify-between">
+            <span>CP-201: <strong class="text-emerald-400">0.990</strong></span>
+            <span>CP-202: <strong class="text-amber-400" id="port-kpi-cp202-spi-mini">0.931</strong></span>
+            <span>CP-203: <strong class="text-sky-300">0.960</strong></span>
+          </div>
+        </div>
+
+        <!-- Card 4: Combined Portfolio CPI -->
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span class="font-semibold text-slate-300">PORTFOLIO CPI (全体原価指数)</span>
+            <span class="text-[10px] px-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/50 mono-num">ON BUDGET</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-2xl font-extrabold text-emerald-400 mono-num" id="port-kpi-cpi">1.008</div>
+            <div class="text-xs font-semibold mono-num text-emerald-400" id="port-kpi-cv">CV: +IDR 16.19 B</div>
+          </div>
+          <div class="text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80 flex justify-between">
+            <span>Cost Reserve: <strong class="text-emerald-300">+IDR 16.19 B</strong></span>
+            <span>Margin: <strong class="text-slate-200">+2.5%</strong></span>
+          </div>
+        </div>
+
+        <!-- Card 5: Corridor Safety Hours -->
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span class="font-semibold text-slate-300">CORRIDOR SAFETY (無事故)</span>
+            <span class="text-[10px] text-emerald-400 font-bold font-jp">安全第一</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-xl font-extrabold text-white mono-num">4,850,000</div>
+            <div class="text-xs text-slate-400">Hours</div>
+          </div>
+          <div class="text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80 flex justify-between">
+            <span>Zero LTI Milestone</span>
+            <span class="text-emerald-400 font-bold">100% Record</span>
+          </div>
+        </div>
+
+        <!-- Card 6: Active TBM Fleet -->
+        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm">
+          <div class="text-[11px] text-slate-400 flex justify-between">
+            <span class="font-semibold text-slate-300">TBM SHIELD FLEET (掘進機)</span>
+            <span class="text-[10px] text-sky-400 mono-num">4 ACTIVE</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-xl font-extrabold text-sky-400 mono-num">3,120 / 5,800m</div>
+            <div class="text-xs font-semibold mono-num text-emerald-400">53.8%</div>
+          </div>
+          <div class="text-[10px] text-slate-400 mono-num mt-2 pt-1 border-t border-slate-800/80 flex justify-between">
+            <span>Tunnel Rings: <strong class="text-slate-200">2,080 Rings</strong></span>
+            <span>Breakthroughs: <strong class="text-emerald-400">2/6</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Package Detailed Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+        <!-- Package CP-201 -->
+        <div class="bg-panel border border-slate-800 hover:border-slate-700 p-3 rounded-sm space-y-2 transition">
+          <div class="flex items-center justify-between border-b border-slate-800/90 pb-2">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="px-1.5 py-0.5 text-[10px] font-bold bg-slate-800 text-sky-400 rounded-sm mono-num">PACKAGE CP-201</span>
+                <span class="text-[10px] text-slate-400">Thamrin – Monas (STA 10+500 – 12+800)</span>
+              </div>
+              <h3 class="text-xs font-bold text-white mt-0.5">Thamrin Box &amp; Monas Underground Station</h3>
+            </div>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60 rounded mono-num">
+              PHYSICAL 82.4%
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs mono-num">
+            <div>
+              <span class="text-[10px] text-slate-400">Contract BAC:</span>
+              <div class="font-bold text-slate-200">IDR 380.00 B</div>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400">SPI / CPI:</span>
+              <div class="font-bold text-emerald-400">0.990 / 1.016</div>
+            </div>
+          </div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div class="bg-emerald-500 h-full" style="width: 82.4%"></div>
+          </div>
+          <div class="text-[11px] text-slate-300 mono-num flex items-center justify-between pt-1 border-t border-slate-800/80">
+            <span>🛡️ TBM "Antareja": STA 12+840 (94% NB Drive)</span>
+            <span class="text-emerald-400 text-[10px]">Breakthrough Dec 2026</span>
+          </div>
+          <div class="text-[10px] text-slate-400">Contractor: Shimizu – Adhi Karya Joint Venture (SAJV)</div>
+        </div>
+
+        <!-- Package CP-202 (Active Reactive Engine) -->
+        <div class="bg-panel border-2 border-sky-500/80 p-3 rounded-sm space-y-2 relative overflow-hidden shadow-[0_0_20px_rgba(0,91,172,0.25)]">
+          <div class="absolute -right-7 -top-7 w-20 h-20 bg-sky-500/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="flex items-center justify-between border-b border-slate-800/90 pb-2">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="px-1.5 py-0.5 text-[10px] font-bold bg-shimizu text-white rounded-sm mono-num">PACKAGE CP-202</span>
+                <span class="text-[10px] text-sky-300 font-bold">● ACTIVE DASHBOARD WORKSPACE</span>
+              </div>
+              <h3 class="text-xs font-bold text-white mt-0.5">Harmoni, Sawah Besar &amp; Mangga Besar Stations</h3>
+            </div>
+            <span id="port-cp202-badge-ev" class="px-2 py-0.5 text-[10px] font-extrabold bg-sky-950 text-sky-300 border border-sky-600/80 rounded mono-num">
+              PHYSICAL 44.85%
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs mono-num">
+            <div>
+              <span class="text-[10px] text-slate-400">Contract BAC:</span>
+              <div class="font-bold text-slate-200">IDR 420.00 B</div>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400">SPI / CPI (Live):</span>
+              <div class="font-bold text-amber-400" id="port-cp202-spicpi-val">0.931 / 1.022</div>
+            </div>
+          </div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div id="port-cp202-bar" class="bg-sky-400 h-full transition-all duration-300" style="width: 44.85%"></div>
+          </div>
+          <div class="text-[11px] text-slate-300 mono-num flex items-center justify-between pt-1 border-t border-slate-800/80">
+            <span>🛡️ Twin TBMs: "Sakura-1" (Ring #282) &amp; "Garuda-2"</span>
+            <button onclick="switchCorridorMode('single')" class="px-2 py-0.5 text-[10px] bg-shimizu hover:bg-sky-500 text-white rounded font-bold transition">
+              Open CP-202 Workspace →
+            </button>
+          </div>
+          <div class="text-[10px] text-slate-400">Lead Contractor: Shimizu Corporation (清水建設)</div>
+        </div>
+
+        <!-- Package CP-203 -->
+        <div class="bg-panel border border-slate-800 hover:border-slate-700 p-3 rounded-sm space-y-2 transition">
+          <div class="flex items-center justify-between border-b border-slate-800/90 pb-2">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="px-1.5 py-0.5 text-[10px] font-bold bg-slate-800 text-sky-400 rounded-sm mono-num">PACKAGE CP-203</span>
+                <span class="text-[10px] text-slate-400">Glodok – Kota (STA 14+350 – 15+800)</span>
+              </div>
+              <h3 class="text-xs font-bold text-white mt-0.5">Glodok &amp; Kota Heritage Terminal Box</h3>
+            </div>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-700/60 rounded mono-num">
+              PHYSICAL 31.2%
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs mono-num">
+            <div>
+              <span class="text-[10px] text-slate-400">Contract BAC:</span>
+              <div class="font-bold text-slate-200">IDR 310.00 B</div>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400">SPI / CPI:</span>
+              <div class="font-bold text-amber-300">0.960 / 0.972</div>
+            </div>
+          </div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div class="bg-amber-500 h-full" style="width: 31.2%"></div>
+          </div>
+          <div class="text-[11px] text-slate-300 mono-num flex items-center justify-between pt-1 border-t border-slate-800/80">
+            <span>🛡️ TBM "Batavia": Commissioning in Launch Shaft</span>
+            <span class="text-amber-400 text-[10px]">D-Wall Grouting 91%</span>
+          </div>
+          <div class="text-[10px] text-slate-400">Contractor: Sumitomo Mitsui – Hutama Karya JV (SMHK JV)</div>
+        </div>
+      </div>
+
+      <!-- Corridor TBM Fleet Tracking Map & Linear Alignment Schematic -->
+      <div class="bg-panel border border-slate-800 p-3 rounded-sm space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-400">JAKARTA MRT PHASE 2A 5.8 KM CORRIDOR TBM FLEET TRACKING MAP</span>
+            <span class="text-[10px] text-slate-400 font-jp">(シールド機全線運行追跡図)</span>
+          </div>
+          <div class="text-[11px] text-slate-400 mono-num flex items-center gap-3">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Completed Drive</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> Active Driving</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Shaft Assembly</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span> Planned Tunnel</span>
+          </div>
+        </div>
+
+        <!-- Interactive Linear Corridor SVG Map -->
+        <div class="overflow-x-auto py-2">
+          <div class="min-w-[1000px] h-[160px] bg-slate-950/90 rounded border border-slate-800 relative p-3 text-xs mono-num flex flex-col justify-between">
+            <!-- Station Nodes Bar (Top) -->
+            <div class="flex justify-between items-center text-[10.5px] font-bold text-slate-300 border-b border-slate-800 pb-1.5">
+              <div class="text-left"><span class="text-sky-400">STA 10+000</span><br>Bundaran HI</div>
+              <div class="text-center"><span class="text-slate-400">STA 10+800</span><br>Thamrin (CP-201)</div>
+              <div class="text-center"><span class="text-slate-400">STA 12+200</span><br>Monas (CP-201)</div>
+              <div class="text-center text-sky-300"><span class="text-sky-400 font-bold">STA 14+000</span><br>Harmoni (CP-202)</div>
+              <div class="text-center text-sky-300"><span class="text-sky-400 font-bold">STA 14+650</span><br>Sawah Besar (CP-202)</div>
+              <div class="text-center text-sky-300"><span class="text-sky-400 font-bold">STA 15+300</span><br>Mangga Besar (CP-202)</div>
+              <div class="text-center"><span class="text-slate-400">STA 16+000</span><br>Glodok (CP-203)</div>
+              <div class="text-right"><span class="text-slate-400">STA 16+800</span><br>Kota (CP-203)</div>
+            </div>
+
+            <!-- Alignment Track with TBM Markers -->
+            <div class="relative my-auto h-12 flex items-center">
+              <!-- Background Rails -->
+              <div class="w-full h-2.5 bg-slate-800/80 rounded-full relative overflow-hidden">
+                <div class="absolute left-0 top-0 h-full bg-emerald-500/70" style="width: 42%"></div>
+                <div class="absolute left-[42%] top-0 h-full bg-sky-500/70" style="width: 14%"></div>
+              </div>
+
+              <!-- TBM Marker 1: Antareja (CP-201) -->
+              <div class="absolute left-[38%] -top-4 flex flex-col items-center group cursor-pointer" onclick="showTbmTooltip('Antareja', 'CP-201', 'STA 12+840', '11.2 m/day', '2.6 bar', '94.4%')">
+                <span class="px-1.5 py-0.5 bg-emerald-950 border border-emerald-500 text-emerald-300 text-[9px] font-bold rounded shadow-lg group-hover:scale-110 transition whitespace-nowrap">
+                  🛡️ Antareja (NB)
+                </span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping mt-0.5"></span>
+              </div>
+
+              <!-- TBM Marker 2: Sakura-1 (CP-202 NB) -->
+              <div class="absolute left-[54%] -top-5 flex flex-col items-center group cursor-pointer" onclick="showTbmTooltip('Sakura-1', 'CP-202', 'STA 14+520', '10.8 m/day', '2.5 bar', '35.8% (Ring #282)')">
+                <span class="px-1.5 py-0.5 bg-sky-950 border-2 border-sky-400 text-sky-200 text-[9px] font-extrabold rounded shadow-lg group-hover:scale-110 transition whitespace-nowrap animate-bounce">
+                  🌸 TBM #1 Sakura
+                </span>
+                <span class="w-3 h-3 rounded-full bg-sky-400 mt-0.5 border border-white"></span>
+              </div>
+
+              <!-- TBM Marker 3: Garuda-2 (CP-202 SB) -->
+              <div class="absolute left-[48%] top-5 flex flex-col items-center group cursor-pointer" onclick="showTbmTooltip('Garuda-2', 'CP-202', 'STA 14+380', '8.4 m/day', '2.4 bar', '12.5% (Ring #152)')">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-400 mb-0.5 border border-white"></span>
+                <span class="px-1.5 py-0.5 bg-sky-950 border border-sky-400 text-sky-200 text-[9px] font-bold rounded shadow-lg group-hover:scale-110 transition whitespace-nowrap">
+                  🦅 TBM #2 Garuda
+                </span>
+              </div>
+
+              <!-- TBM Marker 4: Batavia (CP-203) -->
+              <div class="absolute left-[78%] -top-4 flex flex-col items-center group cursor-pointer" onclick="showTbmTooltip('Batavia', 'CP-203', 'STA 15+950', '0.0 m/day', '1.0 bar', 'Shaft Commissioning')">
+                <span class="px-1.5 py-0.5 bg-amber-950 border border-amber-500 text-amber-300 text-[9px] font-bold rounded shadow-lg group-hover:scale-110 transition whitespace-nowrap">
+                  ⚙️ Batavia
+                </span>
+                <span class="w-2 h-2 rounded-full bg-amber-400 mt-0.5"></span>
+              </div>
+            </div>
+
+            <!-- Alignment Legend & Distance Readout (Bottom) -->
+            <div class="flex justify-between items-center text-[10px] text-slate-400 border-t border-slate-800/80 pt-1">
+              <div>Contract Scope: <strong class="text-slate-200">5,800m Bored Tunnels</strong> (Twin Single-Track O.D. 6.65m)</div>
+              <div class="text-sky-400 font-bold" id="tbm-fleet-status-banner">
+                Live Status: 4 TBM Shields Commissioned • Real-Time CP-202 Dual Launch in Progress
+              </div>
+              <div>Ground Condition: <strong class="text-slate-200">Alluvial Clay &amp; Volcanic Cobble (N-SPT &gt; 50)</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- EXECUTIVE KPI TELEMETRY RIBBON (6 BILINGUAL JAPANESE-ENGLISH METRIC CARDS) -->
   <section class="bg-obsidian border-b border-slate-800/90 px-3 py-2 no-print">
@@ -362,6 +743,11 @@
         <button onclick="switchTab('kaizen')" data-tab="kaizen" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
           <span class="mono-num text-[11px] opacity-80">9.</span>
           <span>改善 Kaizen Simulator</span>
+        </button>
+        <button onclick="switchTab('twin')" data-tab="twin" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5 shadow-sm">
+          <span class="mono-num text-[11px] opacity-80">10.</span>
+          <span class="text-emerald-400">✨</span>
+          <span>4D デジタルツイン 4D BIM Digital Twin</span>
         </button>
       </div>
 
@@ -1157,46 +1543,163 @@
     <!-- MODULE 7: GEOTECHNICAL SUBSURFACE RISK GATES (地盤管理・現場主義)            -->
     <!-- ========================================================================= -->
     <section id="tab-geotech" class="tab-pane hidden space-y-3">
-      <!-- Top Instrumentation Telemetry Strip -->
+      <!-- PILLAR 3: LIVE TELEMETRY STREAMING & FAIL-CLOSED ANOMALY INJECTION SANDBOX -->
+      <div class="bg-panel border border-slate-800 p-3 rounded-sm space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" id="geotech-stream-dot"></span>
+            <div>
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <span>REAL-TIME SUBSURFACE INSTRUMENTATION TELEMETRY ENGINE</span>
+                <span class="text-sky-400 font-jp text-[11px]">(リアルタイム地盤計測)</span>
+              </h3>
+              <p class="text-[10.5px] text-slate-400 mono-num">
+                Live Sensor Polling (2.0s Interval) • Subsurface Inclinometers, Surface Settlement &amp; Hydrogeology Telemetry
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 mono-num text-xs">
+            <span id="geotech-stream-badge" class="px-2 py-0.5 text-[10px] font-bold rounded bg-emerald-950 text-emerald-300 border border-emerald-600/70">
+              ● LIVE POLLING ACTIVE
+            </span>
+            <button id="geotech-stream-toggle-btn" onclick="toggleGeotechStream()" class="px-2.5 py-1 text-xs bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 rounded-sm transition">
+              ⏸ Pause Polling
+            </button>
+            <button onclick="openWebhookDispatchModal()" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-600/60 rounded-sm transition flex items-center gap-1 font-semibold">
+              <span>📡 Webhook Console</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Anomaly Injection Trigger Bar -->
+        <div class="bg-slate-950/90 border border-slate-800 p-2.5 rounded-sm flex flex-wrap items-center justify-between gap-3 text-xs mono-num">
+          <div class="flex items-center gap-3 flex-1 min-w-[280px]">
+            <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wide flex items-center gap-1">
+              <span>⚡ Anomaly Simulator:</span>
+            </span>
+            <div class="flex items-center gap-2 flex-1">
+              <span class="text-[10px] text-slate-400">INC-04:</span>
+              <input
+                type="range"
+                id="inc04-slider"
+                min="10.0"
+                max="32.0"
+                step="0.5"
+                value="18.4"
+                oninput="onGeotechSliderChange(this.value)"
+                class="flex-1 accent-sky-500 cursor-pointer h-2 bg-slate-800 rounded appearance-none"
+              />
+              <span id="inc04-slider-val" class="font-bold text-emerald-400 w-16 text-right">18.4 mm</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="triggerGeotechAnomaly(26.5)" class="px-3 py-1 bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-600/80 rounded-sm font-bold text-xs transition flex items-center gap-1 shadow-sm">
+              <span>🚨 Inject Anomaly (26.5 mm Alarm)</span>
+            </button>
+            <button onclick="resolveGeotechAnomaly()" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-slate-700 rounded-sm font-medium text-xs transition">
+              ↺ Reset (18.4 mm Safe)
+            </button>
+          </div>
+        </div>
+
+        <!-- Sensor Status Thresholds Readout Strip -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-[10.5px] mono-num">
+          <div class="bg-slate-900/60 p-1.5 rounded border border-slate-800/80 flex justify-between">
+            <span class="text-slate-400">Inclinometer INC-04:</span>
+            <span>Warn: <strong class="text-amber-400">20.0mm</strong> | Alarm: <strong class="text-rose-400">25.0mm</strong></span>
+          </div>
+          <div class="bg-slate-900/60 p-1.5 rounded border border-slate-800/80 flex justify-between">
+            <span class="text-slate-400">Settlement SM-08:</span>
+            <span>Warn: <strong class="text-amber-400">-10.0mm</strong> | Alarm: <strong class="text-rose-400">-15.0mm</strong></span>
+          </div>
+          <div class="bg-slate-900/60 p-1.5 rounded border border-slate-800/80 flex justify-between">
+            <span class="text-slate-400">Piezometer PZ-02:</span>
+            <span>Drawdown Alarm: <strong class="text-rose-400">-7.00m</strong></span>
+          </div>
+          <div class="bg-slate-900/60 p-1.5 rounded border border-slate-800/80 flex justify-between">
+            <span class="text-slate-400">Bauer BC 40 Drift:</span>
+            <span>Tolerance: <strong class="text-sky-300">X/Y &lt; 0.15%</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Instrumentation Telemetry 4 Cards (with Sparklines) -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5">
-        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num">
+        <!-- Sensor 1: INC-04 -->
+        <div id="card-inc04" class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num transition">
           <div class="flex justify-between text-[11px] text-slate-400">
             <span>INCLINOMETER INC-04 (D-Wall East)</span>
-            <span class="text-emerald-400 font-bold">SAFE</span>
+            <span id="badge-inc04" class="text-emerald-400 font-bold px-1 rounded bg-emerald-950 border border-emerald-800/60 text-[10px]">SAFE</span>
           </div>
-          <div class="text-xl font-bold text-white mt-1">18.4 mm <span class="text-xs font-normal text-slate-400">/ 28.0 mm Limit</span></div>
-          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5"><div class="bg-emerald-500 h-full rounded-full" style="width:65%"></div></div>
-          <div class="text-[10px] text-slate-400 mt-1">Depth -16.5m (Strut Level S3 Pre-loaded)</div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-xl font-bold text-white" id="val-inc04">18.4 mm <span class="text-xs font-normal text-slate-400">/ 25.0 mm Alarm</span></div>
+            <div class="text-[10px] text-sky-400 font-bold" id="drift-inc04">0.0 mm/hr</div>
+          </div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+            <div id="bar-inc04" class="bg-emerald-500 h-full rounded-full transition-all duration-300" style="width: 73.6%"></div>
+          </div>
+          <div class="mt-2 pt-1.5 border-t border-slate-800/80 flex justify-between items-center text-[10px] text-slate-400">
+            <span>Depth -16.5m (Strut S3)</span>
+            <svg id="sparkline-inc04" class="w-24 h-5 stroke-emerald-400 fill-none" viewBox="0 0 100 20"></svg>
+          </div>
         </div>
 
-        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num">
+        <!-- Sensor 2: SM-08 -->
+        <div id="card-sm08" class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num transition">
           <div class="flex justify-between text-[11px] text-slate-400">
             <span>SETTLEMENT MARKER SM-08</span>
-            <span class="text-emerald-400 font-bold">SAFE</span>
+            <span id="badge-sm08" class="text-emerald-400 font-bold px-1 rounded bg-emerald-950 border border-emerald-800/60 text-[10px]">SAFE</span>
           </div>
-          <div class="text-xl font-bold text-white mt-1">-6.2 mm <span class="text-xs font-normal text-slate-400">/ -15.0 mm Limit</span></div>
-          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5"><div class="bg-sky-500 h-full rounded-full" style="width:41%"></div></div>
-          <div class="text-[10px] text-slate-400 mt-1">Adjacent Heritage Arcade Foundation</div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-xl font-bold text-white" id="val-sm08">-6.2 mm <span class="text-xs font-normal text-slate-400">/ -15.0 mm Limit</span></div>
+            <div class="text-[10px] text-emerald-400">Stable</div>
+          </div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+            <div id="bar-sm08" class="bg-sky-500 h-full rounded-full transition-all duration-300" style="width: 41.3%"></div>
+          </div>
+          <div class="mt-2 pt-1.5 border-t border-slate-800/80 flex justify-between items-center text-[10px] text-slate-400">
+            <span>Heritage Arcade Building</span>
+            <svg id="sparkline-sm08" class="w-24 h-5 stroke-sky-400 fill-none" viewBox="0 0 100 20"></svg>
+          </div>
         </div>
 
-        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num">
+        <!-- Sensor 3: PZ-02 -->
+        <div id="card-pz02" class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num transition">
           <div class="flex justify-between text-[11px] text-slate-400">
             <span>PIEZOMETER PZ-02 DRAWDOWN</span>
-            <span class="text-amber-400 font-bold">WATCH</span>
+            <span id="badge-pz02" class="text-amber-400 font-bold px-1 rounded bg-amber-950 border border-amber-800/60 text-[10px]">WATCH</span>
           </div>
-          <div class="text-xl font-bold text-amber-300 mt-1">-1.85 m <span class="text-xs font-normal text-slate-400">/ -2.50 m Limit</span></div>
-          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5"><div class="bg-amber-500 h-full rounded-full" style="width:74%"></div></div>
-          <div class="text-[10px] text-slate-400 mt-1">Recharge Well RW-03 Active @ 12 m³/hr</div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-xl font-bold text-amber-300" id="val-pz02">-1.85 m <span class="text-xs font-normal text-slate-400">/ -7.00 m Limit</span></div>
+            <div class="text-[10px] text-amber-400">RW-03 Active</div>
+          </div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+            <div id="bar-pz02" class="bg-amber-500 h-full rounded-full transition-all duration-300" style="width: 26.4%"></div>
+          </div>
+          <div class="mt-2 pt-1.5 border-t border-slate-800/80 flex justify-between items-center text-[10px] text-slate-400">
+            <span>Aquifer Head @ -18m</span>
+            <svg id="sparkline-pz02" class="w-24 h-5 stroke-amber-400 fill-none" viewBox="0 0 100 20"></svg>
+          </div>
         </div>
 
-        <div class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num">
+        <!-- Sensor 4: Bauer BC 40 Trench Cutter Verticality -->
+        <div id="card-bauer" class="bg-panel border border-slate-800 p-2.5 rounded-sm mono-num transition">
           <div class="flex justify-between text-[11px] text-slate-400">
-            <span>STRUT LOAD CELL LC-S2-09</span>
-            <span class="text-emerald-400 font-bold">NOMINAL</span>
+            <span>BAUER BC 40 VERTICALITY</span>
+            <span id="badge-bauer" class="text-emerald-400 font-bold px-1 rounded bg-emerald-950 border border-emerald-800/60 text-[10px]">NOMINAL</span>
           </div>
-          <div class="text-xl font-bold text-white mt-1">3,840 kN <span class="text-xs font-normal text-slate-400">/ 4,850 kN Cap</span></div>
-          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5"><div class="bg-emerald-500 h-full rounded-full" style="width:79%"></div></div>
-          <div class="text-[10px] text-slate-400 mt-1">2x H-400x400 King-Post Strut Bay B4</div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-xl font-bold text-white" id="val-bauer">0.08% / 0.06% <span class="text-xs font-normal text-slate-400">X/Y</span></div>
+            <div class="text-[10px] text-emerald-400">&lt;0.15% Tol</div>
+          </div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+            <div id="bar-bauer" class="bg-emerald-500 h-full rounded-full transition-all duration-300" style="width: 53.3%"></div>
+          </div>
+          <div class="mt-2 pt-1.5 border-t border-slate-800/80 flex justify-between items-center text-[10px] text-slate-400">
+            <span>Panel DW-18 Trenching</span>
+            <svg id="sparkline-bauer" class="w-24 h-5 stroke-emerald-400 fill-none" viewBox="0 0 100 20"></svg>
+          </div>
         </div>
       </div>
 
@@ -1628,6 +2131,230 @@
       </div>
     </section>
 
+    <!-- ========================================================================= -->
+    <!-- MODULE 10: 4D BIM DIGITAL TWIN & WEBGL THREE.JS ENGINE (4D デジタルツイン)    -->
+    <!-- ========================================================================= -->
+    <section id="tab-twin" class="tab-pane hidden space-y-3">
+      <!-- Top 3D Viewport Controls & Camera Presets Strip -->
+      <div class="bg-panel border border-slate-800 p-2.5 rounded-sm flex flex-wrap items-center justify-between gap-2.5 text-xs mono-num">
+        <!-- Left: Camera Presets -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-slate-400 text-[10.5px] font-bold uppercase tracking-wider flex items-center gap-1 mr-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Camera 視点:
+          </span>
+          <button onclick="Nexus4DDigitalTwin.setPreset('iso')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 hover:border-sky-500 rounded-sm transition flex items-center gap-1 font-semibold">
+            <span>📐 Isometric 3D</span>
+          </button>
+          <button onclick="Nexus4DDigitalTwin.setPreset('top')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500 rounded-sm transition flex items-center gap-1">
+            <span>📍 Plan (Top)</span>
+          </button>
+          <button onclick="Nexus4DDigitalTwin.setPreset('profile')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500 rounded-sm transition flex items-center gap-1">
+            <span>📏 Long Profile</span>
+          </button>
+          <button onclick="Nexus4DDigitalTwin.setPreset('tbm')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500 rounded-sm transition flex items-center gap-1">
+            <span>🚇 TBM Cutaway</span>
+          </button>
+          <button onclick="Nexus4DDigitalTwin.setPreset('section')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500 rounded-sm transition flex items-center gap-1">
+            <span>🏢 Station Section</span>
+          </button>
+        </div>
+
+        <!-- Center: Dynamic Material / Shader Legend -->
+        <div class="flex items-center gap-3 bg-slate-950 px-2.5 py-1 rounded-sm border border-slate-800 text-[10.5px]">
+          <span class="text-slate-400 font-bold uppercase text-[9.5px]">Live WBS Shader:</span>
+          <span class="flex items-center gap-1 text-emerald-400 font-bold">
+            <span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 border border-emerald-300"></span> 100% Done
+          </span>
+          <span class="flex items-center gap-1 text-amber-400 font-bold">
+            <span class="w-2.5 h-2.5 rounded-sm bg-amber-500 border border-amber-300 animate-pulse"></span> 1–99% Active
+          </span>
+          <span class="flex items-center gap-1 text-rose-400 font-bold">
+            <span class="w-2.5 h-2.5 rounded-sm bg-rose-500 border border-rose-300 animate-ping"></span> Gate / Hold
+          </span>
+          <span class="flex items-center gap-1 text-slate-400">
+            <span class="w-2.5 h-2.5 rounded-sm bg-slate-700/60 border border-slate-600"></span> 0% Not Started
+          </span>
+        </div>
+
+        <!-- Right: Viewport Actions -->
+        <div class="flex items-center gap-1.5">
+          <button onclick="Nexus4DDigitalTwin.resetView()" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 transition" title="Reset Camera View to Default">
+            ↺ Reset
+          </button>
+          <button onclick="Nexus4DDigitalTwin.toggleFullscreen()" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-sky-300 rounded-sm border border-slate-700 transition flex items-center gap-1" title="Toggle Fullscreen 3D Viewport">
+            <span>⛶ Fullscreen</span>
+          </button>
+          <button onclick="switchTab('grid')" class="px-2.5 py-1 bg-shimizu hover:bg-sky-500 text-white font-bold rounded-sm border border-sky-400/40 transition flex items-center gap-1">
+            <span>📋 Jump to Master Grid →</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main 3D WebGL Viewport Container with Overlays -->
+      <div id="three-viewport-container" class="relative w-full h-[640px] rounded-sm bg-obsidian border border-slate-800 overflow-hidden shadow-2xl select-none">
+        <!-- 3D Three.js Canvas -->
+        <canvas id="twin-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+
+        <!-- Top-Left Floating Element HUD / Inspector Card -->
+        <div id="twin-inspector-hud" class="absolute top-3 left-3 bg-panel/95 border border-sky-500/70 p-3 rounded-sm max-w-sm w-full shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-md text-xs mono-num space-y-2 pointer-events-auto transition-all duration-200">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <div class="flex items-center gap-1.5">
+              <span id="twin-hud-badge" class="px-1.5 py-0.5 text-[9.5px] font-extrabold bg-shimizu text-white rounded">WBS-2.3</span>
+              <span id="twin-hud-disc" class="text-[10px] text-sky-300">Civil / D-Wall</span>
+            </div>
+            <span id="twin-hud-status" class="px-1.5 py-0.5 text-[9.5px] font-bold rounded bg-amber-950 text-amber-300 border border-amber-700/60">ACTIVE (77.5%)</span>
+          </div>
+
+          <div>
+            <h4 id="twin-hud-title" class="font-bold text-white text-xs leading-snug">
+              Diaphragm Wall Panel DW-18 Concreting &amp; North Box Panels (DW-18..36)
+            </h4>
+            <div id="twin-hud-chainage" class="text-[10.5px] text-slate-400 mt-0.5">
+              STA 14+180 - STA 14+350 • Depth -26.0m • 1.2m Panel
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1.5 bg-slate-950/80 p-2 rounded border border-slate-800 text-[10.5px]">
+            <div>Weight (Bobot): <strong class="text-slate-200" id="twin-hud-weight">20.00%</strong></div>
+            <div>Early Finish: <strong class="text-slate-200" id="twin-hud-finish">2026-11-20</strong></div>
+            <div>Actual / Plan: <strong class="text-emerald-400" id="twin-hud-actual">77.5%</strong> / <strong class="text-slate-300" id="twin-hud-plan">84.0%</strong></div>
+            <div>Total Float ($TF$): <strong class="text-rose-400" id="twin-hud-tf">0 Days (Critical)</strong></div>
+          </div>
+
+          <div class="text-[10px] text-slate-300 bg-slate-900/90 p-1.5 rounded border border-slate-800 flex items-start gap-1">
+            <span class="text-sky-400">ℹ️</span>
+            <span id="twin-hud-note">Panel DW-18 concreting &amp; RFI-118 slurry QC verified in W43 MS Project cut-off.</span>
+          </div>
+
+          <div class="flex items-center justify-between pt-1 border-t border-slate-800">
+            <span class="text-[10px] text-slate-400">Click mesh to inspect • Drag to orbit</span>
+            <button onclick="Nexus4DDigitalTwin.locateCurrentWbsInGrid()" class="px-2 py-1 bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/80 rounded-sm font-bold text-[10px] transition">
+              🔍 Highlight in Grid →
+            </button>
+          </div>
+        </div>
+
+        <!-- Top-Right Layer Visibility Controls Floating Drawer -->
+        <div class="absolute top-3 right-3 bg-panel/90 border border-slate-800 p-2 rounded-sm shadow-xl backdrop-blur-sm text-[11px] mono-num space-y-1.5 pointer-events-auto">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 pb-1">
+            Layer Filters (表示切替):
+          </div>
+          <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-decking" checked onchange="Nexus4DDigitalTwin.toggleLayer('decking', this.checked)" class="accent-sky-500 rounded">
+            <span>Surface Decking (路面覆工)</span>
+          </label>
+          <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-dwalls" checked onchange="Nexus4DDigitalTwin.toggleLayer('dwalls', this.checked)" class="accent-sky-500 rounded">
+            <span>D-Wall Panels DW-01..36 (連壁)</span>
+          </label>
+          <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-struts" checked onchange="Nexus4DDigitalTwin.toggleLayer('struts', this.checked)" class="accent-sky-500 rounded">
+            <span>Steel Struts 1–4 (切梁支保工)</span>
+          </label>
+          <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-slabs" checked onchange="Nexus4DDigitalTwin.toggleLayer('slabs', this.checked)" class="accent-sky-500 rounded">
+            <span>Slabs B1–B3 &amp; King Posts (躯体)</span>
+          </label>
+          <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-tbm1" checked onchange="Nexus4DDigitalTwin.toggleLayer('tbm1', this.checked)" class="accent-sky-500 rounded">
+            <span>TBM #1 Sakura (NB シールド)</span>
+          </label>
+          <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-tbm2" checked onchange="Nexus4DDigitalTwin.toggleLayer('tbm2', this.checked)" class="accent-sky-500 rounded">
+            <span>TBM #2 Garuda (SB シールド)</span>
+          </label>
+          <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-sensors" checked onchange="Nexus4DDigitalTwin.toggleLayer('sensors', this.checked)" class="accent-sky-500 rounded">
+            <span>Geotech Sensors (計装センサー)</span>
+          </label>
+        </div>
+
+        <!-- Bottom-Left Geotechnical Telemetry Live Floating Strip -->
+        <div class="absolute bottom-3 left-3 bg-panel/90 border border-slate-800 px-3 py-1.5 rounded-sm shadow-xl backdrop-blur-sm text-[11px] mono-num flex items-center gap-3 pointer-events-auto">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-slate-400 font-bold">SUB-SURFACE TELEMETRY:</span>
+          </div>
+          <div>INC-04: <strong class="text-emerald-400" id="twin-telemetry-inc">18.4 mm</strong> <span class="text-slate-500 text-[10px]">(&lt;25mm)</span></div>
+          <div>SM-08: <strong class="text-emerald-400" id="twin-telemetry-sm">-6.2 mm</strong> <span class="text-slate-500 text-[10px]">(&lt;-15mm)</span></div>
+          <div>PZ-02: <strong class="text-amber-300" id="twin-telemetry-pz">-1.85 m</strong></div>
+          <button onclick="switchTab('geotech')" class="text-sky-400 hover:text-white text-[10px] underline ml-1">
+            Sensor Details →
+          </button>
+        </div>
+
+        <!-- Bottom-Right Viewport Navigation Helper -->
+        <div class="absolute bottom-3 right-3 bg-slate-950/80 border border-slate-800 px-2.5 py-1 rounded text-[10px] mono-num text-slate-400 pointer-events-none">
+          Left Drag: Rotate • Right Drag / Shift+Drag: Pan • Scroll: Zoom
+        </div>
+      </div>
+
+      <!-- Bottom 4D Timeline Scrubbing & Construction Sequence Simulation Bar -->
+      <div class="bg-panel border border-slate-800 p-3 rounded-sm space-y-2 text-xs mono-num">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1.5">
+              <button id="twin-btn-play" onclick="Nexus4DDigitalTwin.togglePlay()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-sm shadow flex items-center gap-1.5 transition">
+                <span id="twin-play-icon">▶</span>
+                <span id="twin-play-label">Play 4D Sequence</span>
+              </button>
+              <button onclick="Nexus4DDigitalTwin.resetToCutoffDate()" class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 rounded-sm transition font-bold" title="Reset Timeline to Current Project Cut-Off Date W43 (2026-11-03)">
+                ↺ Today (W43)
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1 text-[11px]">
+              <span class="text-slate-400">Simulated 4D Date:</span>
+              <strong id="twin-sim-date-label" class="text-sky-300 text-sm px-2 py-0.5 bg-slate-950 rounded border border-slate-800">
+                2026-11-03 (Cut-Off W43)
+              </strong>
+            </div>
+          </div>
+
+          <!-- Playback Speed Multipliers -->
+          <div class="flex items-center gap-1 text-[10.5px]">
+            <span class="text-slate-400 uppercase tracking-wider mr-1">Speed:</span>
+            <button onclick="Nexus4DDigitalTwin.setSpeed(1)" class="twin-speed-btn px-2 py-0.5 bg-shimizu text-white rounded font-bold" data-speed="1">1x</button>
+            <button onclick="Nexus4DDigitalTwin.setSpeed(2)" class="twin-speed-btn px-2 py-0.5 bg-slate-900 text-slate-300 rounded hover:text-white" data-speed="2">2x</button>
+            <button onclick="Nexus4DDigitalTwin.setSpeed(5)" class="twin-speed-btn px-2 py-0.5 bg-slate-900 text-slate-300 rounded hover:text-white" data-speed="5">5x</button>
+            <button onclick="Nexus4DDigitalTwin.setSpeed(10)" class="twin-speed-btn px-2 py-0.5 bg-slate-900 text-slate-300 rounded hover:text-white" data-speed="10">10x</button>
+          </div>
+        </div>
+
+        <!-- 4D Time Slider -->
+        <div class="space-y-1">
+          <input
+            type="range"
+            id="twin-timeline-slider"
+            min="0"
+            max="512"
+            value="303"
+            oninput="Nexus4DDigitalTwin.onSliderInput(this.value)"
+            class="w-full accent-sky-500 cursor-pointer h-2 bg-slate-800 rounded-lg appearance-none"
+          />
+          <!-- 5 Sequential Construction Stages Milestone Bar -->
+          <div class="grid grid-cols-5 gap-1 text-[9.5px] text-slate-400 text-center pt-1">
+            <div class="bg-slate-950/60 p-1 rounded border border-slate-800">
+              <span class="text-slate-300 font-bold">1. Site &amp; Guide Wall</span><br>Jan–Mar 2026
+            </div>
+            <div class="bg-slate-950/60 p-1 rounded border border-slate-800">
+              <span class="text-slate-300 font-bold">2. D-Walls DW-01..36</span><br>Mar–Nov 2026
+            </div>
+            <div class="bg-sky-950/40 p-1 rounded border border-sky-800/60 text-sky-200">
+              <span class="font-bold text-sky-300">3. Top-Down &amp; Struts</span><br>Jul–Dec 2026 (Live)
+            </div>
+            <div class="bg-slate-950/60 p-1 rounded border border-slate-800">
+              <span class="text-slate-300 font-bold">4. Twin TBM Drives</span><br>Aug 2026–Mar 2027
+            </div>
+            <div class="bg-slate-950/60 p-1 rounded border border-slate-800">
+              <span class="text-slate-300 font-bold">5. Slabs &amp; Cross-Passage</span><br>Nov 2026–May 2027
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- DEDICATED 1-PAGE A4 EXECUTIVE PRINT / PDF REPORT VIEW (VISIBLE ON PRINT) -->
@@ -1804,6 +2531,118 @@
           <button type="submit" class="px-3 py-1.5 bg-shimizu hover:bg-shimizuLight text-white font-semibold rounded-sm">Insert WBS Activity</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 4: PILLAR 3 AUTOMATED EMERGENCY GEOTECHNICAL DISPATCH CONSOLE         -->
+  <!-- ========================================================================= -->
+  <div id="webhook-dispatch-modal" class="fixed inset-0 bg-black/85 z-50 hidden items-center justify-center p-4 no-print backdrop-blur-sm">
+    <div class="bg-panel border-2 border-rose-500/80 rounded-sm max-w-4xl w-full p-4 shadow-[0_0_50px_rgba(239,68,68,0.35)] space-y-3 max-h-[92vh] overflow-y-auto">
+      <!-- Modal Header -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+        <div class="flex items-center gap-2.5">
+          <div class="px-2.5 py-1 bg-red-950 border border-red-500 text-red-200 rounded-sm font-extrabold text-xs mono-num flex items-center gap-1.5 shadow">
+            <span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
+            🚨 SEVERITY 1 STOP-WORK
+          </div>
+          <div>
+            <h3 class="text-sm font-extrabold text-white tracking-wide flex items-center gap-2">
+              <span>AUTOMATED EMERGENCY GEOTECHNICAL DISPATCH LOG &amp; WEBHOOK CONSOLE</span>
+              <span class="text-xs text-rose-400 font-jp">(緊急通報・自動ディスパッチ)</span>
+            </h3>
+            <p class="text-[11px] text-slate-400 mono-num">
+              Fail-Closed Automated Telemetry Alert Protocol • Inclinometer INC-04 Anomaly Event Dispatch
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="webhook-dispatch-status-badge" class="px-2 py-0.5 text-[10px] font-bold rounded bg-amber-950 text-amber-300 border border-amber-600/70 mono-num">
+            ● READY TO DISPATCH
+          </span>
+          <button onclick="closeWebhookDispatchModal()" class="text-slate-400 hover:text-white text-sm font-bold px-2 py-0.5 bg-slate-900 rounded border border-slate-700">✕</button>
+        </div>
+      </div>
+
+      <!-- Incident Event Summary Banner -->
+      <div class="bg-red-950/40 border border-red-700/60 p-3 rounded-sm text-xs mono-num space-y-1.5 text-red-100">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-extrabold text-sm text-white">INCIDENT #GEO-2026-11-INC04</span>
+          <span class="text-[10.5px] text-slate-300">Timestamp: <strong class="text-white" id="webhook-incident-time">2026-11-03 14:22:15 WIB</strong></span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1 border-t border-red-800/50 text-[11px]">
+          <div>Sensor: <strong class="text-white">Inclinometer INC-04</strong></div>
+          <div>Location: <strong class="text-white">STA 14+220 (East Box)</strong></div>
+          <div>Measured: <strong class="text-yellow-300 text-sm font-bold" id="webhook-disp-val">26.5 mm</strong> <span class="text-slate-400">(&gt;25mm)</span></div>
+          <div>Action: <strong class="text-rose-400">WBS-2.3 &amp; WBS-3.2 Frozen</strong></div>
+        </div>
+      </div>
+
+      <!-- Webhook Tabs Navigation -->
+      <div class="flex items-center space-x-1 border-b border-slate-800 text-xs mono-num">
+        <button onclick="switchWebhookTab('teams')" id="webhook-tab-btn-teams" class="px-3 py-1.5 font-bold rounded-t-sm bg-shimizu text-white border-t border-x border-sky-400/50">
+          Microsoft Teams (Adaptive Card)
+        </button>
+        <button onclick="switchWebhookTab('slack')" id="webhook-tab-btn-slack" class="px-3 py-1.5 font-medium rounded-t-sm text-slate-400 hover:text-slate-200">
+          Slack (Block Kit API)
+        </button>
+        <button onclick="switchWebhookTab('whatsapp')" id="webhook-tab-btn-whatsapp" class="px-3 py-1.5 font-medium rounded-t-sm text-slate-400 hover:text-slate-200">
+          WhatsApp Business API (Cloud Payload)
+        </button>
+      </div>
+
+      <!-- Payload JSON Code Box -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] mono-num text-slate-400">
+          <span>Automated Outgoing Webhook Payload (JSON):</span>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-emerald-400" id="webhook-copy-feedback"></span>
+            <button onclick="copyWebhookPayload()" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 rounded text-[10.5px]">
+              📋 Copy JSON
+            </button>
+          </div>
+        </div>
+        <div class="bg-slate-950 p-3 rounded border border-slate-800 overflow-x-auto max-h-[220px]">
+          <pre id="webhook-payload-pre" class="text-[11px] text-emerald-300 font-mono leading-relaxed whitespace-pre-wrap select-all"></pre>
+        </div>
+      </div>
+
+      <!-- Simulated Transmission Output Log Strip -->
+      <div id="webhook-delivery-log" class="bg-slate-950 border border-slate-800 p-2.5 rounded-sm text-[11px] mono-num space-y-1 text-slate-300">
+        <div class="font-bold text-sky-400 text-xs flex items-center justify-between">
+          <span>DISPATCH TARGET AUDIT LINEAGE:</span>
+          <span id="webhook-transmission-time" class="text-[10px] text-slate-400">Status: Standby</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-1.5 text-[10.5px] pt-1">
+          <div class="p-1.5 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+            <span>1. Shimizu Genba Site Eng:</span>
+            <span id="disp-receipt-1" class="text-emerald-400 font-bold">READY</span>
+          </div>
+          <div class="p-1.5 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+            <span>2. Geotechnical Lead (Dr. Harada):</span>
+            <span id="disp-receipt-2" class="text-emerald-400 font-bold">READY</span>
+          </div>
+          <div class="p-1.5 bg-slate-900/80 rounded border border-slate-800 flex justify-between items-center">
+            <span>3. Shimizu Project Director:</span>
+            <span id="disp-receipt-3" class="text-emerald-400 font-bold">READY</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
+        <div class="text-[10.5px] text-slate-400 mono-num">
+          Protocol: ISO 27001 / FIDIC Red Book Sub-Clause 8.8 (Suspension of Work)
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="simulateWebhookDispatch()" id="btn-trigger-webhook-dispatch" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs rounded-sm shadow-lg transition flex items-center gap-1.5 mono-num">
+            <span>📡 Execute Multi-Channel Emergency Dispatch</span>
+          </button>
+          <button onclick="closeWebhookDispatchModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-sm mono-num">
+            Close Console
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2370,6 +3209,16 @@
       updateEarnedScheduleAndDcma(weightedEV, weightedPV, spi);
       populatePrintView(weightedEV, weightedPV, varPct, wkActualGain, wkDelta, spi, svIdr, cpi, cvIdr, eacCost, tcpi, effectiveCleared);
 
+      if (window.Nexus4DDigitalTwin && typeof Nexus4DDigitalTwin.updateMaterials === 'function') {
+        Nexus4DDigitalTwin.updateMaterials();
+      }
+      if (typeof applyRoleGovernance === 'function') {
+        applyRoleGovernance();
+      }
+      if (typeof updatePortfolioCockpit === 'function') {
+        updatePortfolioCockpit();
+      }
+
       saveState();
 
       const elapsed = (performance.now() - t0).toFixed(2);
@@ -2489,9 +3338,14 @@
               </button>
             </td>
             <td class="py-1.5 px-1.5 text-center">
-              <button onclick="openGenbaModal(${idx})" class="px-2 py-0.5 text-[10px] bg-slate-800 hover:bg-shimizu text-sky-300 hover:text-white rounded border border-slate-700 transition">
-                📋 Log
-              </button>
+              <div class="flex items-center justify-center gap-1">
+                <button onclick="Nexus4DDigitalTwin.focusWbs('${item.code}')" class="px-1.5 py-0.5 text-[10px] bg-slate-900 hover:bg-shimizu text-sky-300 hover:text-white rounded border border-slate-700 transition" title="Focus in 4D Digital Twin">
+                  📐 3D
+                </button>
+                <button onclick="openGenbaModal(${idx})" class="px-2 py-0.5 text-[10px] bg-slate-800 hover:bg-shimizu text-sky-300 hover:text-white rounded border border-slate-700 transition">
+                  📋 Log
+                </button>
+              </div>
             </td>
           </tr>
         `;
@@ -3250,6 +4104,10 @@
         if (evmChart) evmChart.resize();
         if (marchChart) marchChart.resize();
         if (manpowerChart) manpowerChart.resize();
+        if (tabId === 'twin' && window.Nexus4DDigitalTwin) {
+          window.Nexus4DDigitalTwin.init();
+          window.Nexus4DDigitalTwin.onWindowResize();
+        }
       }, 20);
     }
 
@@ -4125,6 +4983,1395 @@
       showNexusToast('📋 NEXUS-AI Copilot Analysis Copied to Clipboard');
     }
 
+
+    // =========================================================================
+    // NEXUS-4D™ KOUTEI v6.0 ENTERPRISE MULTI-ROLE & 4D DIGITAL TWIN ENGINE
+    // =========================================================================
+
+    // Extend State for v6.0 Pillars
+    state.currentRole = 'shimizu'; // 'shimizu' | 'consultant' | 'client'
+    state.corridorMode = 'single'; // 'single' | 'portfolio'
+    state.geotechAnomaly = false;
+    state.geotechLiveStreaming = true;
+    state.telemetry = {
+      inc04: 18.4,
+      sm08: -6.2,
+      pz02: -1.85,
+      bauerX: 0.08,
+      bauerY: 0.06
+    };
+    state.telemetryHistory = {
+      inc04: [18.2, 18.3, 18.4, 18.5, 18.4, 18.3, 18.4, 18.5, 18.4, 18.4],
+      sm08: [-6.1, -6.2, -6.2, -6.3, -6.2, -6.1, -6.2, -6.2, -6.3, -6.2],
+      pz02: [-1.82, -1.84, -1.85, -1.86, -1.85, -1.83, -1.85, -1.87, -1.85, -1.85],
+      bauer: [0.07, 0.08, 0.08, 0.09, 0.08, 0.07, 0.08, 0.08, 0.09, 0.08]
+    };
+    state.activeWebhookTab = 'teams';
+
+    // -------------------------------------------------------------------------
+    // PILLAR 2: MULTI-ROLE RBAC PERSONA SWITCHER ENGINE
+    // -------------------------------------------------------------------------
+    function switchRole(role) {
+      state.currentRole = role;
+      const select = document.getElementById('role-switcher-select');
+      if (select && select.value !== role) select.value = role;
+
+      applyRoleGovernance();
+      showNexusToast(`🔐 Role Switched: ${
+        role === 'shimizu' ? 'Shimizu General Contractor (Full PE26/QC26 Access)' :
+        role === 'consultant' ? 'Supervision Consultant (QA/QC & DCMA-14 View)' :
+        'Employer / Client (Executive Cockpit)'
+      }`);
+    }
+
+    function applyRoleGovernance() {
+      const role = state.currentRole;
+
+      // 1. Grid Input Read-Only Locking
+      const gridInputs = document.querySelectorAll('.grid-input');
+      gridInputs.forEach(input => {
+        if (role === 'shimizu') {
+          input.removeAttribute('readonly');
+          input.disabled = false;
+          input.classList.remove('opacity-75', 'cursor-not-allowed');
+        } else {
+          input.setAttribute('readonly', 'true');
+          input.disabled = true;
+          input.classList.add('opacity-75', 'cursor-not-allowed');
+          input.title = 'Inline editing restricted to General Contractor PE26';
+        }
+      });
+
+      // 2. Commercial / Internal Margin Redaction (Consultant & Client views)
+      const costReserveBadge = document.getElementById('kpi-cv-idr');
+      const vacBadge = document.getElementById('kpi-vac-val');
+      const tcpiBadge = document.getElementById('kpi-tcpi-val');
+      const eacComp = document.getElementById('kpi-eac-comp');
+
+      if (role === 'consultant') {
+        // Redact contractor internal margin & profit reserves
+        if (costReserveBadge) costReserveBadge.innerHTML = '<span class="text-[10px] text-amber-300 font-bold px-1 bg-amber-950/80 rounded border border-amber-700/60">[REDACTED - MARGIN]</span>';
+        if (vacBadge) vacBadge.innerHTML = '<span class="text-[10px] text-amber-300 font-bold px-1 bg-amber-950/80 rounded border border-amber-700/60">[REDACTED]</span>';
+      } else if (role === 'client') {
+        // Executive client view: high-level presentation cockpit
+        if (costReserveBadge) costReserveBadge.textContent = 'CV: Certified';
+        if (vacBadge) vacBadge.textContent = 'Forecast On-Budget';
+      } else {
+        // Shimizu internal: fully unredacted
+        // will be re-populated on recalculateAll()
+      }
+
+      // 3. Highlight Consultant Features (DCMA-14 & QA Gates)
+      const dcmaHeader = document.querySelector('#cpm-gantt-container')?.previousElementSibling;
+      if (dcmaHeader) {
+        if (role === 'consultant') {
+          dcmaHeader.classList.add('ring-2', 'ring-sky-400', 'bg-sky-950/30');
+        } else {
+          dcmaHeader.classList.remove('ring-2', 'ring-sky-400', 'bg-sky-950/30');
+        }
+      }
+
+      // 4. Update Header Badge styling based on role
+      const roleSelect = document.getElementById('role-switcher-select');
+      if (roleSelect) {
+        roleSelect.className = `font-bold border rounded-sm px-2 py-0.5 text-xs focus:outline-none cursor-pointer transition ${
+          role === 'shimizu' ? 'bg-slate-900 text-sky-300 border-slate-700' :
+          role === 'consultant' ? 'bg-amber-950 text-amber-300 border-amber-600' :
+          'bg-emerald-950 text-emerald-300 border-emerald-600'
+        }`;
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // PILLAR 4: CORRIDOR NAVIGATION & PORTFOLIO MULTI-PACKAGE COCKPIT ENGINE
+    // -------------------------------------------------------------------------
+    function switchCorridorMode(mode) {
+      state.corridorMode = mode;
+      const section = document.getElementById('section-portfolio-cockpit');
+      const btnSingle = document.getElementById('btn-mode-single');
+      const btnPort = document.getElementById('btn-mode-portfolio');
+
+      if (mode === 'portfolio') {
+        if (section) section.classList.remove('hidden');
+        if (btnSingle) {
+          btnSingle.className = 'px-2.5 py-1 font-medium text-slate-300 hover:text-white rounded-sm transition flex items-center gap-1';
+        }
+        if (btnPort) {
+          btnPort.className = 'px-2.5 py-1 font-bold rounded-sm bg-shimizu text-white transition flex items-center gap-1 shadow-sm';
+        }
+        updatePortfolioCockpit();
+        showNexusToast('🌐 Switched to Jakarta MRT Phase 2A Corridor Portfolio Cockpit (5.8 km)');
+      } else {
+        if (section) section.classList.add('hidden');
+        if (btnSingle) {
+          btnSingle.className = 'px-2.5 py-1 font-bold rounded-sm bg-shimizu text-white transition flex items-center gap-1 shadow-sm';
+        }
+        if (btnPort) {
+          btnPort.className = 'px-2.5 py-1 font-medium text-slate-300 hover:text-white rounded-sm transition flex items-center gap-1';
+        }
+      }
+    }
+
+    function updatePortfolioCockpit() {
+      // Derive dynamic CP-202 EV from active state
+      let cp202EvPct = 44.85;
+      const evBadge = document.getElementById('kpi-ev-pct');
+      if (evBadge) {
+        const parsed = parseFloat(evBadge.textContent);
+        if (!isNaN(parsed)) cp202EvPct = parsed;
+      }
+
+      const cp201Bac = 380.00;
+      const cp201EvPct = 82.40;
+      const cp201Ev = (cp201Bac * cp201EvPct) / 100.0; // 313.12 B
+
+      const cp202Bac = 420.00;
+      const cp202Ev = (cp202Bac * cp202EvPct) / 100.0;
+
+      const cp203Bac = 310.00;
+      const cp203EvPct = 31.20;
+      const cp203Ev = (cp203Bac * cp203EvPct) / 100.0; // 96.72 B
+
+      const totalBac = cp201Bac + cp202Bac + cp203Bac; // 1110.00 B
+      const totalEv = cp201Ev + cp202Ev + cp203Ev;
+      const combinedEvPct = (totalEv / totalBac) * 100.0;
+
+      // Update Portfolio DOM
+      const elEvPct = document.getElementById('port-kpi-ev-pct');
+      const elEvBar = document.getElementById('port-kpi-ev-bar');
+      const elEvVal = document.getElementById('port-kpi-ev-val');
+
+      if (elEvPct) elEvPct.textContent = `${combinedEvPct.toFixed(2)}%`;
+      if (elEvBar) elEvBar.style.width = `${Math.min(100, combinedEvPct)}%`;
+      if (elEvVal) elEvVal.textContent = `IDR ${totalEv.toFixed(2)} B`;
+
+      // Update CP-202 Card in Portfolio
+      const portCp202Ev = document.getElementById('port-cp202-badge-ev');
+      const portCp202Bar = document.getElementById('port-cp202-bar');
+      const portCp202SpiCpi = document.getElementById('port-cp202-spicpi-val');
+      const spiVal = document.getElementById('kpi-spi-val')?.textContent || '0.931';
+      const cpiVal = document.getElementById('kpi-cpi-val')?.textContent || '1.022';
+
+      if (portCp202Ev) portCp202Ev.textContent = `PHYSICAL ${cp202EvPct.toFixed(2)}%`;
+      if (portCp202Bar) portCp202Bar.style.width = `${Math.min(100, cp202EvPct)}%`;
+      if (portCp202SpiCpi) portCp202SpiCpi.textContent = `${spiVal} / ${cpiVal}`;
+
+      const miniSpi = document.getElementById('port-kpi-cp202-spi-mini');
+      if (miniSpi) miniSpi.textContent = spiVal;
+    }
+
+    function showTbmTooltip(tbmName, pkg, chainage, rate, pressure, prog) {
+      showNexusToast(`🛡️ ${tbmName} [${pkg}]: Location ${chainage} • Advance ${rate} • Face Pressure ${pressure} • Progress: ${prog}`);
+    }
+
+    // -------------------------------------------------------------------------
+    // PILLAR 3: GEOTECHNICAL TELEMETRY STREAMING & FAIL-CLOSED DISPATCH ENGINE
+    // -------------------------------------------------------------------------
+    let geotechStreamInterval = null;
+
+    function startGeotechTelemetryStream() {
+      if (geotechStreamInterval) clearInterval(geotechStreamInterval);
+      geotechStreamInterval = setInterval(() => {
+        if (!state.geotechLiveStreaming) return;
+
+        if (!state.geotechAnomaly) {
+          // Normal micro-jitter
+          const jitterInc = (Math.random() - 0.5) * 0.16;
+          state.telemetry.inc04 = Math.max(18.0, Math.min(18.8, state.telemetry.inc04 + jitterInc));
+
+          const jitterSm = (Math.random() - 0.5) * 0.08;
+          state.telemetry.sm08 = Math.max(-6.4, Math.min(-6.0, state.telemetry.sm08 + jitterSm));
+
+          const jitterPz = (Math.random() - 0.5) * 0.02;
+          state.telemetry.pz02 = Math.max(-1.90, Math.min(-1.80, state.telemetry.pz02 + jitterPz));
+
+          const jitterBauer = (Math.random() - 0.5) * 0.005;
+          state.telemetry.bauerX = Math.max(0.06, Math.min(0.10, state.telemetry.bauerX + jitterBauer));
+        }
+
+        // Push history for sparklines
+        state.telemetryHistory.inc04.push(state.telemetry.inc04);
+        if (state.telemetryHistory.inc04.length > 12) state.telemetryHistory.inc04.shift();
+
+        state.telemetryHistory.sm08.push(state.telemetry.sm08);
+        if (state.telemetryHistory.sm08.length > 12) state.telemetryHistory.sm08.shift();
+
+        state.telemetryHistory.pz02.push(state.telemetry.pz02);
+        if (state.telemetryHistory.pz02.length > 12) state.telemetryHistory.pz02.shift();
+
+        state.telemetryHistory.bauer.push(state.telemetry.bauerX);
+        if (state.telemetryHistory.bauer.length > 12) state.telemetryHistory.bauer.shift();
+
+        updateGeotechUI();
+        if (window.Nexus4DDigitalTwin && typeof Nexus4DDigitalTwin.updateMaterials === 'function') {
+          Nexus4DDigitalTwin.updateMaterials();
+        }
+      }, 2000);
+    }
+
+    function toggleGeotechStream() {
+      state.geotechLiveStreaming = !state.geotechLiveStreaming;
+      const btn = document.getElementById('geotech-stream-toggle-btn');
+      const badge = document.getElementById('geotech-stream-badge');
+      const dot = document.getElementById('geotech-stream-dot');
+
+      if (state.geotechLiveStreaming) {
+        if (btn) btn.textContent = '⏸ Pause Polling';
+        if (badge) {
+          badge.textContent = '● LIVE POLLING ACTIVE';
+          badge.className = 'px-2 py-0.5 text-[10px] font-bold rounded bg-emerald-950 text-emerald-300 border border-emerald-600/70';
+        }
+        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
+        showNexusToast('▶ Geotechnical Telemetry Live Polling Resumed');
+      } else {
+        if (btn) btn.textContent = '▶ Resume Polling';
+        if (badge) {
+          badge.textContent = '⏸ POLLING PAUSED';
+          badge.className = 'px-2 py-0.5 text-[10px] font-bold rounded bg-slate-900 text-slate-400 border border-slate-700';
+        }
+        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-500';
+        showNexusToast('⏸ Geotechnical Telemetry Polling Paused');
+      }
+    }
+
+    function onGeotechSliderChange(val) {
+      const numVal = parseFloat(val);
+      const valLabel = document.getElementById('inc04-slider-val');
+      if (valLabel) {
+        valLabel.textContent = `${numVal.toFixed(1)} mm`;
+        if (numVal >= 25.0) {
+          valLabel.className = 'font-bold text-rose-400 w-16 text-right animate-pulse';
+        } else if (numVal >= 20.0) {
+          valLabel.className = 'font-bold text-amber-400 w-16 text-right';
+        } else {
+          valLabel.className = 'font-bold text-emerald-400 w-16 text-right';
+        }
+      }
+
+      state.telemetry.inc04 = numVal;
+      if (numVal >= 25.0 && !state.geotechAnomaly) {
+        triggerGeotechAnomaly(numVal);
+      } else if (numVal < 25.0 && state.geotechAnomaly) {
+        resolveGeotechAnomaly(false);
+      } else {
+        updateGeotechUI();
+      }
+    }
+
+    function triggerGeotechAnomaly(spikeVal = 26.5) {
+      state.geotechAnomaly = true;
+      state.telemetry.inc04 = spikeVal;
+
+      // Update Slider UI
+      const slider = document.getElementById('inc04-slider');
+      const valLabel = document.getElementById('inc04-slider-val');
+      if (slider) slider.value = spikeVal;
+      if (valLabel) {
+        valLabel.textContent = `${spikeVal.toFixed(1)} mm`;
+        valLabel.className = 'font-bold text-rose-400 w-16 text-right animate-pulse';
+      }
+
+      // FAIL-CLOSED AUTOMATED WBS FREEZE on WBS-2.3 & WBS-3.2
+      state.wbs.forEach(item => {
+        if (item.code === 'WBS-2.3' || item.code === 'WBS-3.2') {
+          item.gate = 'CRITICAL GEO ALARM HOLD';
+          item.isLocked = true;
+        }
+      });
+
+      // Show Flashing Emergency Stop-Work Banner
+      const banner = document.getElementById('stop-work-banner');
+      const bannerVal = document.getElementById('banner-inc-val');
+      if (banner) banner.classList.remove('hidden');
+      if (bannerVal) bannerVal.textContent = `${spikeVal.toFixed(1)} mm`;
+
+      updateGeotechUI();
+      renderMasterGrid();
+      recalculateAll(true);
+
+      if (window.Nexus4DDigitalTwin) {
+        Nexus4DDigitalTwin.updateMaterials();
+      }
+
+      // Automatically Open Webhook Emergency Console
+      openWebhookDispatchModal();
+      showNexusToast(`🚨 STOP-WORK ORDER TRIGGERED: INC-04 at ${spikeVal}mm exceeds 25.0mm Alarm Limit!`);
+    }
+
+    function resolveGeotechAnomaly(notify = true) {
+      state.geotechAnomaly = false;
+      state.telemetry.inc04 = 18.4;
+
+      // Restore Slider UI
+      const slider = document.getElementById('inc04-slider');
+      const valLabel = document.getElementById('inc04-slider-val');
+      if (slider) slider.value = 18.4;
+      if (valLabel) {
+        valLabel.textContent = '18.4 mm';
+        valLabel.className = 'font-bold text-emerald-400 w-16 text-right';
+      }
+
+      // Restore WBS Gates
+      state.wbs.forEach(item => {
+        if (item.code === 'WBS-2.3') {
+          item.gate = 'GEO HOLD';
+          item.isLocked = false;
+        }
+        if (item.code === 'WBS-3.2') {
+          item.gate = 'RFI HOLD';
+          item.isLocked = false;
+        }
+      });
+
+      // Hide Emergency Banner
+      const banner = document.getElementById('stop-work-banner');
+      if (banner) banner.classList.add('hidden');
+
+      updateGeotechUI();
+      renderMasterGrid();
+      recalculateAll(true);
+
+      if (window.Nexus4DDigitalTwin) {
+        Nexus4DDigitalTwin.updateMaterials();
+      }
+
+      if (notify) {
+        showNexusToast('✅ Geotechnical Anomaly Cleared — Safe Baseline Restored (18.4mm)');
+      }
+    }
+
+    function updateGeotechUI() {
+      const inc = state.telemetry.inc04;
+      const sm = state.telemetry.sm08;
+      const pz = state.telemetry.pz02;
+      const bauer = state.telemetry.bauerX;
+
+      // Card 1: INC-04
+      const valInc = document.getElementById('val-inc04');
+      const badgeInc = document.getElementById('badge-inc04');
+      const barInc = document.getElementById('bar-inc04');
+      const cardInc = document.getElementById('card-inc04');
+
+      if (valInc) valInc.innerHTML = `${inc.toFixed(1)} mm <span class="text-xs font-normal text-slate-400">/ 25.0 mm Alarm</span>`;
+      if (barInc) barInc.style.width = `${Math.min(100, (inc / 25.0) * 100)}%`;
+
+      if (inc >= 25.0) {
+        if (badgeInc) {
+          badgeInc.textContent = 'ALARM EXCEEDED';
+          badgeInc.className = 'text-rose-300 font-extrabold px-1 rounded bg-rose-950 border border-rose-600 animate-ping text-[10px]';
+        }
+        if (barInc) barInc.className = 'bg-rose-500 h-full rounded-full transition-all duration-300';
+        if (cardInc) cardInc.className = 'bg-rose-950/40 border-2 border-rose-500 p-2.5 rounded-sm mono-num transition shadow-[0_0_20px_rgba(239,68,68,0.3)]';
+      } else if (inc >= 20.0) {
+        if (badgeInc) {
+          badgeInc.textContent = 'WARNING';
+          badgeInc.className = 'text-amber-300 font-bold px-1 rounded bg-amber-950 border border-amber-600 text-[10px]';
+        }
+        if (barInc) barInc.className = 'bg-amber-500 h-full rounded-full transition-all duration-300';
+        if (cardInc) cardInc.className = 'bg-panel border border-amber-600/80 p-2.5 rounded-sm mono-num transition';
+      } else {
+        if (badgeInc) {
+          badgeInc.textContent = 'SAFE';
+          badgeInc.className = 'text-emerald-400 font-bold px-1 rounded bg-emerald-950 border border-emerald-800/60 text-[10px]';
+        }
+        if (barInc) barInc.className = 'bg-emerald-500 h-full rounded-full transition-all duration-300';
+        if (cardInc) cardInc.className = 'bg-panel border border-slate-800 p-2.5 rounded-sm mono-num transition';
+      }
+
+      // Card 2: SM-08
+      const valSm = document.getElementById('val-sm08');
+      if (valSm) valSm.innerHTML = `${sm.toFixed(1)} mm <span class="text-xs font-normal text-slate-400">/ -15.0 mm Limit</span>`;
+
+      // Card 3: PZ-02
+      const valPz = document.getElementById('val-pz02');
+      if (valPz) valPz.innerHTML = `${pz.toFixed(2)} m <span class="text-xs font-normal text-slate-400">/ -7.00 m Limit</span>`;
+
+      // Card 4: Bauer BC 40
+      const valBauer = document.getElementById('val-bauer');
+      if (valBauer) valBauer.innerHTML = `${bauer.toFixed(2)}% / ${state.telemetry.bauerY.toFixed(2)}% <span class="text-xs font-normal text-slate-400">X/Y</span>`;
+
+      // Sync Twin Overlay
+      const twinInc = document.getElementById('twin-telemetry-inc');
+      const twinSm = document.getElementById('twin-telemetry-sm');
+      const twinPz = document.getElementById('twin-telemetry-pz');
+      if (twinInc) {
+        twinInc.textContent = `${inc.toFixed(1)} mm`;
+        twinInc.className = inc >= 25.0 ? 'text-rose-400 font-extrabold animate-pulse' : 'text-emerald-400 font-bold';
+      }
+      if (twinSm) twinSm.textContent = `${sm.toFixed(1)} mm`;
+      if (twinPz) twinPz.textContent = `${pz.toFixed(2)} m`;
+
+      // Render Sparklines
+      renderSvgSparkline('sparkline-inc04', state.telemetryHistory.inc04, inc >= 25.0 ? '#ef4444' : inc >= 20.0 ? '#f59e0b' : '#10b981');
+      renderSvgSparkline('sparkline-sm08', state.telemetryHistory.sm08, '#38bdf8');
+      renderSvgSparkline('sparkline-pz02', state.telemetryHistory.pz02, '#f59e0b');
+      renderSvgSparkline('sparkline-bauer', state.telemetryHistory.bauer, '#10b981');
+    }
+
+    function renderSvgSparkline(svgId, dataPoints, strokeColor) {
+      const svg = document.getElementById(svgId);
+      if (!svg || !dataPoints || dataPoints.length < 2) return;
+
+      const min = Math.min(...dataPoints);
+      const max = Math.max(...dataPoints);
+      const range = max - min || 1;
+      const width = 100;
+      const height = 20;
+
+      const pts = dataPoints.map((val, idx) => {
+        const x = (idx / (dataPoints.length - 1)) * width;
+        const y = height - ((val - min) / range) * (height - 4) - 2;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+
+      svg.setAttribute('stroke', strokeColor);
+      svg.innerHTML = `<polyline points="${pts}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />`;
+    }
+
+    // -------------------------------------------------------------------------
+    // EMERGENCY WEBHOOK DISPATCH CONSOLE LOGIC
+    // -------------------------------------------------------------------------
+    function generateWebhookPayloads() {
+      const incVal = state.telemetry.inc04.toFixed(1);
+      const nowStr = new Date().toISOString();
+
+      return {
+        teams: {
+          "@type": "MessageCard",
+          "@context": "http://schema.org/extensions",
+          "themeColor": "D9383A",
+          "summary": `🚨 ANZEN DAI-ICHI STOP-WORK ORDER: INC-04 Deflection ${incVal}mm Exceeds Alarm Limit`,
+          "sections": [{
+            "activityTitle": "🚨 SHIMIZU CP-202 EMERGENCY GEOTECHNICAL DISPATCH",
+            "activitySubtitle": `Jakarta MRT Underground CP-202 • Incident #GEO-2026-11-INC04`,
+            "activityImage": "https://img.icons8.com/color/96/warning-shield.png",
+            "facts": [
+              { "name": "Telemetry Sensor:", "value": "Inclinometer INC-04 (East D-Wall)" },
+              { "name": "Station Chainage:", "value": "STA 14+220 (Station Box Tier 3)" },
+              { "name": "Current Deflection:", "value": `**${incVal} mm** (Alarm Limit: 25.0 mm)` },
+              { "name": "Immediate Action:", "value": "FAIL-CLOSED: WBS-2.3 & WBS-3.2 Frozen" },
+              { "name": "Governing Rule:", "value": "FIDIC Red Book Sub-Clause 8.8 (Suspension)" },
+              { "name": "Timestamp:", "value": nowStr }
+            ],
+            "markdown": true
+          }],
+          "potentialAction": [
+            {
+              "@type": "OpenUri",
+              "name": "View 4D Digital Twin",
+              "targets": [{ "os": "default", "uri": "https://nexus4d-koutei-planning-engine.vercel.app/#twin" }]
+            },
+            {
+              "@type": "ActionCard",
+              "name": "Acknowledge Incident",
+              "actions": [{
+                "@type": "HttpPOST",
+                "name": "Sign Stop-Work Notice",
+                "target": "https://shimizu.co.jp/api/cp202/geotech/ack"
+              }]
+            }
+          ]
+        },
+        slack: {
+          "channel": "#cp202-genba-emergency",
+          "text": `🚨 *ANZEN DAI-ICHI STOP-WORK ORDER: INC-04 DEFLECTION ${incVal}mm* <!channel>`,
+          "attachments": [{
+            "color": "#ef4444",
+            "blocks": [
+              {
+                "type": "header",
+                "text": { "type": "plain_text", "text": "🚨 GEOTECHNICAL FAIL-CLOSED HOLD ISSUED" }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  { "type": "mrkdwn", "text": `*Sensor:*
+INC-04 (STA 14+220)` },
+                  { "type": "mrkdwn", "text": `*Reading:*
+*${incVal} mm* (Threshold: 25.0 mm)` },
+                  { "type": "mrkdwn", "text": `*Impacted WBS:*
+WBS-2.3 & WBS-3.2` },
+                  { "type": "mrkdwn", "text": `*Status:*
+Excavation Frozen` }
+                ]
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": { "type": "plain_text", "text": "Convene Emergency Genba Committee" },
+                    "style": "danger",
+                    "value": "convene_meeting"
+                  }
+                ]
+              }
+            ]
+          }]
+        },
+        whatsapp: {
+          "messaging_product": "whatsapp",
+          "recipient_type": "individual",
+          "to": "+62811202043",
+          "type": "template",
+          "template": {
+            "name": "shimizu_emergency_stop_work_v2",
+            "language": { "code": "en_US" },
+            "components": [
+              {
+                "type": "body",
+                "parameters": [
+                  { "type": "text", "text": "INC-04 (STA 14+220)" },
+                  { "type": "text", "text": `${incVal} mm` },
+                  { "type": "text", "text": "WBS-2.3 DW-18 & Tier 3 Excavation" },
+                  { "type": "text", "text": "Shimizu Project Director & GEO-ENG Lead" }
+                ]
+              }
+            ]
+          }
+        }
+      };
+    }
+
+    function openWebhookDispatchModal() {
+      const modal = document.getElementById('webhook-dispatch-modal');
+      if (!modal) return;
+
+      const incVal = state.telemetry.inc04.toFixed(1);
+      const dispVal = document.getElementById('webhook-disp-val');
+      if (dispVal) dispVal.textContent = `${incVal} mm`;
+
+      const timeEl = document.getElementById('webhook-incident-time');
+      if (timeEl) timeEl.textContent = new Date().toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' }) + ' WIB';
+
+      renderActiveWebhookPayload();
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeWebhookDispatchModal() {
+      const modal = document.getElementById('webhook-dispatch-modal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function switchWebhookTab(tabKey) {
+      state.activeWebhookTab = tabKey;
+      ['teams', 'slack', 'whatsapp'].forEach(k => {
+        const btn = document.getElementById(`webhook-tab-btn-${k}`);
+        if (btn) {
+          if (k === tabKey) {
+            btn.className = 'px-3 py-1.5 font-bold rounded-t-sm bg-shimizu text-white border-t border-x border-sky-400/50';
+          } else {
+            btn.className = 'px-3 py-1.5 font-medium rounded-t-sm text-slate-400 hover:text-slate-200';
+          }
+        }
+      });
+      renderActiveWebhookPayload();
+    }
+
+    function renderActiveWebhookPayload() {
+      const payloads = generateWebhookPayloads();
+      const payloadPre = document.getElementById('webhook-payload-pre');
+      if (!payloadPre) return;
+
+      const activeObj = payloads[state.activeWebhookTab] || payloads.teams;
+      payloadPre.textContent = JSON.stringify(activeObj, null, 2);
+    }
+
+    function copyWebhookPayload() {
+      const pre = document.getElementById('webhook-payload-pre');
+      const feedback = document.getElementById('webhook-copy-feedback');
+      if (!pre) return;
+
+      navigator.clipboard?.writeText(pre.textContent || '');
+      if (feedback) {
+        feedback.textContent = '✓ JSON Copied to Clipboard';
+        setTimeout(() => { feedback.textContent = ''; }, 2500);
+      }
+      showNexusToast('📋 Webhook Payload JSON Copied');
+    }
+
+    function simulateWebhookDispatch() {
+      const statusBadge = document.getElementById('webhook-dispatch-status-badge');
+      const transTime = document.getElementById('webhook-transmission-time');
+      const r1 = document.getElementById('disp-receipt-1');
+      const r2 = document.getElementById('disp-receipt-2');
+      const r3 = document.getElementById('disp-receipt-3');
+      const btn = document.getElementById('btn-trigger-webhook-dispatch');
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳ Transmitting Webhook Payloads...</span>';
+      }
+
+      setTimeout(() => {
+        if (r1) r1.innerHTML = '<span class="text-emerald-400 font-extrabold">200 OK (38ms)</span>';
+      }, 250);
+
+      setTimeout(() => {
+        if (r2) r2.innerHTML = '<span class="text-emerald-400 font-extrabold">200 OK (54ms)</span>';
+      }, 500);
+
+      setTimeout(() => {
+        if (r3) r3.innerHTML = '<span class="text-emerald-400 font-extrabold">200 OK (82ms)</span>';
+
+        if (statusBadge) {
+          statusBadge.textContent = '✓ 3/3 DISPATCHED (200 OK)';
+          statusBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded bg-emerald-950 text-emerald-300 border border-emerald-600/70 mono-num';
+        }
+
+        if (transTime) {
+          transTime.textContent = `Completed at ${new Date().toLocaleTimeString()} • SHA-256 Verified`;
+        }
+
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span>✓ Emergency Payloads Delivered (200 OK)</span>';
+        }
+
+        showNexusToast('📡 Emergency Webhooks Successfully Dispatched to Teams, Slack & WhatsApp!');
+      }, 850);
+    }
+
+    // -------------------------------------------------------------------------
+    // PILLAR 1: INTERACTIVE 4D WEBGL / THREE.JS DIGITAL TWIN CONTROLLER
+    // -------------------------------------------------------------------------
+    window.Nexus4DDigitalTwin = {
+      scene: null,
+      camera: null,
+      renderer: null,
+      controls: null,
+      raycaster: null,
+      mouse: null,
+      initialized: false,
+      isPlaying: false,
+      playSpeed: 1,
+      playInterval: null,
+      sliderValue: 303, // Corresponds to W43 (2026-11-03)
+      meshes: [],
+      selectedMesh: null,
+      layers: {
+        decking: true,
+        dwalls: true,
+        struts: true,
+        slabs: true,
+        tbm1: true,
+        tbm2: true,
+        sensors: true
+      },
+
+      init() {
+        if (this.initialized) return;
+
+        const container = document.getElementById('three-viewport-container');
+        const canvas = document.getElementById('twin-canvas');
+        if (!container || !canvas || typeof THREE === 'undefined') {
+          console.warn('Three.js container or canvas not ready.');
+          return;
+        }
+
+        const width = container.clientWidth || 1200;
+        const height = container.clientHeight || 640;
+
+        // 1. Scene & Background
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x070b14); // Obsidian background
+
+        // Ground Reference Grid
+        const gridHelper = new THREE.GridHelper(360, 36, 0x1e293b, 0x0f172a);
+        gridHelper.position.y = -26.5;
+        this.scene.add(gridHelper);
+
+        // 2. Camera
+        this.camera = new THREE.PerspectiveCamera(45, width / height, 1, 2000);
+        this.camera.position.set(160, 110, 150);
+
+        // 3. Renderer
+        this.renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        this.renderer.setSize(width, height);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.shadowMap.enabled = true;
+
+        // 4. OrbitControls
+        if (typeof THREE.OrbitControls !== 'undefined') {
+          this.controls = new THREE.OrbitControls(this.camera, canvas);
+          this.controls.enableDamping = true;
+          this.controls.dampingFactor = 0.08;
+          this.controls.target.set(40, -10, 0);
+          this.controls.maxPolarAngle = Math.PI / 2 + 0.15; // Allow slight underground tilt
+        }
+
+        // 5. Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        this.scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+        dirLight.position.set(120, 200, 100);
+        this.scene.add(dirLight);
+
+        const blueFillLight = new THREE.DirectionalLight(0x005bac, 0.6);
+        blueFillLight.position.set(-100, -50, -80);
+        this.scene.add(blueFillLight);
+
+        // 6. Build Procedural Station Box & TBM Elements
+        this.buildProceduralModel();
+
+        // 7. Raycasting Setup
+        this.raycaster = new THREE.Raycaster();
+        this.mouse = new THREE.Vector2();
+
+        canvas.addEventListener('mousemove', (e) => this.onPointerMove(e));
+        canvas.addEventListener('click', (e) => this.onPointerClick(e));
+        window.addEventListener('resize', () => this.onWindowResize());
+
+        this.initialized = true;
+        this.animate();
+        this.updateMaterials();
+      },
+
+      buildProceduralModel() {
+        const rootGroup = new THREE.Group();
+        rootGroup.name = 'root_construction_model';
+        this.scene.add(rootGroup);
+
+        // Materials cache
+        const concreteMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8, metalness: 0.1 });
+        const steelMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.5, metalness: 0.7 });
+
+        // A. Ground Decking (WBS-1.1: STA 14+000 - STA 14+350)
+        const deckingGeo = new THREE.BoxGeometry(200, 0.6, 26);
+        const deckingMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9, transparent: true, opacity: 0.65 });
+        const deckingMesh = new THREE.Mesh(deckingGeo, deckingMat);
+        deckingMesh.position.set(0, -0.3, 0);
+        deckingMesh.userData = {
+          wbsCode: 'WBS-1.1',
+          name: 'Site Mobilization, Traffic Decking & Guide Wall',
+          category: 'decking',
+          chainage: 'STA 14+000 - STA 14+350',
+          elev: 'Surface EL +0.0m'
+        };
+        rootGroup.add(deckingMesh);
+        this.meshes.push(deckingMesh);
+
+        // B. Diaphragm Wall (D-Wall) Perimeter Panels (DW-01 to DW-36)
+        // 18 panels East side, 18 panels West side
+        const panelWidth = 11.0;
+        const panelHeight = 26.0;
+        const panelThick = 1.2;
+
+        for (let i = 0; i < 18; i++) {
+          const panelX = -94 + (i * panelWidth);
+          const isSouthBox = i < 9;
+          const wbsCode = isSouthBox ? 'WBS-2.1' : 'WBS-2.3';
+          const pId = i + 1;
+
+          // East Panel
+          const eastGeo = new THREE.BoxGeometry(panelWidth - 0.2, panelHeight, panelThick);
+          const eastMat = concreteMat.clone();
+          const eastMesh = new THREE.Mesh(eastGeo, eastMat);
+          eastMesh.position.set(panelX, -13.0, -13.0);
+          eastMesh.userData = {
+            wbsCode: wbsCode,
+            name: `Diaphragm Wall East Panel DW-${pId < 10 ? '0' + pId : pId}`,
+            category: 'dwalls',
+            chainage: `STA 14+${(100 + i * 14).toFixed(0)}`,
+            elev: 'Depth 0.0m to -26.0m'
+          };
+          rootGroup.add(eastMesh);
+          this.meshes.push(eastMesh);
+
+          // West Panel
+          const westGeo = new THREE.BoxGeometry(panelWidth - 0.2, panelHeight, panelThick);
+          const westMat = concreteMat.clone();
+          const westMesh = new THREE.Mesh(westGeo, westMat);
+          westMesh.position.set(panelX, -13.0, 13.0);
+          westMesh.userData = {
+            wbsCode: wbsCode,
+            name: `Diaphragm Wall West Panel DW-${pId + 18}`,
+            category: 'dwalls',
+            chainage: `STA 14+${(100 + i * 14).toFixed(0)}`,
+            elev: 'Depth 0.0m to -26.0m'
+          };
+          rootGroup.add(westMesh);
+          this.meshes.push(westMesh);
+        }
+
+        // End Closure Walls (North & South bulkheads)
+        const endWallGeo = new THREE.BoxGeometry(panelThick, panelHeight, 26);
+        const southEnd = new THREE.Mesh(endWallGeo, concreteMat.clone());
+        southEnd.position.set(-100, -13.0, 0);
+        southEnd.userData = { wbsCode: 'WBS-2.1', name: 'D-Wall South Bulkhead Closure (STA 14+000)', category: 'dwalls' };
+        rootGroup.add(southEnd);
+        this.meshes.push(southEnd);
+
+        const northEnd = new THREE.Mesh(endWallGeo, concreteMat.clone());
+        northEnd.position.set(100, -13.0, 0);
+        northEnd.userData = { wbsCode: 'WBS-2.3', name: 'D-Wall North TBM Launch Bulkhead (STA 14+350)', category: 'dwalls' };
+        rootGroup.add(northEnd);
+        this.meshes.push(northEnd);
+
+        // C. Multi-Level Station Slabs
+        // B1 Concourse Slab (Y = -8m) -> WBS-3.1
+        const b1Geo = new THREE.BoxGeometry(198, 0.9, 24.8);
+        const b1Mat = concreteMat.clone();
+        const b1Mesh = new THREE.Mesh(b1Geo, b1Mat);
+        b1Mesh.position.set(0, -8.0, 0);
+        b1Mesh.userData = {
+          wbsCode: 'WBS-3.1',
+          name: 'Station Box Top-Down Roof & B1 Concourse Slab',
+          category: 'slabs',
+          chainage: 'STA 14+000 - STA 14+350',
+          elev: 'Elevation -8.0m'
+        };
+        rootGroup.add(b1Mesh);
+        this.meshes.push(b1Mesh);
+
+        // B2 Intermediate Slab (Y = -16m) -> WBS-3.2
+        const b2Geo = new THREE.BoxGeometry(198, 0.9, 24.8);
+        const b2Mat = concreteMat.clone();
+        const b2Mesh = new THREE.Mesh(b2Geo, b2Mat);
+        b2Mesh.position.set(0, -16.0, 0);
+        b2Mesh.userData = {
+          wbsCode: 'WBS-3.2',
+          name: 'Station Box Top-Down Slab Level S2 & Stage 2 Excavation',
+          category: 'slabs',
+          chainage: 'STA 14+000 - STA 14+350',
+          elev: 'Elevation -16.0m'
+        };
+        rootGroup.add(b2Mesh);
+        this.meshes.push(b2Mesh);
+
+        // B3 Base Slab (Y = -24.5m) -> WBS-5.1
+        const b3Geo = new THREE.BoxGeometry(198, 1.8, 24.8);
+        const b3Mat = concreteMat.clone();
+        const b3Mesh = new THREE.Mesh(b3Geo, b3Mat);
+        b3Mesh.position.set(0, -24.5, 0);
+        b3Mesh.userData = {
+          wbsCode: 'WBS-5.1',
+          name: 'Concourse & Base Slab RC Structure (-24.0m Base)',
+          category: 'slabs',
+          chainage: 'STA 14+000 - STA 14+350',
+          elev: 'Elevation -24.0m to -25.8m'
+        };
+        rootGroup.add(b3Mesh);
+        this.meshes.push(b3Mesh);
+
+        // Vertical King Posts (Plunge Columns) Grid
+        const colGeo = new THREE.BoxGeometry(0.7, 26, 0.7);
+        for (let kx = -80; kx <= 80; kx += 20) {
+          [-6, 6].forEach(kz => {
+            const colMesh = new THREE.Mesh(colGeo, steelMat);
+            colMesh.position.set(kx, -13.0, kz);
+            colMesh.userData = { wbsCode: 'WBS-3.1', name: 'Vertical Steel King Post Plunge Column', category: 'slabs' };
+            rootGroup.add(colMesh);
+          });
+        }
+
+        // Temporary Steel Strutting Tiers (Tier 1 to 4)
+        const strutYLevels = [-3.0, -10.0, -17.5, -22.0];
+        strutYLevels.forEach((sy, tierIdx) => {
+          const strutGeo = new THREE.CylinderGeometry(0.4, 0.4, 25.2, 12);
+          for (let sx = -80; sx <= 80; sx += 20) {
+            const strutMesh = new THREE.Mesh(strutGeo, steelMat.clone());
+            strutMesh.rotation.x = Math.PI / 2;
+            strutMesh.position.set(sx, sy, 0);
+            strutMesh.userData = {
+              wbsCode: tierIdx < 2 ? 'WBS-3.1' : 'WBS-3.2',
+              name: `Temporary Heavy Steel Strut Level S${tierIdx + 1} (Hydraulic Preloaded)`,
+              category: 'struts'
+            };
+            rootGroup.add(strutMesh);
+            this.meshes.push(strutMesh);
+          }
+        });
+
+        // D. Twin EPB TBM Bored Tunnels (STA 14+350 to STA 15+500)
+        // Northbound: TBM #1 "Sakura-1" (Z = -7.0) -> WBS-4.1
+        const tbmRadius = 3.32;
+
+        // Northbound Segmental Lining Rings
+        const nbRingsGroup = new THREE.Group();
+        nbRingsGroup.userData = { category: 'tbm1' };
+        rootGroup.add(nbRingsGroup);
+
+        for (let rx = 101; rx <= 165; rx += 2.2) {
+          const ringGeo = new THREE.CylinderGeometry(tbmRadius, tbmRadius, 2.0, 24, 1, true);
+          const ringMat = concreteMat.clone();
+          const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+          ringMesh.rotation.z = Math.PI / 2;
+          ringMesh.position.set(rx, -17.0, -7.0);
+          ringMesh.userData = {
+            wbsCode: 'WBS-4.1',
+            name: `Twin EPB TBM #1 "Sakura-1" Precast Segmental Ring (Ø6.65m)`,
+            category: 'tbm1',
+            chainage: `STA 14+${(350 + (rx - 100) * 1.5).toFixed(0)}`
+          };
+          nbRingsGroup.add(ringMesh);
+          this.meshes.push(ringMesh);
+        }
+
+        // TBM #1 Shield Machine Body & Cutterhead at X = 170
+        const shieldGeo = new THREE.CylinderGeometry(tbmRadius + 0.05, tbmRadius + 0.05, 8.5, 32);
+        const shieldMat = new THREE.MeshStandardMaterial({ color: 0x005bac, metalness: 0.8, roughness: 0.3 });
+        const shieldMesh = new THREE.Mesh(shieldGeo, shieldMat);
+        shieldMesh.rotation.z = Math.PI / 2;
+        shieldMesh.position.set(170, -17.0, -7.0);
+        shieldMesh.userData = {
+          wbsCode: 'WBS-4.1',
+          name: 'Twin EPB TBM #1 "Sakura-1" Shield Body & Articulated Trailing Gantries',
+          category: 'tbm1',
+          chainage: 'STA 14+520 (Current Face Ring #282)'
+        };
+        rootGroup.add(shieldMesh);
+        this.meshes.push(shieldMesh);
+
+        // Cutterhead
+        const cutterGeo = new THREE.CylinderGeometry(tbmRadius + 0.1, tbmRadius + 0.1, 1.2, 32);
+        const cutterMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.2 });
+        const cutterMesh = new THREE.Mesh(cutterGeo, cutterMat);
+        cutterMesh.rotation.z = Math.PI / 2;
+        cutterMesh.position.set(175, -17.0, -7.0);
+        cutterMesh.userData = {
+          wbsCode: 'WBS-4.1',
+          name: 'TBM #1 Rotating Cutterhead (Foam Ports & Heavy Disc Cutters)',
+          category: 'tbm1'
+        };
+        rootGroup.add(cutterMesh);
+        this.meshes.push(cutterMesh);
+
+        // Southbound Tunnel: TBM #2 "Garuda-2" (Z = +7.0) -> WBS-4.2
+        const sbRingsGroup = new THREE.Group();
+        sbRingsGroup.userData = { category: 'tbm2' };
+        rootGroup.add(sbRingsGroup);
+
+        for (let rx = 101; rx <= 135; rx += 2.2) {
+          const ringGeo = new THREE.CylinderGeometry(tbmRadius, tbmRadius, 2.0, 24, 1, true);
+          const ringMat = concreteMat.clone();
+          const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+          ringMesh.rotation.z = Math.PI / 2;
+          ringMesh.position.set(rx, -17.0, 7.0);
+          ringMesh.userData = {
+            wbsCode: 'WBS-4.2',
+            name: `Twin EPB TBM #2 "Garuda-2" Precast Segmental Ring (Ø6.65m)`,
+            category: 'tbm2',
+            chainage: `STA 14+${(350 + (rx - 100) * 1.5).toFixed(0)}`
+          };
+          sbRingsGroup.add(ringMesh);
+          this.meshes.push(ringMesh);
+        }
+
+        // TBM #2 Shield Machine Body at X = 140
+        const shield2Geo = new THREE.CylinderGeometry(tbmRadius + 0.05, tbmRadius + 0.05, 8.5, 32);
+        const shield2Mat = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.8, roughness: 0.3 });
+        const shield2Mesh = new THREE.Mesh(shield2Geo, shield2Mat);
+        shield2Mesh.rotation.z = Math.PI / 2;
+        shield2Mesh.position.set(140, -17.0, 7.0);
+        shield2Mesh.userData = {
+          wbsCode: 'WBS-4.2',
+          name: 'Twin EPB TBM #2 "Garuda-2" Shield Machine & Trailing Gantries',
+          category: 'tbm2',
+          chainage: 'STA 14+380 (Current Face Ring #152)'
+        };
+        rootGroup.add(shield2Mesh);
+        this.meshes.push(shield2Mesh);
+
+        // Cross-Passage CP-01 (Connecting Tube between NB & SB at X = 190) -> WBS-5.2
+        const cpGeo = new THREE.CylinderGeometry(1.8, 1.8, 14, 16);
+        const cpMat = concreteMat.clone();
+        const cpMesh = new THREE.Mesh(cpGeo, cpMat);
+        cpMesh.rotation.x = Math.PI / 2;
+        cpMesh.position.set(190, -17.0, 0);
+        cpMesh.userData = {
+          wbsCode: 'WBS-5.2',
+          name: 'Cross-Passage CP-01 Opening & Tunnel Walkways',
+          category: 'slabs',
+          chainage: 'STA 14+850'
+        };
+        rootGroup.add(cpMesh);
+        this.meshes.push(cpMesh);
+
+        // E. Subsurface Instrumentation Beacons (Sensors)
+        // 1. INC-04: East D-Wall Lateral Deflection Sensor
+        const sensorGeo = new THREE.SphereGeometry(1.2, 16, 16);
+        const incMat = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x10b981, emissiveIntensity: 0.6 });
+        const incMesh = new THREE.Mesh(sensorGeo, incMat);
+        incMesh.position.set(-20, -16.5, -13.8);
+        incMesh.userData = {
+          wbsCode: 'WBS-2.3',
+          sensorId: 'INC-04',
+          name: 'Inclinometer INC-04 (East Wall Deflection Telemetry)',
+          category: 'sensors'
+        };
+        rootGroup.add(incMesh);
+        this.meshes.push(incMesh);
+
+        // 2. SM-08: Surface Building Settlement Marker
+        const smGeo = new THREE.ConeGeometry(1.2, 2.0, 16);
+        const smMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x38bdf8, emissiveIntensity: 0.5 });
+        const smMesh = new THREE.Mesh(smGeo, smMat);
+        smMesh.position.set(10, 1.2, -18.0);
+        smMesh.userData = {
+          wbsCode: 'WBS-1.2',
+          sensorId: 'SM-08',
+          name: 'Settlement Marker SM-08 (Heritage Arcade Foundation)',
+          category: 'sensors'
+        };
+        rootGroup.add(smMesh);
+        this.meshes.push(smMesh);
+
+        // 3. PZ-02: Piezometer Standpipe
+        const pzGeo = new THREE.CylinderGeometry(0.3, 0.3, 20, 8);
+        const pzMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xf59e0b, emissiveIntensity: 0.4 });
+        const pzMesh = new THREE.Mesh(pzGeo, pzMat);
+        pzMesh.position.set(-10, -10.0, 15.0);
+        pzMesh.userData = {
+          wbsCode: 'WBS-1.2',
+          sensorId: 'PZ-02',
+          name: 'Piezometer PZ-02 Groundwater Drawdown Standpipe',
+          category: 'sensors'
+        };
+        rootGroup.add(pzMesh);
+        this.meshes.push(pzMesh);
+      },
+
+      updateMaterials() {
+        if (!this.initialized || !this.meshes.length) return;
+
+        const time = performance.now() * 0.003;
+        const isAnomaly = state.geotechAnomaly;
+
+        this.meshes.forEach(mesh => {
+          if (!mesh.userData || !mesh.userData.wbsCode) return;
+
+          const wbs = state.wbs.find(w => w.code === mesh.userData.wbsCode);
+          if (!wbs) return;
+
+          const mat = mesh.material;
+          if (!mat || !mat.color) return;
+
+          const hasHold = wbs.gate && (wbs.gate.includes('HOLD') || wbs.gate.includes('ALARM'));
+          const isAnomalyAffected = isAnomaly && (wbs.code === 'WBS-2.3' || wbs.code === 'WBS-3.2');
+
+          if (isAnomalyAffected || hasHold) {
+            // 🟥 Crimson Pulsing: Hard Gated / Locked / Geotech Anomaly
+            mat.color.setHex(0xef4444);
+            if (mat.emissive) {
+              mat.emissive.setHex(0xef4444);
+              mat.emissiveIntensity = 0.4 + 0.4 * Math.sin(time * 3);
+            }
+            mat.wireframe = false;
+            mat.transparent = false;
+            mat.opacity = 1.0;
+          } else if (wbs.actual >= 100) {
+            // 🟩 Emerald Solid: Completed
+            mat.color.setHex(0x10b981);
+            if (mat.emissive) {
+              mat.emissive.setHex(0x064e3b);
+              mat.emissiveIntensity = 0.2;
+            }
+            mat.wireframe = false;
+            mat.transparent = false;
+            mat.opacity = 1.0;
+          } else if (wbs.actual > 0) {
+            // 🟨 Amber Glowing: Active / In-Progress
+            mat.color.setHex(0xf59e0b);
+            if (mat.emissive) {
+              mat.emissive.setHex(0xf59e0b);
+              mat.emissiveIntensity = 0.25 + 0.25 * Math.sin(time);
+            }
+            mat.wireframe = false;
+            mat.transparent = false;
+            mat.opacity = 1.0;
+          } else {
+            // ⬜ Translucent Dark Wireframe: Not Started
+            mat.color.setHex(0x334155);
+            if (mat.emissive) mat.emissive.setHex(0x000000);
+            mat.wireframe = true;
+            mat.transparent = true;
+            mat.opacity = 0.35;
+          }
+        });
+      },
+
+      setPreset(presetName) {
+        if (!this.controls || !this.camera) return;
+
+        if (presetName === 'iso') {
+          this.camera.position.set(160, 110, 150);
+          this.controls.target.set(40, -10, 0);
+        } else if (presetName === 'top') {
+          this.camera.position.set(40, 240, 0);
+          this.controls.target.set(40, -10, 0);
+        } else if (presetName === 'profile') {
+          this.camera.position.set(40, -10, 210);
+          this.controls.target.set(40, -10, 0);
+        } else if (presetName === 'tbm') {
+          this.camera.position.set(175, -5, 45);
+          this.controls.target.set(155, -16, 0);
+        } else if (presetName === 'section') {
+          this.camera.position.set(-60, -10, 0);
+          this.controls.target.set(30, -10, 0);
+        }
+        this.controls.update();
+      },
+
+      toggleLayer(layerKey, isVisible) {
+        this.layers[layerKey] = isVisible;
+        this.meshes.forEach(m => {
+          if (m.userData && m.userData.category === layerKey) {
+            m.visible = isVisible;
+          }
+        });
+      },
+
+      resetView() {
+        this.setPreset('iso');
+      },
+
+      toggleFullscreen() {
+        const container = document.getElementById('three-viewport-container');
+        if (!container) return;
+
+        if (!document.fullscreenElement) {
+          container.requestFullscreen?.().catch(err => console.warn(err));
+        } else {
+          document.exitFullscreen?.().catch(err => console.warn(err));
+        }
+      },
+
+      onPointerMove(event) {
+        const canvas = document.getElementById('twin-canvas');
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      },
+
+      onPointerClick(event) {
+        this.onPointerMove(event);
+        if (!this.raycaster || !this.camera) return;
+
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.raycaster.intersectObjects(this.meshes, false);
+
+        if (intersects.length > 0) {
+          const hit = intersects[0].object;
+          this.inspectMesh(hit);
+        }
+      },
+
+      inspectMesh(mesh) {
+        this.selectedMesh = mesh;
+        if (!mesh.userData) return;
+
+        const wbsCode = mesh.userData.wbsCode;
+        const wbs = state.wbs.find(w => w.code === wbsCode);
+
+        // Update HUD Card
+        const badge = document.getElementById('twin-hud-badge');
+        const disc = document.getElementById('twin-hud-disc');
+        const status = document.getElementById('twin-hud-status');
+        const title = document.getElementById('twin-hud-title');
+        const chainage = document.getElementById('twin-hud-chainage');
+        const weight = document.getElementById('twin-hud-weight');
+        const finish = document.getElementById('twin-hud-finish');
+        const actual = document.getElementById('twin-hud-actual');
+        const plan = document.getElementById('twin-hud-plan');
+        const tf = document.getElementById('twin-hud-tf');
+        const note = document.getElementById('twin-hud-note');
+
+        if (badge) badge.textContent = wbsCode || 'WBS';
+        if (disc) disc.textContent = wbs?.discipline || mesh.userData.category || 'Civil';
+        if (title) title.textContent = mesh.userData.name || wbs?.name || 'CP-202 Work Component';
+        if (chainage) chainage.textContent = `${mesh.userData.chainage || wbs?.chainage || 'STA 14+000'} • ${mesh.userData.elev || 'Subsurface'}`;
+        if (weight) weight.textContent = `${wbs?.weight?.toFixed(1) || '0.0'}%`;
+        if (finish) finish.textContent = wbs?.ef || '2026-11-20';
+        if (actual) actual.textContent = `${wbs?.actual?.toFixed(1) || '0.0'}%`;
+        if (plan) plan.textContent = `${wbs?.plan?.toFixed(1) || '0.0'}%`;
+        if (tf) tf.textContent = `${wbs?.tf ?? 0} Days ${wbs?.tf === 0 ? '(Critical Path)' : ''}`;
+        if (note) note.textContent = wbs?.genba?.note || 'Component inspected by Shimizu QC26 / PE26.';
+
+        if (status) {
+          if (wbs?.gate?.includes('HOLD') || wbs?.gate?.includes('ALARM')) {
+            status.textContent = wbs.gate;
+            status.className = 'px-1.5 py-0.5 text-[9.5px] font-bold rounded bg-rose-950 text-rose-300 border border-rose-700/60 animate-pulse';
+          } else if (wbs?.actual >= 100) {
+            status.textContent = 'COMPLETED (100%)';
+            status.className = 'px-1.5 py-0.5 text-[9.5px] font-bold rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60';
+          } else {
+            status.textContent = `ACTIVE (${wbs?.actual?.toFixed(1)}%)`;
+            status.className = 'px-1.5 py-0.5 text-[9.5px] font-bold rounded bg-amber-950 text-amber-300 border border-amber-700/60';
+          }
+        }
+      },
+
+      locateCurrentWbsInGrid() {
+        if (!this.selectedMesh || !this.selectedMesh.userData?.wbsCode) return;
+        const wbsCode = this.selectedMesh.userData.wbsCode;
+        locateWbsInGrid(wbsCode);
+      },
+
+      focusWbs(wbsCode) {
+        // Switch to Tab 10
+        switchTab('twin');
+
+        // Find mesh matching WBS
+        const targetMesh = this.meshes.find(m => m.userData?.wbsCode === wbsCode);
+        if (targetMesh && this.controls && this.camera) {
+          this.inspectMesh(targetMesh);
+          const p = targetMesh.position;
+          this.controls.target.set(p.x, p.y, p.z);
+          this.camera.position.set(p.x + 35, p.y + 25, p.z + 45);
+          this.controls.update();
+        }
+      },
+
+      onSliderInput(val) {
+        this.sliderValue = parseInt(val, 10);
+        const startDate = new Date('2026-01-05').getTime();
+        const targetDate = new Date(startDate + this.sliderValue * 86400000);
+        const dateStr = targetDate.toISOString().split('T')[0];
+
+        const dateLabel = document.getElementById('twin-sim-date-label');
+        if (dateLabel) {
+          dateLabel.textContent = `${dateStr} (Day ${this.sliderValue})`;
+        }
+
+        // Interpolate construction progress by date
+        this.meshes.forEach(mesh => {
+          if (!mesh.userData?.wbsCode) return;
+          const wbs = state.wbs.find(w => w.code === mesh.userData.wbsCode);
+          if (!wbs) return;
+
+          const esTime = new Date(wbs.es).getTime();
+          const efTime = new Date(wbs.ef).getTime();
+          const curTime = targetDate.getTime();
+
+          let simProg = 0;
+          if (curTime >= efTime) {
+            simProg = 100;
+          } else if (curTime <= esTime) {
+            simProg = 0;
+          } else {
+            simProg = ((curTime - esTime) / (efTime - esTime)) * 100;
+          }
+
+          const mat = mesh.material;
+          if (mat) {
+            if (simProg >= 100) {
+              mat.color.setHex(0x10b981);
+              mat.wireframe = false;
+              mat.opacity = 1.0;
+            } else if (simProg > 0) {
+              mat.color.setHex(0xf59e0b);
+              mat.wireframe = false;
+              mat.opacity = 0.9;
+            } else {
+              mat.color.setHex(0x334155);
+              mat.wireframe = true;
+              mat.opacity = 0.25;
+            }
+          }
+        });
+      },
+
+      togglePlay() {
+        this.isPlaying = !this.isPlaying;
+        const icon = document.getElementById('twin-play-icon');
+        const label = document.getElementById('twin-play-label');
+
+        if (this.isPlaying) {
+          if (icon) icon.textContent = '⏸';
+          if (label) label.textContent = 'Pause 4D';
+          this.playInterval = setInterval(() => {
+            let nextVal = this.sliderValue + (1 * this.playSpeed);
+            if (nextVal > 512) nextVal = 0;
+            const slider = document.getElementById('twin-timeline-slider');
+            if (slider) slider.value = nextVal;
+            this.onSliderInput(nextVal);
+          }, 80);
+        } else {
+          if (icon) icon.textContent = '▶';
+          if (label) label.textContent = 'Play 4D Sequence';
+          if (this.playInterval) clearInterval(this.playInterval);
+        }
+      },
+
+      setSpeed(spd) {
+        this.playSpeed = spd;
+        document.querySelectorAll('.twin-speed-btn').forEach(btn => {
+          if (parseInt(btn.dataset.speed, 10) === spd) {
+            btn.className = 'twin-speed-btn px-2 py-0.5 bg-shimizu text-white rounded font-bold';
+          } else {
+            btn.className = 'twin-speed-btn px-2 py-0.5 bg-slate-900 text-slate-300 rounded hover:text-white';
+          }
+        });
+      },
+
+      resetToCutoffDate() {
+        if (this.isPlaying) this.togglePlay();
+        const slider = document.getElementById('twin-timeline-slider');
+        if (slider) slider.value = 303;
+        this.onSliderInput(303);
+        const dateLabel = document.getElementById('twin-sim-date-label');
+        if (dateLabel) dateLabel.textContent = '2026-11-03 (Cut-Off W43)';
+        this.updateMaterials();
+      },
+
+      onWindowResize() {
+        const container = document.getElementById('three-viewport-container');
+        if (!container || !this.renderer || !this.camera) return;
+
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        this.camera.aspect = w / h;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(w, h);
+      },
+
+      animate() {
+        requestAnimationFrame(() => this.animate());
+
+        if (this.controls) this.controls.update();
+
+        // Pulsate active and alarm shaders
+        const activeTab = document.getElementById('tab-twin');
+        if (activeTab && !activeTab.classList.contains('hidden')) {
+          this.updateMaterials();
+        }
+
+        if (this.renderer && this.scene && this.camera) {
+          this.renderer.render(this.scene, this.camera);
+        }
+      }
+    };
+
+    // Bi-directional link from 3D into Master Grid
+    function locateWbsInGrid(wbsCode) {
+      switchTab('grid');
+      setTimeout(() => {
+        const rows = document.querySelectorAll('#wbs-grid-body tr');
+        let targetRow = null;
+        rows.forEach(r => {
+          if (r.textContent.includes(wbsCode)) {
+            targetRow = r;
+          }
+        });
+
+        if (targetRow) {
+          targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          targetRow.classList.add('row-flash-emerald');
+          setTimeout(() => {
+            targetRow.classList.remove('row-flash-emerald');
+          }, 2400);
+          showNexusToast(`🎯 Focused Row: ${wbsCode} in Master Planning Grid`);
+        }
+      }, 50);
+    }
+
+
     // Boot Application
     window.addEventListener('DOMContentLoaded', () => {
       initState();
@@ -4133,6 +6380,10 @@
       renderPlantCards();
       renderBoreholes();
       renderHankoStamps();
+      startGeotechTelemetryStream();
+      updateGeotechUI();
+      applyRoleGovernance();
+      updatePortfolioCockpit();
       recalculateAll(false);
       updateAiContextStrip();
     });
