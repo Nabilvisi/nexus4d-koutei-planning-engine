@@ -1329,11 +1329,11 @@
                 </h4>
                 <p class="text-[10.5px] text-slate-400">Cumulative Completion Probability distribution across simulated iterations</p>
               </div>
-              <span id="qsra-ontime-badge" class="text-[10px] mono-num px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-700/60">
+              <span id="qsra-ontime-badge" class="text-[10px] mono-num px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-700/60 font-bold">
                 Det. On-Time: 28.4%
               </span>
             </div>
-            <div class="h-[280px] w-full">
+            <div class="h-[280px] w-full relative">
               <canvas id="qsraCumulativeChart"></canvas>
             </div>
           </div>
@@ -1348,12 +1348,111 @@
                   </h4>
                   <p class="text-[10.5px] text-slate-400">Ranked by Criticality Index (% on Critical Path) &amp; Cruciality ($r$ with Duration)</p>
                 </div>
-                <span class="text-[10px] mono-num text-amber-300 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-700/60">
+                <span class="text-[10px] mono-num text-amber-300 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-700/60 font-bold">
                   Spearman Rank $r$
                 </span>
               </div>
               <div id="qsra-tornado-container" class="space-y-2 mt-2 text-xs mono-num">
-                <!-- Dynamically populated tornado bars -->
+                <!-- Pre-rendered Tornado Sensitivity Bars -->
+                <div class="space-y-1 bg-slate-900/60 p-1.5 rounded border border-slate-800/80">
+                  <div class="flex justify-between items-baseline text-[11px]">
+                    <div class="truncate max-w-[280px]">
+                      <span class="font-extrabold text-sky-300">#1 WBS-2.3</span>
+                      <span class="text-slate-200 ml-1 font-sans font-medium text-[10.5px]">Station Box Excavation Tier 3 &amp; DW-18 Boulder Lens</span>
+                    </div>
+                    <div class="text-[10px] space-x-2 text-right">
+                      <span>Criticality: <strong class="text-white font-bold">84.5%</strong></span>
+                      <span>Cruciality: <strong class="text-amber-400 font-bold">r=0.79</strong></span>
+                    </div>
+                  </div>
+                  <div class="w-full bg-slate-950 h-2.5 rounded-xs overflow-hidden border border-slate-800 flex items-center">
+                    <div class="bg-rose-500 h-full transition-all duration-700 shadow-sm" style="width: 84.5%" title="Criticality: 84.5%"></div>
+                  </div>
+                  <div class="flex justify-between text-[9px] text-slate-400 pt-0.5">
+                    <span>High Risk • BH-09 Coring Rework</span>
+                    <span class="mono-num">🟥 Severe Driver</span>
+                  </div>
+                </div>
+
+                <div class="space-y-1 bg-slate-900/60 p-1.5 rounded border border-slate-800/80">
+                  <div class="flex justify-between items-baseline text-[11px]">
+                    <div class="truncate max-w-[280px]">
+                      <span class="font-extrabold text-sky-300">#2 WBS-3.2</span>
+                      <span class="text-slate-200 ml-1 font-sans font-medium text-[10.5px]">Station Box Top-Down S2 Excavation &amp; Slab Pouring</span>
+                    </div>
+                    <div class="text-[10px] space-x-2 text-right">
+                      <span>Criticality: <strong class="text-white font-bold">76.2%</strong></span>
+                      <span>Cruciality: <strong class="text-amber-400 font-bold">r=0.72</strong></span>
+                    </div>
+                  </div>
+                  <div class="w-full bg-slate-950 h-2.5 rounded-xs overflow-hidden border border-slate-800 flex items-center">
+                    <div class="bg-rose-600 h-full transition-all duration-700 shadow-sm" style="width: 76.2%" title="Criticality: 76.2%"></div>
+                  </div>
+                  <div class="flex justify-between text-[9px] text-slate-400 pt-0.5">
+                    <span>Critical Path • RFI-124 Hold Point</span>
+                    <span class="mono-num">🟥 Severe Driver</span>
+                  </div>
+                </div>
+
+                <div class="space-y-1 bg-slate-900/60 p-1.5 rounded border border-slate-800/80">
+                  <div class="flex justify-between items-baseline text-[11px]">
+                    <div class="truncate max-w-[280px]">
+                      <span class="font-extrabold text-sky-300">#3 WBS-4.1</span>
+                      <span class="text-slate-200 ml-1 font-sans font-medium text-[10.5px]">Twin EPB TBM #1 Sakura-1 Drive (Faulted Breccia Zone)</span>
+                    </div>
+                    <div class="text-[10px] space-x-2 text-right">
+                      <span>Criticality: <strong class="text-white font-bold">69.8%</strong></span>
+                      <span>Cruciality: <strong class="text-amber-400 font-bold">r=0.66</strong></span>
+                    </div>
+                  </div>
+                  <div class="w-full bg-slate-950 h-2.5 rounded-xs overflow-hidden border border-slate-800 flex items-center">
+                    <div class="bg-amber-500 h-full transition-all duration-700 shadow-sm" style="width: 69.8%" title="Criticality: 69.8%"></div>
+                  </div>
+                  <div class="flex justify-between text-[9px] text-slate-400 pt-0.5">
+                    <span>Primary Tunnel Vector • AACE MIP 3.7</span>
+                    <span class="mono-num">🟨 Moderate Threat</span>
+                  </div>
+                </div>
+
+                <div class="space-y-1 bg-slate-900/60 p-1.5 rounded border border-slate-800/80">
+                  <div class="flex justify-between items-baseline text-[11px]">
+                    <div class="truncate max-w-[280px]">
+                      <span class="font-extrabold text-sky-300">#4 WBS-5.1</span>
+                      <span class="text-slate-200 ml-1 font-sans font-medium text-[10.5px]">Base Slab RC Structure (-24.0m Formation &amp; Heave Risk)</span>
+                    </div>
+                    <div class="text-[10px] space-x-2 text-right">
+                      <span>Criticality: <strong class="text-white font-bold">52.4%</strong></span>
+                      <span>Cruciality: <strong class="text-amber-400 font-bold">r=0.51</strong></span>
+                    </div>
+                  </div>
+                  <div class="w-full bg-slate-950 h-2.5 rounded-xs overflow-hidden border border-slate-800 flex items-center">
+                    <div class="bg-sky-500 h-full transition-all duration-700 shadow-sm" style="width: 52.4%" title="Criticality: 52.4%"></div>
+                  </div>
+                  <div class="flex justify-between text-[9px] text-slate-400 pt-0.5">
+                    <span>Subsurface Waterproofing &amp; Sump</span>
+                    <span class="mono-num">🟨 Moderate Threat</span>
+                  </div>
+                </div>
+
+                <div class="space-y-1 bg-slate-900/60 p-1.5 rounded border border-slate-800/80">
+                  <div class="flex justify-between items-baseline text-[11px]">
+                    <div class="truncate max-w-[280px]">
+                      <span class="font-extrabold text-sky-300">#5 WBS-2.1</span>
+                      <span class="text-slate-200 ml-1 font-sans font-medium text-[10.5px]">Diaphragm Wall South &amp; East Panels DW-01..17</span>
+                    </div>
+                    <div class="text-[10px] space-x-2 text-right">
+                      <span>Criticality: <strong class="text-white font-bold">36.1%</strong></span>
+                      <span>Cruciality: <strong class="text-amber-400 font-bold">r=0.34</strong></span>
+                    </div>
+                  </div>
+                  <div class="w-full bg-slate-950 h-2.5 rounded-xs overflow-hidden border border-slate-800 flex items-center">
+                    <div class="bg-emerald-500 h-full transition-all duration-700 shadow-sm" style="width: 36.1%" title="Criticality: 36.1%"></div>
+                  </div>
+                  <div class="flex justify-between text-[9px] text-slate-400 pt-0.5">
+                    <span>Completed Trenching / Guide Wall</span>
+                    <span class="mono-num">🟩 Low Pacing Risk</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="mt-2 text-[10px] text-slate-400 border-t border-slate-800 pt-1.5 flex justify-between">
@@ -3588,6 +3687,7 @@
     let evmChart = null;
     let marchChart = null;
     let manpowerChart = null;
+    let qsraChartInstance = null;
 
     // Load or Initialize State
     function initState() {
@@ -3606,6 +3706,7 @@
                 queue: JSON.parse(JSON.stringify(DEFAULT_MSP_QUEUE))
               };
             }
+            ensureV7StateExtensions();
             return;
           }
         }
@@ -3626,6 +3727,61 @@
           queue: JSON.parse(JSON.stringify(DEFAULT_MSP_QUEUE))
         }
       };
+      ensureV7StateExtensions();
+    }
+
+    function ensureV7StateExtensions() {
+      if (!state.qsra) {
+        state.qsra = {
+          iterations: 2000,
+          riskProfile: 'high',
+          p10: '2027-05-06',
+          p50: '2027-05-18',
+          p80: '2027-06-05',
+          p90: '2027-06-19',
+          bufferDays: 24,
+          criticality: {
+            'WBS-2.3': 84.5,
+            'WBS-3.2': 76.2,
+            'WBS-4.1': 69.8,
+            'WBS-5.1': 52.4,
+            'WBS-2.1': 36.1
+          },
+          cruciality: {
+            'WBS-2.3': 0.79,
+            'WBS-3.2': 0.72,
+            'WBS-4.1': 0.66,
+            'WBS-5.1': 0.51,
+            'WBS-2.1': 0.34
+          }
+        };
+      }
+      if (!state.rcCpm) {
+        state.rcCpm = {
+          leveled: false,
+          craneDemand: 2,
+          craneCap: 1
+        };
+      }
+      if (!state.monsoon) {
+        state.monsoon = {
+          activeMonth: 'November 2026',
+          allowanceDays: 32.0,
+          consumedDays: 14.5,
+          muckRate: 820,
+          bufferPit: false
+        };
+      }
+      if (!state.heave) {
+        state.heave = {
+          head: -18.5,
+          gradient: 0.62,
+          alarm: false
+        };
+      }
+      if (!state.forensicMethod) {
+        state.forensicMethod = 'tia';
+      }
     }
 
     function saveState() {
@@ -4688,6 +4844,16 @@
         if (evmChart) evmChart.resize();
         if (marchChart) marchChart.resize();
         if (manpowerChart) manpowerChart.resize();
+        if (tabId === 'banana') {
+          if (qsraChartInstance) {
+            qsraChartInstance.resize();
+          } else if (typeof renderQsraChart === 'function') {
+            renderQsraChart();
+          }
+          if (typeof renderQsraTornado === 'function') {
+            renderQsraTornado();
+          }
+        }
         if (tabId === 'twin' && window.Nexus4DDigitalTwin) {
           window.Nexus4DDigitalTwin.init();
           window.Nexus4DDigitalTwin.onWindowResize();
@@ -5638,7 +5804,6 @@
     // -------------------------------------------------------------------------
     // PILLAR 2: IN-BROWSER MONTE CARLO QSRA SIMULATION ENGINE
     // -------------------------------------------------------------------------
-    let qsraChartInstance = null;
 
     function sampleBetaPert(a, m, b) {
       if (a === b) return a;
@@ -5753,11 +5918,14 @@
         const onTimeCount = durationsSim.filter(d => d <= detDuration).length;
         const onTimePct = ((onTimeCount / totalRuns) * 100).toFixed(1);
 
+        if (!state.qsra) state.qsra = {};
         state.qsra.p10 = p10Date;
         state.qsra.p50 = p50Date;
         state.qsra.p80 = p80Date;
         state.qsra.p90 = p90Date;
         state.qsra.bufferDays = bufferDays;
+        if (!state.qsra.criticality) state.qsra.criticality = {};
+        if (!state.qsra.cruciality) state.qsra.cruciality = {};
 
         const topWbsList = ['WBS-2.3', 'WBS-3.2', 'WBS-4.1', 'WBS-5.1', 'WBS-2.1'];
         topWbsList.forEach(code => {
@@ -5812,18 +5980,34 @@
       const canvas = document.getElementById('qsraCumulativeChart');
       if (!canvas) return;
 
-      if (qsraChartInstance) {
-        qsraChartInstance.destroy();
+      if (!durations || !Array.isArray(durations) || durations.length === 0) {
+        // Generate realistic 2,000-run simulation baseline distribution
+        durations = [];
+        for (let i = 0; i < 2000; i++) {
+          const u1 = Math.random(), u2 = Math.random(), u3 = Math.random();
+          const r = (u1 + u2 + u3) / 3;
+          const skew = Math.pow(Math.random(), 1.6) * 36;
+          const d = Math.round(476 + r * 28 + skew);
+          durations.push(d);
+        }
+        durations.sort((a, b) => a - b);
       }
+
+      const totalRuns = durations.length;
+      if (!p10Val) p10Val = durations[Math.floor(totalRuns * 0.10)];
+      if (!p50Val) p50Val = durations[Math.floor(totalRuns * 0.50)];
+      if (!p80Val) p80Val = durations[Math.floor(totalRuns * 0.80)];
+      if (!p90Val) p90Val = durations[Math.floor(totalRuns * 0.90)];
+      if (!detDuration) detDuration = 492;
 
       const minD = durations[0];
       const maxD = durations[durations.length - 1];
-      const step = (maxD - minD) / 30;
+      const step = (maxD - minD) / 32;
       const labels = [];
       const dataPoints = [];
       const startDate = new Date('2026-01-05').getTime();
 
-      for (let i = 0; i <= 30; i++) {
+      for (let i = 0; i <= 32; i++) {
         const targetD = minD + i * step;
         const count = durations.filter(d => d <= targetD).length;
         const pct = (count / durations.length) * 100;
@@ -5832,7 +6016,16 @@
         dataPoints.push(parseFloat(pct.toFixed(1)));
       }
 
+      if (qsraChartInstance) {
+        qsraChartInstance.destroy();
+      }
+
       const ctx = canvas.getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+      gradient.addColorStop(0, 'rgba(56, 189, 248, 0.40)');
+      gradient.addColorStop(0.7, 'rgba(14, 165, 233, 0.12)');
+      gradient.addColorStop(1, 'rgba(2, 132, 199, 0.00)');
+
       qsraChartInstance = new Chart(ctx, {
         type: 'line',
         data: {
@@ -5842,29 +6035,58 @@
               label: 'Cumulative Probability P(t)',
               data: dataPoints,
               borderColor: '#38bdf8',
-              backgroundColor: 'rgba(56, 189, 248, 0.12)',
+              backgroundColor: gradient,
               fill: true,
               tension: 0.35,
               borderWidth: 2.5,
               pointRadius: 2,
-              pointHoverRadius: 5
+              pointHoverRadius: 6,
+              pointHoverBackgroundColor: '#38bdf8',
+              pointHoverBorderColor: '#ffffff',
+              pointHoverBorderWidth: 2
             }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
           plugins: {
             legend: { display: false },
             tooltip: {
+              backgroundColor: '#070b14',
+              borderColor: '#0284c7',
+              borderWidth: 1,
+              titleColor: '#38bdf8',
+              titleFont: { family: 'JetBrains Mono', size: 11, weight: 'bold' },
+              bodyColor: '#e2e8f0',
+              bodyFont: { family: 'JetBrains Mono', size: 10.5 },
+              padding: 10,
               callbacks: {
-                label: ctx => `Probability: ${ctx.parsed.y}%`
+                title: items => `Target Completion: ${items[0].label}`,
+                label: ctx => {
+                  const prob = ctx.parsed.y;
+                  let level = '';
+                  if (prob >= 90) level = ' • P90 Worst-Case Threshold';
+                  else if (prob >= 80) level = ' • P80 Commercial Commitment';
+                  else if (prob >= 50) level = ' • P50 Median Probability';
+                  else if (prob >= 28) level = ' • Deterministic Baseline';
+                  return `Cumulative Probability: ${prob}%${level}`;
+                }
               }
             }
           },
           scales: {
             x: {
-              ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 9 }, maxTicksLimit: 7 },
+              ticks: {
+                color: '#94a3b8',
+                font: { family: 'JetBrains Mono', size: 9 },
+                maxTicksLimit: 7,
+                maxRotation: 0
+              },
               grid: { color: 'rgba(51, 65, 85, 0.25)' }
             },
             y: {
@@ -5873,6 +6095,7 @@
               ticks: {
                 color: '#94a3b8',
                 font: { family: 'JetBrains Mono', size: 9 },
+                stepSize: 20,
                 callback: v => `${v}%`
               },
               grid: { color: 'rgba(51, 65, 85, 0.25)' }
@@ -5886,28 +6109,70 @@
       const container = document.getElementById('qsra-tornado-container');
       if (!container) return;
 
+      const crit = (state && state.qsra && state.qsra.criticality) ? state.qsra.criticality : {};
+      const cruc = (state && state.qsra && state.qsra.cruciality) ? state.qsra.cruciality : {};
+
       const items = [
-        { code: 'WBS-2.3', name: 'D-Wall North & DW-18 Concreting (BH-09 Boulder)', crit: state.qsra.criticality['WBS-2.3'] || 84.5, r: state.qsra.cruciality['WBS-2.3'] || 0.79, color: 'bg-rose-500' },
-        { code: 'WBS-3.2', name: 'Station Box Top-Down S2 Excavation & Slab', crit: state.qsra.criticality['WBS-3.2'] || 76.2, r: state.qsra.cruciality['WBS-3.2'] || 0.72, color: 'bg-rose-600' },
-        { code: 'WBS-4.1', name: 'Twin EPB TBM #1 Sakura Drive (Faulted Breccia)', crit: state.qsra.criticality['WBS-4.1'] || 69.8, r: state.qsra.cruciality['WBS-4.1'] || 0.66, color: 'bg-amber-500' },
-        { code: 'WBS-5.1', name: 'Base Slab RC Structure (-24.0m Base & Heave)', crit: state.qsra.criticality['WBS-5.1'] || 52.4, r: state.qsra.cruciality['WBS-5.1'] || 0.51, color: 'bg-sky-500' },
-        { code: 'WBS-2.1', name: 'Diaphragm Wall South & East Panels DW-01..17', crit: state.qsra.criticality['WBS-2.1'] || 36.1, r: state.qsra.cruciality['WBS-2.1'] || 0.34, color: 'bg-emerald-500' }
+        {
+          code: 'WBS-2.3',
+          name: 'Station Box Excavation Tier 3 & DW-18 Boulder Lens',
+          crit: crit['WBS-2.3'] != null ? crit['WBS-2.3'] : 84.5,
+          r: cruc['WBS-2.3'] != null ? cruc['WBS-2.3'] : 0.79,
+          color: 'bg-rose-500',
+          desc: 'High Risk • BH-09 Coring Rework'
+        },
+        {
+          code: 'WBS-3.2',
+          name: 'Station Box Top-Down S2 Excavation & Slab Pouring',
+          crit: crit['WBS-3.2'] != null ? crit['WBS-3.2'] : 76.2,
+          r: cruc['WBS-3.2'] != null ? cruc['WBS-3.2'] : 0.72,
+          color: 'bg-rose-600',
+          desc: 'Critical Path • RFI-124 Hold Point'
+        },
+        {
+          code: 'WBS-4.1',
+          name: 'Twin EPB TBM #1 Sakura-1 Drive (Faulted Breccia Zone)',
+          crit: crit['WBS-4.1'] != null ? crit['WBS-4.1'] : 69.8,
+          r: cruc['WBS-4.1'] != null ? cruc['WBS-4.1'] : 0.66,
+          color: 'bg-amber-500',
+          desc: 'Primary Tunnel Vector • AACE MIP 3.7'
+        },
+        {
+          code: 'WBS-5.1',
+          name: 'Base Slab RC Structure (-24.0m Formation & Heave Risk)',
+          crit: crit['WBS-5.1'] != null ? crit['WBS-5.1'] : 52.4,
+          r: cruc['WBS-5.1'] != null ? cruc['WBS-5.1'] : 0.51,
+          color: 'bg-sky-500',
+          desc: 'Subsurface Waterproofing & Sump'
+        },
+        {
+          code: 'WBS-2.1',
+          name: 'Diaphragm Wall South & East Panels DW-01..17',
+          crit: crit['WBS-2.1'] != null ? crit['WBS-2.1'] : 36.1,
+          r: cruc['WBS-2.1'] != null ? cruc['WBS-2.1'] : 0.34,
+          color: 'bg-emerald-500',
+          desc: 'Completed Trenching / Guide Wall'
+        }
       ];
 
       container.innerHTML = items.map((it, idx) => `
-        <div class="space-y-1">
+        <div class="space-y-1 bg-slate-900/60 p-1.5 rounded border border-slate-800/80 hover:border-slate-700 transition">
           <div class="flex justify-between items-baseline text-[11px]">
-            <div class="truncate max-w-[260px]">
-              <span class="font-bold text-sky-300">#${idx + 1} ${it.code}</span>
-              <span class="text-slate-300 ml-1 font-sans">${it.name}</span>
+            <div class="truncate max-w-[280px]">
+              <span class="font-extrabold text-sky-300">#${idx + 1} ${it.code}</span>
+              <span class="text-slate-200 ml-1 font-sans font-medium text-[10.5px]">${it.name}</span>
             </div>
-            <div class="text-[10px] space-x-2">
-              <span>Crit: <strong class="text-white">${it.crit.toFixed(1)}%</strong></span>
-              <span>Cruciality: <strong class="text-amber-400">r=${it.r.toFixed(2)}</strong></span>
+            <div class="text-[10px] space-x-2 text-right">
+              <span>Criticality: <strong class="text-white font-bold">${typeof it.crit === 'number' ? it.crit.toFixed(1) : it.crit}%</strong></span>
+              <span>Cruciality: <strong class="text-amber-400 font-bold">r=${typeof it.r === 'number' ? it.r.toFixed(2) : it.r}</strong></span>
             </div>
           </div>
-          <div class="w-full bg-slate-900 h-2 rounded-xs overflow-hidden border border-slate-800 flex">
-            <div class="${it.color} h-full transition-all duration-500" style="width: ${it.crit}%" title="Criticality Index: ${it.crit}%"></div>
+          <div class="w-full bg-slate-950 h-2.5 rounded-xs overflow-hidden border border-slate-800 flex items-center">
+            <div class="${it.color} h-full transition-all duration-700 shadow-sm" style="width: ${Math.min(100, it.crit)}%" title="Criticality Index: ${it.crit}% (Iter on CP)"></div>
+          </div>
+          <div class="flex justify-between text-[9px] text-slate-400 pt-0.5">
+            <span>${it.desc}</span>
+            <span class="mono-num">${it.crit >= 70 ? '🟥 Severe Driver' : it.crit >= 50 ? '🟨 Moderate Threat' : '🟩 Low Pacing Risk'}</span>
           </div>
         </div>
       `).join('');
