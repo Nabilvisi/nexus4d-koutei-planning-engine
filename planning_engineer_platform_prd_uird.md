@@ -1,6 +1,6 @@
 # PRODUCT REQUIREMENTS DOCUMENT (PRD) & UI REQUIREMENTS DOCUMENT (UIRD)
 ## System: `NEXUS-4D™ KOUTEI | Enterprise Project Controls & Linear Scheduling Engine`
-**Document Version:** 5.1.0 (Shimizu Monozukuri Edition — Vercel Production Ready) | **Date:** November 2026  
+**Document Version:** 5.2.0 (Shimizu Monozukuri Edition — MS Project Unified Ingestion Middleware & 3-Tier Approval Gate) | **Date:** November 2026  
 **Project Scope:** Jakarta Mass Rapid Transit (MRT) Underground Package CP-202 (Station Box & TBM Drive Section)  
 **Engineering Standard:** Shimizu Corporation Monozukuri Quality / ISO 21502 / PMI PMBOK 7th Ed. / FIDIC Red Book  
 **Classification:** Enterprise Engineering Specification (PE26 / QC26 / GEO-ENG Tailored)  
