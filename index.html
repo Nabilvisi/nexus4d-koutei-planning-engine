@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXUS-4D™ KOUTEI (工程) v6.0 | Shimizu Corporation CP-202 Project Controls & 4D Digital Twin Platform</title>
+  <title>NEXUS-4D™ KOUTEI (工程) v7.0 | Shimizu Corporation CP-202 Project Controls, Forensic & 4D BIM Simulation Engine</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -159,7 +159,7 @@
             <div class="text-xs font-bold tracking-tight flex items-center gap-1">
               NEXUS-4D™ <span class="text-sky-200 font-jp">工程 KOUTEI</span>
             </div>
-            <div class="text-[10px] text-sky-100/90 mono-num">v6.0 • ENTERPRISE MULTI-ROLE &amp; 4D DIGITAL TWIN PLATFORM</div>
+            <div class="text-[10px] text-sky-100/90 mono-num">v7.0 • ULTIMATE FORENSIC, QSRA &amp; 4D BIM SIMULATION ENGINE</div>
           </div>
         </div>
 
@@ -714,7 +714,7 @@
         </button>
         <button onclick="switchTab('banana')" data-tab="banana" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
           <span class="mono-num text-[11px] opacity-80">2.</span>
-          <span>バナナ曲線 Banana Curve & EVM</span>
+          <span>S-Curve, EVM &amp; QSRA (P50/P80)</span>
         </button>
         <button onclick="switchTab('march')" data-tab="march" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
           <span class="mono-num text-[11px] opacity-80">3.</span>
@@ -722,23 +722,23 @@
         </button>
         <button onclick="switchTab('lookahead')" data-tab="lookahead" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
           <span class="mono-num text-[11px] opacity-80">4.</span>
-          <span>4WLH & QC Gates</span>
+          <span>4WLH &amp; QC Gates</span>
         </button>
         <button onclick="switchTab('resources')" data-tab="resources" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
           <span class="mono-num text-[11px] opacity-80">5.</span>
-          <span>資源 Resources & Plant</span>
+          <span>資源 Plant &amp; RC-CPM Clashes</span>
         </button>
         <button onclick="switchTab('gantt')" data-tab="gantt" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
           <span class="mono-num text-[11px] opacity-80">6.</span>
-          <span>CPM Gantt Network</span>
+          <span>CPM Gantt &amp; DCMA-14</span>
         </button>
         <button onclick="switchTab('geotech')" data-tab="geotech" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
           <span class="mono-num text-[11px] opacity-80">7.</span>
-          <span>地盤管理 Ground Risk Gates</span>
+          <span>地盤 Geotech &amp; Monsoon Matrix</span>
         </button>
         <button onclick="switchTab('hourenso')" data-tab="hourenso" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
           <span class="mono-num text-[11px] opacity-80">8.</span>
-          <span>報連相 Hou-Ren-So & 稟議書</span>
+          <span>報連相 Hou-Ren-So &amp; FIDIC Claims</span>
         </button>
         <button onclick="switchTab('kaizen')" data-tab="kaizen" class="tab-btn px-3 py-1.5 text-xs font-medium rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5">
           <span class="mono-num text-[11px] opacity-80">9.</span>
@@ -747,7 +747,7 @@
         <button onclick="switchTab('twin')" data-tab="twin" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-sm text-slate-300 hover:bg-slate-800/80 border border-transparent whitespace-nowrap flex items-center gap-1.5 shadow-sm">
           <span class="mono-num text-[11px] opacity-80">10.</span>
           <span class="text-emerald-400">✨</span>
-          <span>4D デジタルツイン 4D BIM Digital Twin</span>
+          <span>4D BIM Simulation Twin</span>
         </button>
       </div>
 
@@ -1239,6 +1239,130 @@
           </table>
         </div>
       </div>
+
+      <!-- ========================================================================= -->
+      <!-- PILLAR 2: IN-BROWSER MONTE CARLO QSRA SIMULATION ENGINE (P50/P80/P90)      -->
+      <!-- ========================================================================= -->
+      <div class="bg-panel border border-sky-800/80 p-3.5 rounded-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-2.5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 text-[10px] font-extrabold bg-sky-950 text-sky-300 border border-sky-600/80 rounded-sm mono-num">
+                AACE RP 57R-09 • PMI-SP • ISO 21502
+              </span>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white">
+                Quantitative Schedule Risk Assessment (QSRA) • In-Browser Monte Carlo Engine
+                <span class="text-sky-400 font-jp">(モンテカルロ定量工期リスク評価)</span>
+              </h3>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">
+              Probabilistic Beta-PERT duration modeling ($μ = \frac{a + 4m + b}{6}, σ = \frac{b - a}{6}$) across 10 WBS network activities with in-memory non-blocking batch iterations.
+            </p>
+          </div>
+
+          <!-- Simulation Action Bar -->
+          <div class="flex items-center gap-2 mono-num text-xs flex-wrap">
+            <div class="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded border border-slate-800">
+              <label for="qsra-iterations" class="text-[10.5px] text-slate-400">Iterations:</label>
+              <select id="qsra-iterations" class="bg-slate-900 text-sky-300 text-[11px] rounded border border-slate-700 px-1.5 py-0.5 font-bold">
+                <option value="1000">1,000 Runs</option>
+                <option value="2000" selected>2,000 Runs</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded border border-slate-800">
+              <label for="qsra-risk-profile" class="text-[10.5px] text-slate-400">Geotech Bias:</label>
+              <select id="qsra-risk-profile" class="bg-slate-900 text-amber-300 text-[11px] rounded border border-slate-700 px-1.5 py-0.5 font-bold">
+                <option value="high" selected>High-Risk (BH-09 Boulder +25d)</option>
+                <option value="standard">Standard PERT (0.85a / 1.40b)</option>
+              </select>
+            </div>
+            <button id="qsra-run-btn" onclick="runMonteCarloQSRA()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white font-extrabold rounded-sm shadow transition flex items-center gap-1.5 border border-sky-400/50">
+              <span id="qsra-run-icon">⚡</span>
+              <span id="qsra-run-label">Run Monte Carlo QSRA (2,000 Runs)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar (Visible during execution) -->
+        <div id="qsra-progress-container" class="hidden space-y-1">
+          <div class="flex justify-between text-[10px] mono-num text-slate-400">
+            <span id="qsra-progress-label">Simulating iterations in asynchronous micro-batches...</span>
+            <span id="qsra-progress-pct" class="text-sky-300 font-bold">0%</span>
+          </div>
+          <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden border border-slate-800">
+            <div id="qsra-progress-bar" class="bg-sky-400 h-full rounded-full transition-all duration-75" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- QSRA 4 Metric KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 text-xs mono-num">
+          <div class="bg-slate-950/90 border border-slate-800 p-2.5 rounded-sm">
+            <div class="text-[10px] text-slate-400">P50 MEDIAN COMPLETION</div>
+            <div class="text-base font-extrabold text-sky-400 mt-0.5" id="qsra-kpi-p50">2027-05-18</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">50% Probability (+6d vs Det. 2027-05-12)</div>
+          </div>
+          <div class="bg-slate-950/90 border border-amber-800/60 p-2.5 rounded-sm">
+            <div class="text-[10px] text-amber-300 font-bold">P80 TARGET COMMITMENT</div>
+            <div class="text-base font-extrabold text-amber-400 mt-0.5" id="qsra-kpi-p80">2027-06-05</div>
+            <div class="text-[10px] text-slate-300 mt-0.5">Commercial Baseline (80% Confidence)</div>
+          </div>
+          <div class="bg-slate-950/90 border border-emerald-800/60 p-2.5 rounded-sm">
+            <div class="text-[10px] text-emerald-300 font-bold">SCHEDULE CONTINGENCY BUFFER</div>
+            <div class="text-base font-extrabold text-emerald-400 mt-0.5" id="qsra-kpi-buffer">+24 Calendar Days</div>
+            <div class="text-[10px] text-emerald-400/90 mt-0.5">Required Float Buffer (Det. → P80)</div>
+          </div>
+          <div class="bg-slate-950/90 border border-rose-800/60 p-2.5 rounded-sm">
+            <div class="text-[10px] text-rose-300 font-bold">P90 WORST-CASE RISK</div>
+            <div class="text-base font-extrabold text-rose-400 mt-0.5" id="qsra-kpi-p90">2027-06-19</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">90% Tail Risk Envelope (+38d Variance)</div>
+          </div>
+        </div>
+
+        <!-- QSRA Visuals: Left S-Band Cumulative Probability Curve, Right Tornado Sensitivity Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <!-- Cumulative Probability S-Band Chart -->
+          <div class="bg-slate-950/80 border border-slate-800 p-3 rounded-sm">
+            <div class="flex items-center justify-between mb-2 border-b border-slate-800 pb-1.5">
+              <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                  <span>Cumulative Probability S-Band (P-Curves)</span>
+                </h4>
+                <p class="text-[10.5px] text-slate-400">Cumulative Completion Probability distribution across simulated iterations</p>
+              </div>
+              <span id="qsra-ontime-badge" class="text-[10px] mono-num px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-700/60">
+                Det. On-Time: 28.4%
+              </span>
+            </div>
+            <div class="h-[280px] w-full">
+              <canvas id="qsraCumulativeChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Tornado Sensitivity Chart -->
+          <div class="bg-slate-950/80 border border-slate-800 p-3 rounded-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2 border-b border-slate-800 pb-1.5">
+                <div>
+                  <h4 class="text-xs font-bold text-white uppercase tracking-wider">
+                    Tornado Sensitivity Analysis (Top Schedule Killers)
+                  </h4>
+                  <p class="text-[10.5px] text-slate-400">Ranked by Criticality Index (% on Critical Path) &amp; Cruciality ($r$ with Duration)</p>
+                </div>
+                <span class="text-[10px] mono-num text-amber-300 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-700/60">
+                  Spearman Rank $r$
+                </span>
+              </div>
+              <div id="qsra-tornado-container" class="space-y-2 mt-2 text-xs mono-num">
+                <!-- Dynamically populated tornado bars -->
+              </div>
+            </div>
+            <div class="mt-2 text-[10px] text-slate-400 border-t border-slate-800 pt-1.5 flex justify-between">
+              <span>AACE RP 57R-09: Activities with Criticality &gt; 50% govern project duration.</span>
+              <span class="text-sky-300 font-bold">Top Threat: WBS-2.3 (84.5%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ========================================================================= -->
@@ -1439,6 +1563,116 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs mono-num" id="plant-telemetry-cards">
             <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- PILLAR 4: RESOURCE-CONSTRAINED CPM (RC-CPM) & RIG CONFLICT DETECTOR      -->
+      <!-- ========================================================================= -->
+      <div class="bg-panel border border-amber-800/80 p-3.5 rounded-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-2.5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 text-[10px] font-extrabold bg-amber-950 text-amber-300 border border-amber-600/80 rounded-sm mono-num">
+                AACE RP 49R-06 • PMI PRACTICE STANDARD
+              </span>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white">
+                Resource-Constrained Critical Path Method (RC-CPM) &amp; Heavy Rig Conflict Detector
+                <span class="text-sky-400 font-jp">(重機制約付クリティカルパス・干渉検知)</span>
+              </h3>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">
+              Models finite mega-equipment inventory constraints. Identifies artificial Total Float generated by classical CPM and resolves simultaneous plant contention.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 mono-num text-xs">
+            <button onclick="autoLevelResources()" id="rc-cpm-level-btn" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-white font-extrabold rounded-sm transition flex items-center gap-1 shadow border border-amber-400/50">
+              <span>⚡ Auto-Level Resources (Heuristic ELS)</span>
+            </button>
+            <button onclick="resetRcCpm()" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 transition">
+              ↺ Reset to Unconstrained CPM
+            </button>
+          </div>
+        </div>
+
+        <!-- Heavy Rig Fleet Allocation & Over-Allocation Conflict Alert Banner -->
+        <div id="rc-cpm-clash-banner" class="bg-rose-950/80 border border-rose-600/80 p-2.5 rounded-sm flex items-start gap-2.5 text-xs text-rose-200 mono-num animate-pulse">
+          <span class="text-lg leading-none">⚠️</span>
+          <div class="flex-1">
+            <div class="font-bold text-white flex items-center justify-between">
+              <span>OVER-ALLOCATION CLASH DETECTED: Kobelco CKE2500G-2 (250t Crane)</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded bg-rose-900 border border-rose-700 font-bold">CAPACITY EXCEEDED: DEMAND 2.0 &gt; CAP 1.0</span>
+            </div>
+            <p class="text-[11px] text-rose-300 mt-0.5">
+              Simultaneous demand from <strong class="text-white">WBS-2.3 (D-Wall North Cage Hoist)</strong> and <strong class="text-white">WBS-3.1 (King-Post Plunge Column Setting)</strong> during Weeks W43–W46. Classical CPM reports artificial Total Float ($TF = +10\text{d}$) on WBS-3.1. Under physical 1-crane availability, True Resource Critical Path pushes completion date by <strong class="text-amber-300">+9 Calendar Days</strong> unless leveled.
+            </p>
+          </div>
+        </div>
+
+        <!-- Resource Fleet Pool & Comparison Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 text-xs mono-num">
+          <div class="bg-slate-950/90 border border-slate-800 p-2.5 rounded-sm">
+            <div class="flex justify-between text-[10px] text-slate-400">
+              <span>BAUER BC 40 TRENCH CUTTER</span>
+              <span class="text-emerald-400 font-bold">1/1 RIG (100%)</span>
+            </div>
+            <div class="text-sm font-bold text-white mt-1">Dedicated to WBS-2.3</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Torque: 92 kNm • Depth: -26.4m</div>
+          </div>
+          <div class="bg-slate-950/90 border border-rose-700/70 p-2.5 rounded-sm">
+            <div class="flex justify-between text-[10px] text-rose-300">
+              <span>KOBELCO 250t CRAWLER CRANE</span>
+              <span class="text-rose-400 font-extrabold animate-pulse" id="pool-crane-badge">2/1 UNIT (200% CLASH)</span>
+            </div>
+            <div class="text-sm font-bold text-rose-300 mt-1" id="pool-crane-status">Contested: WBS-2.3 &amp; WBS-3.1</div>
+            <div class="text-[10px] text-rose-300/80 mt-0.5">Cage Hoist vs. King-Post Placement</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 p-2.5 rounded-sm">
+            <div class="flex justify-between text-[10px] text-slate-400">
+              <span>KOMATSU PC300 EXCAVATORS</span>
+              <span class="text-emerald-400 font-bold">2/2 UNITS (100%)</span>
+            </div>
+            <div class="text-sm font-bold text-white mt-1">Shaft Top-Down Mucking</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Output: 650 m³/day (Within Curfew)</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 p-2.5 rounded-sm">
+            <div class="flex justify-between text-[10px] text-slate-400">
+              <span>BENTONITE DESANDER PLANT</span>
+              <span class="text-emerald-400 font-bold">210 / 250 m³/h (84%)</span>
+            </div>
+            <div class="text-sm font-bold text-white mt-1">SOTRES Plant Operating</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Sand Content: 1.8% (&lt;3.0% Limit)</div>
+          </div>
+        </div>
+
+        <!-- RC-CPM Timeline & Comparison Table -->
+        <div class="bg-slate-950/80 border border-slate-800 p-3 rounded-sm space-y-2 text-xs mono-num">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-1.5">
+            <h4 class="font-bold text-white uppercase tracking-wider">
+              Classical CPM vs. Resource-Constrained Critical Path (RC-CPM) Analysis
+            </h4>
+            <span id="rc-cpm-status-pill" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-700/70">
+              RESOURCE OVER-ALLOCATION ACTIVE (+9d IMPACT)
+            </span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+            <div class="bg-slate-900/80 p-2 rounded border border-slate-800">
+              <div class="text-[10px] text-slate-400 uppercase">Classical CPM Finish (Infinite Equipment)</div>
+              <div class="text-base font-extrabold text-sky-400 mt-0.5">2027-05-12</div>
+              <div class="text-[10.5px] text-slate-400 mt-0.5">Artificial Float: +10d on WBS-3.1</div>
+            </div>
+            <div class="bg-slate-900/80 p-2 rounded border border-slate-800">
+              <div class="text-[10px] text-slate-400 uppercase">Resource-Constrained Finish (Unleveled)</div>
+              <div class="text-base font-extrabold text-rose-400 mt-0.5" id="rc-cpm-unleveled-finish">2027-05-21 (+9 Days)</div>
+              <div class="text-[10.5px] text-rose-400 mt-0.5">Crane Bottleneck Delay to Station Box</div>
+            </div>
+            <div class="bg-slate-900/80 p-2 rounded border border-slate-800">
+              <div class="text-[10px] text-slate-400 uppercase">Heuristically Leveled Schedule (ELS)</div>
+              <div class="text-base font-extrabold text-emerald-400 mt-0.5" id="rc-cpm-leveled-finish">2027-05-12 (On Target)</div>
+              <div class="text-[10.5px] text-emerald-300 mt-0.5">Serial Sequence: WBS-2.3 → WBS-3.1</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1735,6 +1969,114 @@
           </table>
         </div>
       </div>
+
+      <!-- ========================================================================= -->
+      <!-- PILLAR 5: JAKARTA TROPICAL MONSOON & HYDROLOGICAL CURFEW MODELING         -->
+      <!-- ========================================================================= -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <!-- Left: Jakarta Tropical Monsoon Meteorological Risk Matrix -->
+        <div class="bg-panel border border-sky-800/80 p-3 rounded-sm space-y-2.5 text-xs mono-num">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="px-1.5 py-0.5 text-[9.5px] font-bold rounded bg-sky-950 text-sky-300 border border-sky-600/70">
+                  METEOROLOGICAL RISK
+                </span>
+                <h4 class="font-bold text-white uppercase tracking-wider text-xs">
+                  Jakarta Tropical Monsoon &amp; Rain-Stoppage Risk Matrix <span class="text-sky-400 font-jp">(熱帯モンスーン気象リスク)</span>
+                </h4>
+              </div>
+              <p class="text-[10.5px] text-slate-400 mt-0.5">Historical rain-stoppage allowances under FIDIC Sub-Clause 8.4(b) (Adverse Climatic Conditions).</p>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-700/60">
+              NOV 2026: HIGH MONSOON
+            </span>
+          </div>
+
+          <!-- 12-Month Monsoon Profile Bars -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex items-center justify-between text-[10px] text-slate-400">
+              <span>Monthly Rain Days Allowance (Historical Stoppage &gt; 25mm/hr):</span>
+              <span class="text-amber-300 font-bold">Total Contract Allowance: 32.0 Days</span>
+            </div>
+            <div class="grid grid-cols-12 gap-1 text-center text-[9px]">
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Jan<br><strong class="text-rose-400">6.5d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Feb<br><strong class="text-rose-400">5.8d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Mar<br><strong class="text-amber-400">4.2d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Apr<br><strong class="text-sky-300">2.8d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">May<br><strong class="text-slate-400">1.2d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Jun<br><strong class="text-slate-400">0.8d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Jul<br><strong class="text-slate-400">0.5d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Aug<br><strong class="text-slate-400">0.4d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Sep<br><strong class="text-slate-400">0.9d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Oct<br><strong class="text-sky-300">2.5d</strong></div>
+              <div class="bg-rose-950/70 p-1 rounded border border-rose-600 text-rose-200 font-bold">Nov<br><strong>4.2d</strong></div>
+              <div class="bg-slate-900 p-1 rounded border border-slate-800">Dec<br><strong class="text-rose-400">5.2d</strong></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 bg-slate-950/80 p-2 rounded border border-slate-800 text-[11px]">
+            <div>Allowed Stoppage: <strong class="text-white">32.0 Days</strong></div>
+            <div>Consumed to Date: <strong class="text-amber-300">14.5 Days</strong></div>
+            <div>Remaining Reserve: <strong class="text-emerald-400">17.5 Days</strong></div>
+          </div>
+        </div>
+
+        <!-- Right: Municipal Transport (Dishub) Muck Haulage Curfew & PZ-02 Hydraulic Heave Interlock -->
+        <div class="bg-panel border border-slate-800 p-3 rounded-sm space-y-2.5 text-xs mono-num">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="px-1.5 py-0.5 text-[9.5px] font-bold rounded bg-amber-950 text-amber-300 border border-amber-600/70">
+                  MUNICIPAL CURFEW &amp; HYDRAULIC HEAVE
+                </span>
+                <h4 class="font-bold text-white uppercase tracking-wider text-xs">
+                  Dishub Muck Curfew &amp; PZ-02 Heave Interlock <span class="text-sky-400 font-jp">(残土運搬・水圧ヒービング連動)</span>
+                </h4>
+              </div>
+              <p class="text-[10.5px] text-slate-400 mt-0.5">Central Jakarta 22:00–05:00 trucking ceiling &amp; excavation base stability safety gate.</p>
+            </div>
+          </div>
+
+          <!-- Muck Curfew Chokepoint Controls -->
+          <div class="bg-slate-950/90 border border-slate-800 p-2 rounded-sm space-y-1.5">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-slate-300 font-semibold">Jl. Gajah Mada Night Dump Truck Rate:</span>
+              <span id="dishub-rate-badge" class="font-bold text-amber-400">45 Trips/night (675 m³/night Max Legal Cap)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] text-slate-400">Planned Muck:</span>
+              <input type="range" id="dishub-muck-slider" min="500" max="950" step="25" value="820" oninput="onMuckRateChange(this.value)" class="flex-1 accent-amber-500 cursor-pointer h-1.5 bg-slate-800 rounded appearance-none">
+              <span id="dishub-muck-val" class="font-bold text-amber-300 w-24 text-right">820 m³/night</span>
+            </div>
+            <div id="dishub-curfew-status" class="text-[10.5px] px-2 py-1 rounded bg-amber-950/80 border border-amber-700/60 text-amber-300 flex items-center justify-between">
+              <span>⚠️ MUCK HAULAGE CHOKEPOINT: Rate exceeds 675 m³/night (+4.5d bench delay)</span>
+              <button onclick="enableBufferPit()" id="btn-buffer-pit" class="px-2 py-0.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded font-bold text-[10px]">
+                Enable Buffer Pit (Kaizen Opt-C)
+              </button>
+            </div>
+          </div>
+
+          <!-- PZ-02 Hydraulic Heave Safety Interlock -->
+          <div class="bg-slate-950/90 border border-slate-800 p-2 rounded-sm space-y-1.5">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-slate-300 font-semibold">PZ-02 Critical Hydraulic Gradient ($i_{crit} = 0.98$):</span>
+              <span id="heave-gradient-badge" class="font-bold text-emerald-400">i = 0.62 (Safe &lt; 0.85)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] text-slate-400">PZ-02 Head:</span>
+              <input type="range" id="heave-head-slider" min="-24.0" max="-1.0" step="0.5" value="-18.5" oninput="onPzHeaveChange(this.value)" class="flex-1 accent-sky-500 cursor-pointer h-1.5 bg-slate-800 rounded appearance-none">
+              <span id="heave-head-val" class="font-bold text-sky-300 w-20 text-right">-18.5 m</span>
+            </div>
+            <div id="heave-interlock-status" class="text-[10.5px] px-2 py-1 rounded bg-slate-900 border border-slate-700 text-emerald-300 flex items-center justify-between">
+              <span>✓ BASE SLAB HYDRAULIC EQUILIBRIUM: WBS-5.1 Excavation Permitted</span>
+              <button onclick="testHeaveAlarm()" class="px-2 py-0.5 bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-700 rounded text-[10px]">
+                Simulate Heave Alarm (-21.5m)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ========================================================================= -->
@@ -1899,62 +2241,181 @@
         </div>
       </div>
 
-      <!-- v5.4 FORENSIC DELAY ANALYSIS (AACE RP 29R-03 TIA) & FIDIC RED BOOK EOT ENTITLEMENT MATRIX -->
-      <div class="bg-panel border border-sky-800/70 p-3.5 rounded-sm space-y-2.5">
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+      <!-- ========================================================================= -->
+      <!-- PILLAR 3: AACE RP 29R-03 MULTI-METHOD FORENSIC DELAYS & FIDIC CLAIM DRAFTER -->
+      <!-- ========================================================================= -->
+      <div class="bg-panel border border-sky-800/80 p-3.5 rounded-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
           <div>
             <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 text-[10px] font-extrabold bg-sky-950 text-sky-300 border border-sky-600/80 rounded-sm mono-num">AACE RP 29R-03 • FIDIC RED BOOK</span>
-              <h3 class="text-xs font-bold uppercase tracking-wider text-white">Forensic Delay Analysis (Time Impact Analysis / TIA) &amp; EOT Entitlement Ledger <span class="text-sky-400 font-jp">(遅延解析・FIDIC契約工期延長管理)</span></h3>
+              <span class="px-2 py-0.5 text-[10px] font-extrabold bg-sky-950 text-sky-300 border border-sky-600/80 rounded-sm mono-num">
+                AACE RP 29R-03 • FIDIC RED BOOK 1999/2017
+              </span>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white">
+                Multi-Method Forensic Delay Analysis &amp; Formal FIDIC EOT Claim Drafter
+                <span class="text-sky-400 font-jp">(国際法廷鑑定遅延解析・契約請求書作成)</span>
+              </h3>
             </div>
             <p class="text-[11px] text-slate-400 mt-0.5">
-              Prospective Fragnet Injection into W43 Updated CPM Network to separate Employer-Risk Excusable Delays from Contractor-Mitigated Recovery.
+              Protocol comparison across TIA (MIP 3.7), Contemporaneous Windows (MIP 3.3), and Collapsed As-Built (MIP 3.8) to establish excusable compensable entitlement.
             </p>
           </div>
-          <span class="text-[11px] mono-num px-2.5 py-1 rounded bg-emerald-950/80 border border-emerald-700/60 text-emerald-300 font-semibold">
-            Net EOT Claim Required: 0 Days (100% Absorbed via Ringisho Hybrid Kaizen)
-          </span>
+          <div class="flex items-center gap-2 mono-num text-xs">
+            <button onclick="openFidicClaimModal()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-extrabold rounded-sm transition flex items-center gap-1.5 shadow border border-amber-400/50">
+              <span>📄 Draft Formal FIDIC EOT Notice (Cl. 20.1/8.4)</span>
+            </button>
+            <span class="text-[11px] mono-num px-2 py-1 rounded bg-emerald-950/80 border border-emerald-700/60 text-emerald-300 font-semibold">
+              Net EOT Entitlement: +6d Compensable / +16d Exposure
+            </span>
+          </div>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs mono-num">
-            <thead>
-              <tr class="bg-slate-900 border-b border-slate-700 text-[10.5px] text-slate-300 uppercase">
-                <th class="py-1.5 px-2 border-r border-slate-800">Fragnet ID</th>
-                <th class="py-1.5 px-2 border-r border-slate-800">Impacted WBS &amp; Delay Event</th>
-                <th class="py-1.5 px-2 border-r border-slate-800">FIDIC Red Book Clause</th>
-                <th class="py-1.5 px-2 border-r border-slate-800">Delay Classification</th>
-                <th class="py-1.5 px-2 border-r border-slate-800 text-right">Unmitigated Impact</th>
-                <th class="py-1.5 px-2">Shimizu Forensic &amp; Commercial Resolution</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800 text-[11.5px]">
-              <tr class="hover:bg-slate-900/60">
-                <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">TIA-01</td>
-                <td class="py-2 px-2 border-r border-slate-800 font-sans text-slate-100"><strong>WBS-2.3 (D-Wall DW-18..24):</strong> Unforeseen volcanic cobble boulder stratum at BH-09 (N-SPT &gt; 60 at -21.5m)</td>
-                <td class="py-2 px-2 border-r border-slate-800 text-amber-300">Sub-Clause 4.12 &amp; 8.4(b)</td>
-                <td class="py-2 px-2 border-r border-slate-800"><span class="px-1.5 py-0.5 text-[10px] rounded bg-emerald-950 text-emerald-300 border border-emerald-700">EXCUSABLE &amp; COMPENSABLE</span></td>
-                <td class="py-2 px-2 border-r border-slate-800 text-right font-bold text-rose-400">+6 Cal Days (TF=0)</td>
-                <td class="py-2 px-2 font-sans text-slate-300">Notice under Cl. 20.1 logged; recovered in-house via roller disc cutter &amp; hyperbaric crew (Ringisho 043) to preserve client COD.</td>
-              </tr>
-              <tr class="hover:bg-slate-900/60">
-                <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">TIA-02</td>
-                <td class="py-2 px-2 border-r border-slate-800 font-sans text-slate-100"><strong>WBS-5.1 (Bulk Excavation S2):</strong> Municipal night-shift dump truck window restriction on Jl. Thamrin</td>
-                <td class="py-2 px-2 border-r border-slate-800 text-sky-300">Sub-Clause 8.5 &amp; 8.4(e)</td>
-                <td class="py-2 px-2 border-r border-slate-800"><span class="px-1.5 py-0.5 text-[10px] rounded bg-sky-950 text-sky-300 border border-sky-700">EXCUSABLE NON-COMPENSABLE</span></td>
-                <td class="py-2 px-2 border-r border-slate-800 text-right font-bold text-amber-400">+3 Cal Days (TF=0)</td>
-                <td class="py-2 px-2 font-sans text-slate-300">Mitigated via 24/7 on-site acoustic Muck Buffer Pit + 8 additional sealed dump trucks during permitted window (+11d saved).</td>
-              </tr>
-              <tr class="hover:bg-slate-900/60">
-                <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">TIA-03</td>
-                <td class="py-2 px-2 border-r border-slate-800 font-sans text-slate-100"><strong>WBS-3.2 (Slab Level S2 Pour):</strong> Fail-Closed QA/QC Hold pending Concrete Slump &amp; Rebar RFI-124</td>
-                <td class="py-2 px-2 border-r border-slate-800 text-slate-400">Sub-Clause 7.3 (Inspection)</td>
-                <td class="py-2 px-2 border-r border-slate-800"><span class="px-1.5 py-0.5 text-[10px] rounded bg-slate-800 text-slate-300 border border-slate-600">CONTRACTOR QA GOVERNANCE</span></td>
-                <td class="py-2 px-2 border-r border-slate-800 text-right font-bold text-emerald-400">0 Cal Days (TF=10d)</td>
-                <td class="py-2 px-2 font-sans text-slate-300">Absorbed within non-critical Total Float buffer (`TF = 10d → 7d`); zero impact on critical path or Milestone M2/M3.</td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- 3-Method Protocol Selector Tabs -->
+        <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-sm border border-slate-800 text-xs mono-num flex-wrap">
+          <span class="text-slate-400 text-[10.5px] uppercase tracking-wider px-2 font-bold">AACE RP 29R-03 Methodology:</span>
+          <button onclick="switchForensicMethod('tia')" id="forensic-tab-btn-tia" class="px-2.5 py-1 rounded bg-shimizu text-white font-bold transition flex items-center gap-1">
+            <span>Method 1: TIA (Forward-Looking / MIP 3.7)</span>
+          </button>
+          <button onclick="switchForensicMethod('window')" id="forensic-tab-btn-window" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition flex items-center gap-1">
+            <span>Method 2: Contemporaneous Windows (MIP 3.3)</span>
+          </button>
+          <button onclick="switchForensicMethod('collapsed')" id="forensic-tab-btn-collapsed" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition flex items-center gap-1">
+            <span>Method 3: Collapsed As-Built / But-For (MIP 3.8)</span>
+          </button>
+        </div>
+
+        <!-- Dynamic Container for Selected Forensic Method -->
+        <div id="forensic-method-container" class="space-y-2">
+          <!-- Method 1: Time Impact Analysis (Default View) -->
+          <div id="forensic-view-tia" class="space-y-2">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs mono-num">
+                <thead>
+                  <tr class="bg-slate-900 border-b border-slate-700 text-[10.5px] text-slate-300 uppercase">
+                    <th class="py-1.5 px-2 border-r border-slate-800">Fragnet ID</th>
+                    <th class="py-1.5 px-2 border-r border-slate-800">Impacted WBS &amp; Delay Event</th>
+                    <th class="py-1.5 px-2 border-r border-slate-800">FIDIC Red Book Clause</th>
+                    <th class="py-1.5 px-2 border-r border-slate-800">Delay Classification</th>
+                    <th class="py-1.5 px-2 border-r border-slate-800 text-right">Unmitigated Impact</th>
+                    <th class="py-1.5 px-2">Shimizu Forensic Resolution &amp; Entitlement</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-[11.5px]">
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">TIA-01</td>
+                    <td class="py-2 px-2 border-r border-slate-800 font-sans text-slate-100"><strong>WBS-2.3 (D-Wall DW-18..24):</strong> Unforeseen volcanic cobble boulder stratum at BH-09 (N-SPT &gt; 60 at -21.5m)</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-amber-300">Sub-Clause 4.12 &amp; 8.4(b)</td>
+                    <td class="py-2 px-2 border-r border-slate-800"><span class="px-1.5 py-0.5 text-[10px] rounded bg-emerald-950 text-emerald-300 border border-emerald-700">EXCUSABLE &amp; COMPENSABLE</span></td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right font-bold text-rose-400">+6 Cal Days (TF=0)</td>
+                    <td class="py-2 px-2 font-sans text-slate-300">Notice under Cl. 20.1 issued; Employer risk under Cl. 4.12. Entitled to +6d EOT and Standby Cost recovery.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">TIA-02</td>
+                    <td class="py-2 px-2 border-r border-slate-800 font-sans text-slate-100"><strong>WBS-5.1 (Bulk Excavation S2):</strong> Municipal night-shift dump truck window restriction on Jl. Thamrin</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-sky-300">Sub-Clause 8.5 &amp; 8.4(e)</td>
+                    <td class="py-2 px-2 border-r border-slate-800"><span class="px-1.5 py-0.5 text-[10px] rounded bg-sky-950 text-sky-300 border border-sky-700">EXCUSABLE NON-COMPENSABLE</span></td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right font-bold text-amber-400">+3 Cal Days (TF=0)</td>
+                    <td class="py-2 px-2 font-sans text-slate-300">Mitigated via 24/7 on-site acoustic Muck Buffer Pit + 8 additional sealed dump trucks (+11d saved).</td>
+                  </tr>
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">TIA-03</td>
+                    <td class="py-2 px-2 border-r border-slate-800 font-sans text-slate-100"><strong>WBS-3.2 (Slab Level S2 Pour):</strong> Fail-Closed QA/QC Hold pending Concrete Slump &amp; Rebar RFI-124</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-slate-400">Sub-Clause 7.3 (Inspection)</td>
+                    <td class="py-2 px-2 border-r border-slate-800"><span class="px-1.5 py-0.5 text-[10px] rounded bg-slate-800 text-slate-300 border border-slate-600">CONTRACTOR QA GOVERNANCE</span></td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right font-bold text-emerald-400">0 Cal Days (TF=10d)</td>
+                    <td class="py-2 px-2 font-sans text-slate-300">Absorbed within non-critical Total Float buffer (TF = 10d → 7d); zero impact on critical path.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Method 2: Contemporaneous Window Analysis -->
+          <div id="forensic-view-window" class="hidden space-y-2">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs mono-num">
+                <thead>
+                  <tr class="bg-slate-900 border-b border-slate-700 text-[10.5px] text-slate-300 uppercase">
+                    <th class="py-1.5 px-2 border-r border-slate-800">Window Period</th>
+                    <th class="py-1.5 px-2 border-r border-slate-800">Critical Path Activity Evaluated</th>
+                    <th class="py-1.5 px-2 border-r border-slate-800 text-right">Planned Progress</th>
+                    <th class="py-1.5 px-2 border-r border-slate-800 text-right">Actual Earned</th>
+                    <th class="py-1.5 px-2 border-r border-slate-800 text-right">Window Critical Delay</th>
+                    <th class="py-1.5 px-2 border-r border-slate-800">Delay Causation Breakdown</th>
+                    <th class="py-1.5 px-2">Pacing vs. Critical Path Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-[11.5px]">
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">Window 1 (W40)</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-slate-100">WBS-2.3 D-Wall North Guide Trench</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right">100.0%</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right text-emerald-400">100.0%</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right text-emerald-400">0.0 Days</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-slate-300">On schedule; guide trench tolerance ±4mm verified.</td>
+                    <td class="py-2 px-2 text-emerald-400">Aligned with CPM Baseline</td>
+                  </tr>
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">Window 2 (W41)</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-slate-100">WBS-2.3 Bauer BC 40 Trenching Panel 18</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right">72.0%</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right text-amber-300">68.5%</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right text-rose-400">-1.8 Days</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-amber-300">Encountered stiff gravel layer at -18.0m (BH-07).</td>
+                    <td class="py-2 px-2 text-amber-400">Minor Critical Drift</td>
+                  </tr>
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">Window 3 (W42)</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-slate-100">WBS-2.3 BH-09 Boulder Lens at -21.5m</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right">78.0%</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right text-rose-400">71.0%</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right text-rose-400">-3.6 Days</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-rose-300">Hard volcanic boulder obstruction; cutter wear.</td>
+                    <td class="py-2 px-2 text-rose-400">Employer Risk (FIDIC Cl. 4.12)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-900/60">
+                    <td class="py-2 px-2 border-r border-slate-800 font-bold text-sky-300">Window 4 (W43)</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-slate-100">WBS-2.3 DW-18 Concreting &amp; Kaizen Recovery</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right">84.0%</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right text-emerald-400">77.5% (+4.5% Δ)</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-right text-amber-300">-5.6 Days Net</td>
+                    <td class="py-2 px-2 border-r border-slate-800 text-emerald-300">Kaizen roller disc cutters deployed; rate restored.</td>
+                    <td class="py-2 px-2 text-emerald-300">Contractor Acceleration Active</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Method 3: Collapsed As-Built / But-For Analysis -->
+          <div id="forensic-view-collapsed" class="hidden space-y-2">
+            <div class="bg-slate-950/80 p-3 rounded-sm border border-slate-800 space-y-2 text-xs">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="font-bold text-white uppercase">AACE MIP 3.8 Collapsed As-Built Schedule Extraction:</span>
+                <span class="text-emerald-400 font-bold">Employer Risk Excised: 6.0 Calendar Days</span>
+              </div>
+              <p class="text-slate-300 text-[11px] leading-relaxed">
+                By excising the Employer Risk Event (Fragnet TIA-01: BH-09 Unforeseeable Volcanic Boulder Stratum, FIDIC Sub-Clause 4.12) from the contemporaneous as-built network, the collapsed schedule demonstrates that the Contractor would have completed Milestone M1 and Station Box Handover on <strong class="text-white">2026-11-20 (Zero Delay)</strong>.
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs mono-num pt-1">
+                <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                  <div class="text-[10px] text-slate-400">ACTUAL AS-BUILT FINISH</div>
+                  <div class="text-sm font-bold text-rose-400 mt-0.5">2026-11-26 (+6 Days)</div>
+                  <div class="text-[10px] text-slate-400">Driven by BH-09 obstruction</div>
+                </div>
+                <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                  <div class="text-[10px] text-slate-400">EXCISED EMPLOYER DELAYS</div>
+                  <div class="text-sm font-bold text-amber-400 mt-0.5">-6.0 Calendar Days</div>
+                  <div class="text-[10px] text-slate-400">Sub-Clause 4.12 &amp; 8.4(b)</div>
+                </div>
+                <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                  <div class="text-[10px] text-slate-400">BUT-FOR COMPLETION DATE</div>
+                  <div class="text-sm font-bold text-emerald-400 mt-0.5">2026-11-20 (ON-TIME)</div>
+                  <div class="text-[10px] text-emerald-300">100% Excusable &amp; Compensable</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -2291,30 +2752,53 @@
       </div>
 
       <!-- Bottom 4D Timeline Scrubbing & Construction Sequence Simulation Bar -->
-      <div class="bg-panel border border-slate-800 p-3 rounded-sm space-y-2 text-xs mono-num">
+      <div class="bg-panel border border-sky-800/80 p-3 rounded-sm space-y-2.5 text-xs mono-num">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
-          <div class="flex items-center gap-3">
-            <div class="flex items-center gap-1.5">
-              <button id="twin-btn-play" onclick="Nexus4DDigitalTwin.togglePlay()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-sm shadow flex items-center gap-1.5 transition">
-                <span id="twin-play-icon">▶</span>
-                <span id="twin-play-label">Play 4D Sequence</span>
-              </button>
-              <button onclick="Nexus4DDigitalTwin.resetToCutoffDate()" class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 rounded-sm transition font-bold" title="Reset Timeline to Current Project Cut-Off Date W43 (2026-11-03)">
-                ↺ Today (W43)
-              </button>
-            </div>
+          <!-- Playback Transport Buttons -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button onclick="Nexus4DDigitalTwin.jumpToStart()" class="px-2 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 transition font-bold" title="Jump to Project Commencement (2026-01-05)">
+              ⏮ Start
+            </button>
+            <button onclick="Nexus4DDigitalTwin.stepDays(-7)" class="px-2 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 transition font-bold" title="Step Back 7 Days (1 Week)">
+              ◀ -7d
+            </button>
+            <button id="twin-btn-play" onclick="Nexus4DDigitalTwin.togglePlay()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-sm shadow flex items-center gap-1.5 transition border border-emerald-400/50">
+              <span id="twin-play-icon">▶</span>
+              <span id="twin-play-label">Play 4D Sequence</span>
+            </button>
+            <button onclick="Nexus4DDigitalTwin.stepDays(7)" class="px-2 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 transition font-bold" title="Step Forward 7 Days (1 Week)">
+              +7d ▶
+            </button>
+            <button onclick="Nexus4DDigitalTwin.jumpToFinish()" class="px-2 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 transition font-bold" title="Jump to Baseline Completion (2027-05-12)">
+              ⏭ Finish
+            </button>
+            <button onclick="Nexus4DDigitalTwin.resetToCutoffDate()" class="px-2.5 py-1.5 bg-slate-900 hover:bg-sky-900/60 text-sky-300 border border-sky-600/70 rounded-sm transition font-bold" title="Reset Timeline to Current Project Cut-Off Date W43 (2026-11-03)">
+              ↺ Today (W43)
+            </button>
+          </div>
 
-            <div class="flex items-center gap-1 text-[11px]">
-              <span class="text-slate-400">Simulated 4D Date:</span>
-              <strong id="twin-sim-date-label" class="text-sky-300 text-sm px-2 py-0.5 bg-slate-950 rounded border border-slate-800">
-                2026-11-03 (Cut-Off W43)
-              </strong>
+          <!-- Time Telemetry Display -->
+          <div class="flex items-center gap-2.5 bg-slate-950 px-3 py-1 rounded border border-slate-800 text-[11px] flex-wrap">
+            <div class="flex items-center gap-1">
+              <span class="text-slate-400">Date:</span>
+              <strong id="twin-sim-date-label" class="text-sky-300 font-bold">2026-11-03</strong>
+            </div>
+            <span class="text-slate-600">•</span>
+            <span id="twin-sim-elapsed-days" class="text-slate-300">Day 303 / 492 d</span>
+            <span class="text-slate-600">•</span>
+            <span id="twin-sim-week-label" class="text-amber-300 font-bold">W43 (of W72)</span>
+            <span class="text-slate-600">•</span>
+            <div class="flex items-center gap-1.5">
+              <span>S_Act: <strong id="twin-sim-s-act" class="text-emerald-400">44.85%</strong></span>
+              <span class="text-slate-400">vs</span>
+              <span>S_Plan: <strong id="twin-sim-s-plan" class="text-sky-300">48.20%</strong></span>
+              <span id="twin-sim-var-badge" class="px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-700 font-bold text-[10px]">Δ -3.35%</span>
             </div>
           </div>
 
           <!-- Playback Speed Multipliers -->
           <div class="flex items-center gap-1 text-[10.5px]">
-            <span class="text-slate-400 uppercase tracking-wider mr-1">Speed:</span>
+            <span class="text-slate-400 uppercase tracking-wider mr-1 font-bold">Speed:</span>
             <button onclick="Nexus4DDigitalTwin.setSpeed(1)" class="twin-speed-btn px-2 py-0.5 bg-shimizu text-white rounded font-bold" data-speed="1">1x</button>
             <button onclick="Nexus4DDigitalTwin.setSpeed(2)" class="twin-speed-btn px-2 py-0.5 bg-slate-900 text-slate-300 rounded hover:text-white" data-speed="2">2x</button>
             <button onclick="Nexus4DDigitalTwin.setSpeed(5)" class="twin-speed-btn px-2 py-0.5 bg-slate-900 text-slate-300 rounded hover:text-white" data-speed="5">5x</button>
@@ -2328,10 +2812,10 @@
             type="range"
             id="twin-timeline-slider"
             min="0"
-            max="512"
+            max="492"
             value="303"
             oninput="Nexus4DDigitalTwin.onSliderInput(this.value)"
-            class="w-full accent-sky-500 cursor-pointer h-2 bg-slate-800 rounded-lg appearance-none"
+            class="w-full accent-sky-500 cursor-pointer h-2.5 bg-slate-800 rounded-lg appearance-none"
           />
           <!-- 5 Sequential Construction Stages Milestone Bar -->
           <div class="grid grid-cols-5 gap-1 text-[9.5px] text-slate-400 text-center pt-1">
@@ -2777,6 +3261,106 @@
           </div>
         </details>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: AACE RP 29R-03 / FIDIC RED BOOK SUB-CLAUSE 20.1 & 8.4 FORMAL EOT CLAIM NOTICE DRAFTER -->
+  <div id="fidic-claim-notice-modal" class="fixed inset-0 bg-black/85 z-50 hidden items-center justify-center p-4 no-print backdrop-blur-sm">
+    <div class="bg-panel border border-amber-600/80 rounded-sm max-w-4xl w-full p-4 shadow-[0_0_50px_rgba(217,119,6,0.3)] space-y-3 max-h-[92vh] overflow-y-auto text-xs mono-num">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 text-[10px] font-extrabold bg-amber-950 text-amber-300 border border-amber-600/80 rounded-sm">
+            FIDIC RED BOOK 1999/2017 CLAIMS ENGINE
+          </span>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">
+            Formal Notice of Claim — Sub-Clause 20.1 &amp; Sub-Clause 8.4(d) / 4.12
+          </h3>
+        </div>
+        <button onclick="closeFidicClaimModal()" class="text-slate-400 hover:text-white text-sm font-bold px-2 py-0.5 bg-slate-900 rounded border border-slate-700">✕</button>
+      </div>
+
+      <!-- Action & Toolbar Strip -->
+      <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-950 p-2 rounded border border-slate-800">
+        <div class="text-[11px] text-slate-300">
+          Status: <strong class="text-emerald-400">Validated 28-Day Notice Compliance</strong> • Certified Critical Delay: <strong class="text-rose-400">+6.0 Calendar Days</strong>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="copyFidicClaimNotice()" class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-sm shadow transition flex items-center gap-1 border border-amber-400/50">
+            <span>📋 Copy Formal Notice</span>
+          </button>
+          <button onclick="printFidicClaimNotice()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-sky-300 font-semibold rounded-sm border border-slate-600 transition flex items-center gap-1">
+            <span>🖨️ Print Notice (PDF)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Formal Letterhead & Contractual Notice Document Container -->
+      <div id="fidic-notice-letter-body" class="bg-slate-950 border border-slate-800 p-5 rounded-sm space-y-3 font-sans text-slate-200 text-xs leading-relaxed">
+        <!-- Letterhead Header -->
+        <div class="border-b-2 border-slate-700 pb-3 flex justify-between items-start mono-num">
+          <div>
+            <div class="text-sm font-extrabold text-white tracking-wide">SHIMIZU CORPORATION (清水建設株式会社)</div>
+            <div class="text-[11px] text-sky-400 font-semibold">JAKARTA MRT UNDERGROUND PACKAGE CP-202 (STATION BOX &amp; TWIN EPB TBM)</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Project Directorate Office: Jl. Gajah Mada No. 100, Jakarta Pusat 10130, Indonesia</div>
+          </div>
+          <div class="text-right text-[10.5px] text-slate-400">
+            <div><strong>Notice Ref:</strong> <span class="text-amber-400 font-bold">SHMZ-CP202-FIDIC-CLM-2026-043</span></div>
+            <div><strong>Date:</strong> 03 November 2026 (Data Date Cut-Off W43)</div>
+            <div><strong>Rule:</strong> 28-Day Strict Notice Rule (Sub-Clause 20.1)</div>
+          </div>
+        </div>
+
+        <!-- Addressee -->
+        <div class="text-[11px] mono-num space-y-0.5 border-b border-slate-800 pb-2">
+          <div><strong>To:</strong> PT Mass Rapid Transit Jakarta (Perseroda) — <span class="text-slate-400">The Employer</span></div>
+          <div><strong>Attn:</strong> The "Engineer" / Supervision Consultant (Oriental Consultants Global Consortium)</div>
+          <div><strong>Contract:</strong> Jakarta Mass Rapid Transit Project Phase 2A Underground Package CP-202 (Contract Ref: MRT-CP202-2023)</div>
+        </div>
+
+        <!-- Subject -->
+        <div class="bg-slate-900/80 p-2.5 rounded border border-slate-800 font-semibold text-white text-xs">
+          SUBJECT: NOTICE OF CONTRACTOR'S CLAIM FOR EXTENSION OF TIME (EOT) UNDER FIDIC RED BOOK (1999) SUB-CLAUSE 20.1 &amp; SUB-CLAUSE 8.4(d) ARISING FROM UNFORESEEABLE PHYSICAL CONDITIONS UNDER SUB-CLAUSE 4.12 AT BOREHOLE BH-09 (STA 14+810)
+        </div>
+
+        <!-- Formal Body Paragraphs -->
+        <div class="space-y-2.5 text-[11px] text-slate-300">
+          <p>
+            Dear Sir/Madam,
+          </p>
+          <p>
+            In accordance with <strong>FIDIC Conditions of Contract for Construction (Red Book) Sub-Clause 20.1 [Contractor's Claims]</strong>, Shimizu Corporation as the General Contractor hereby gives formal contractual notice of its intention to claim an <strong>Extension of Time for Completion (EOT)</strong> pursuant to <strong>Sub-Clause 8.4 [Extension of Time for Completion]</strong>, paragraph (d), together with associated additional payment and standby costs under <strong>Sub-Clause 4.12 [Unforeseeable Physical Conditions]</strong>.
+          </p>
+          <p>
+            <strong>1. NATURE &amp; ROOT CAUSE OF THE UNFORESEEABLE CONDITION:</strong><br>
+            On 12 October 2026 during Hydrofraise Bauer BC 40 trench excavation for Diaphragm Wall North Box Panel DW-18 (WBS-2.3, STA 14+180 to STA 14+350), the Contractor encountered a massive, highly cemented volcanic boulder and cobble stratum ($N\text{-SPT} &gt; 60$ at depth $-21.5\text{m}$ to $-26.0\text{m}$ GL), corroborated by anomalous borehole <span class="text-amber-300 font-semibold">BH-09 (STA 14+810)</span> and ERT high-contrast resistivity ($290\ \Omega\cdot\text{m}$). This physical condition could not reasonably have been foreseen by an experienced contractor at the Base Date based on the Tender Geotechnical Baseline Report (GBR).
+          </p>
+          <p>
+            <strong>2. AACE RP 29R-03 FORENSIC QUANTIFICATION &amp; CRITICAL PATH IMPACT:</strong><br>
+            A forensic <strong>Time Impact Analysis (TIA — AACE MIP 3.7)</strong> and <strong>Contemporaneous Window Analysis (MIP 3.3)</strong> executed within the contemporaneous Updated CPM Schedule establishes that the boulder encounter resulted in an unmitigated critical delay of <strong class="text-rose-400">+6.0 Calendar Days</strong> to Milestone M1 (Diaphragm Wall Perimeter Closure) and directly threatens Milestone M2 (TBM Launch Breakthrough). Furthermore, <strong>MIP 3.8 Collapsed As-Built Analysis</strong> demonstrates that <em>but for</em> this Employer-risk condition, the works would be proceeding strictly on the baseline completion date of 2026-11-20.
+          </p>
+          <p>
+            <strong>3. CONTRACTOR'S DUTY TO MITIGATE (SUB-CLAUSE 8.4):</strong><br>
+            In fulfillment of its contractual duty under Sub-Clause 8.4, the Contractor immediately mobilized specialized roller disc cutters for the Hydrofraise cutter wheels, authorized continuous 24/7 muck staging via on-site acoustic buffer pits (Ringisho SHMZ-CP202-RNG-2026-043), and deployed secondary hyperbaric maintenance crews to accelerate recovery.
+          </p>
+          <p>
+            <strong>4. SUBSTANTIATION &amp; INTERIM PARTICULARS (SUB-CLAUSE 20.1):</strong><br>
+            The Contractor has incurred direct additional standby costs, cutterhead refurbishments, and acceleration expenses provisionally assessed at <strong class="text-amber-300">IDR 3,450,000,000 (Three Billion Four Hundred Fifty Million Rupiah)</strong>. Full contemporary records (Bauer telemetry logs, N-SPT core photographs, and detailed fragnet sub-network CPM files) are maintained on site and available for inspection. Comprehensive particulars under Sub-Clause 20.1 will be submitted within 42 days of this notice.
+          </p>
+          <p>
+            Yours faithfully,<br>
+            <strong>For and on behalf of SHIMIZU CORPORATION (清水建設株式会社)</strong><br>
+            <span class="font-bold text-white">Project Director / Representative</span><br>
+            Jakarta MRT Underground Package CP-202 Project Directorate
+          </p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between border-t border-slate-800 pt-2.5">
+        <span class="text-[10px] text-slate-400">Generated dynamically from NEXUS-4D™ KOUTEI v7.0 Forensic Schedule Engine.</span>
+        <button onclick="closeFidicClaimModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-sm">Close</button>
+      </div>
     </div>
   </div>
 
@@ -5008,6 +5592,557 @@
     };
     state.activeWebhookTab = 'teams';
 
+    // Extend State for v7.0 Forensic, QSRA, RC-CPM & Hydrological Pillars
+    state.qsra = {
+      iterations: 2000,
+      riskProfile: 'high',
+      p10: '2027-05-06',
+      p50: '2027-05-18',
+      p80: '2027-06-05',
+      p90: '2027-06-19',
+      bufferDays: 24,
+      criticality: {
+        'WBS-2.3': 84.5,
+        'WBS-3.2': 76.2,
+        'WBS-4.1': 69.8,
+        'WBS-5.1': 52.4,
+        'WBS-2.1': 36.1
+      },
+      cruciality: {
+        'WBS-2.3': 0.79,
+        'WBS-3.2': 0.72,
+        'WBS-4.1': 0.66,
+        'WBS-5.1': 0.51,
+        'WBS-2.1': 0.34
+      }
+    };
+    state.rcCpm = {
+      leveled: false,
+      craneDemand: 2,
+      craneCap: 1
+    };
+    state.monsoon = {
+      activeMonth: 'November 2026',
+      allowanceDays: 32.0,
+      consumedDays: 14.5,
+      muckRate: 820,
+      bufferPit: false
+    };
+    state.heave = {
+      head: -18.5,
+      gradient: 0.62,
+      alarm: false
+    };
+    state.forensicMethod = 'tia';
+
+    // -------------------------------------------------------------------------
+    // PILLAR 2: IN-BROWSER MONTE CARLO QSRA SIMULATION ENGINE
+    // -------------------------------------------------------------------------
+    let qsraChartInstance = null;
+
+    function sampleBetaPert(a, m, b) {
+      if (a === b) return a;
+      const mu = (a + 4 * m + b) / 6;
+      const sigma = (b - a) / 6;
+      const u1 = Math.max(0.0001, Math.random());
+      const u2 = Math.random();
+      const z = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+      let val = mu + z * sigma;
+      return Math.max(a, Math.min(b, val));
+    }
+
+    function runMonteCarloQSRA() {
+      const iterSelect = document.getElementById('qsra-iterations');
+      const totalRuns = iterSelect ? parseInt(iterSelect.value, 10) : 2000;
+      const riskSelect = document.getElementById('qsra-risk-profile');
+      const isHighRisk = riskSelect ? riskSelect.value === 'high' : true;
+
+      const runBtn = document.getElementById('qsra-run-btn');
+      const progContainer = document.getElementById('qsra-progress-container');
+      const progBar = document.getElementById('qsra-progress-bar');
+      const progPct = document.getElementById('qsra-progress-pct');
+
+      if (runBtn) {
+        runBtn.disabled = true;
+        runBtn.classList.add('opacity-75', 'cursor-not-allowed');
+      }
+      if (progContainer) progContainer.classList.remove('hidden');
+
+      const durationsSim = [];
+      const activityCritCounts = {};
+      const activityDurations = {};
+      state.wbs.forEach(w => {
+        activityCritCounts[w.code] = 0;
+        activityDurations[w.code] = [];
+      });
+
+      const batchSize = 250;
+      let completedRuns = 0;
+
+      function simulateBatch() {
+        const currentBatchEnd = Math.min(totalRuns, completedRuns + batchSize);
+
+        for (let iter = completedRuns; iter < currentBatchEnd; iter++) {
+          const sampled = {};
+          state.wbs.forEach(w => {
+            const startD = new Date(w.es).getTime();
+            const finishD = new Date(w.ef).getTime();
+            const schedDur = Math.max(10, Math.round((finishD - startD) / 86400000));
+            const a = Math.round(schedDur * 0.85);
+            let b = Math.round(schedDur * 1.40);
+            if (isHighRisk && (w.code === 'WBS-2.3' || w.code === 'WBS-4.1')) {
+              b += 25; // Geotechnical geological anomaly uncertainty
+            }
+            const dur = sampleBetaPert(a, schedDur, b);
+            sampled[w.code] = dur;
+            activityDurations[w.code].push(dur);
+          });
+
+          const path1 = sampled['WBS-1.1'] + sampled['WBS-2.1'] + sampled['WBS-2.3'] + sampled['WBS-3.1'] + sampled['WBS-3.2'] + sampled['WBS-5.1'];
+          const path2 = sampled['WBS-1.1'] + sampled['WBS-2.1'] + sampled['WBS-2.3'] + sampled['WBS-4.1'] + sampled['WBS-5.2'];
+          const path3 = sampled['WBS-1.1'] + sampled['WBS-2.1'] + sampled['WBS-2.3'] + sampled['WBS-4.2'] + sampled['WBS-5.2'];
+
+          const maxPath = Math.max(path1, path2, path3);
+          durationsSim.push(maxPath);
+
+          if (maxPath === path1) {
+            ['WBS-1.1', 'WBS-2.1', 'WBS-2.3', 'WBS-3.1', 'WBS-3.2', 'WBS-5.1'].forEach(c => activityCritCounts[c]++);
+          } else if (maxPath === path2) {
+            ['WBS-1.1', 'WBS-2.1', 'WBS-2.3', 'WBS-4.1', 'WBS-5.2'].forEach(c => activityCritCounts[c]++);
+          } else {
+            ['WBS-1.1', 'WBS-2.1', 'WBS-2.3', 'WBS-4.2', 'WBS-5.2'].forEach(c => activityCritCounts[c]++);
+          }
+        }
+
+        completedRuns = currentBatchEnd;
+        const pct = Math.round((completedRuns / totalRuns) * 100);
+        if (progBar) progBar.style.width = `${pct}%`;
+        if (progPct) progPct.textContent = `${pct}% (${completedRuns}/${totalRuns} Runs)`;
+
+        if (completedRuns < totalRuns) {
+          setTimeout(simulateBatch, 5);
+        } else {
+          finishSimulation();
+        }
+      }
+
+      function finishSimulation() {
+        if (runBtn) {
+          runBtn.disabled = false;
+          runBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
+        if (progContainer) {
+          setTimeout(() => progContainer.classList.add('hidden'), 1200);
+        }
+
+        durationsSim.sort((x, y) => x - y);
+        const p10Val = durationsSim[Math.floor(totalRuns * 0.10)];
+        const p50Val = durationsSim[Math.floor(totalRuns * 0.50)];
+        const p80Val = durationsSim[Math.floor(totalRuns * 0.80)];
+        const p90Val = durationsSim[Math.floor(totalRuns * 0.90)];
+
+        const startDate = new Date('2026-01-05').getTime();
+        const p10Date = new Date(startDate + p10Val * 86400000).toISOString().split('T')[0];
+        const p50Date = new Date(startDate + p50Val * 86400000).toISOString().split('T')[0];
+        const p80Date = new Date(startDate + p80Val * 86400000).toISOString().split('T')[0];
+        const p90Date = new Date(startDate + p90Val * 86400000).toISOString().split('T')[0];
+
+        const detDuration = Math.round((new Date('2027-05-12').getTime() - startDate) / 86400000);
+        const bufferDays = Math.max(0, Math.round(p80Val - detDuration));
+
+        const onTimeCount = durationsSim.filter(d => d <= detDuration).length;
+        const onTimePct = ((onTimeCount / totalRuns) * 100).toFixed(1);
+
+        state.qsra.p10 = p10Date;
+        state.qsra.p50 = p50Date;
+        state.qsra.p80 = p80Date;
+        state.qsra.p90 = p90Date;
+        state.qsra.bufferDays = bufferDays;
+
+        const topWbsList = ['WBS-2.3', 'WBS-3.2', 'WBS-4.1', 'WBS-5.1', 'WBS-2.1'];
+        topWbsList.forEach(code => {
+          const critPct = (activityCritCounts[code] / totalRuns) * 100;
+          state.qsra.criticality[code] = critPct;
+          const actArr = activityDurations[code];
+          state.qsra.cruciality[code] = computeSpearmanRankCorrelation(actArr, durationsSim);
+        });
+
+        const elP50 = document.getElementById('qsra-kpi-p50');
+        const elP80 = document.getElementById('qsra-kpi-p80');
+        const elP90 = document.getElementById('qsra-kpi-p90');
+        const elBuffer = document.getElementById('qsra-kpi-buffer');
+        const elOntime = document.getElementById('qsra-ontime-badge');
+
+        if (elP50) elP50.textContent = p50Date;
+        if (elP80) elP80.textContent = p80Date;
+        if (elP90) elP90.textContent = p90Date;
+        if (elBuffer) elBuffer.textContent = `+${bufferDays} Calendar Days`;
+        if (elOntime) elOntime.textContent = `Det. On-Time: ${onTimePct}%`;
+
+        renderQsraChart(durationsSim, p10Val, p50Val, p80Val, p90Val, detDuration);
+        renderQsraTornado();
+
+        showNexusToast(`⚡ Monte Carlo QSRA Finished (${totalRuns} Runs): P80 Commercial Target ${p80Date} (+${bufferDays}d Buffer)`);
+      }
+
+      simulateBatch();
+    }
+
+    function computeSpearmanRankCorrelation(xArr, yArr) {
+      const n = Math.min(xArr.length, yArr.length, 500);
+      if (n < 5) return 0.5;
+      const getRanks = arr => {
+        const sorted = arr.slice(0, n).map((v, i) => ({ v, i })).sort((a, b) => a.v - b.v);
+        const ranks = new Array(n);
+        for (let r = 0; r < n; r++) ranks[sorted[r].i] = r + 1;
+        return ranks;
+      };
+      const rx = getRanks(xArr);
+      const ry = getRanks(yArr);
+      let dSqSum = 0;
+      for (let i = 0; i < n; i++) {
+        const d = rx[i] - ry[i];
+        dSqSum += d * d;
+      }
+      const r = 1 - (6 * dSqSum) / (n * (n * n - 1));
+      return Math.max(0.15, Math.min(0.95, parseFloat(r.toFixed(2))));
+    }
+
+    function renderQsraChart(durations, p10Val, p50Val, p80Val, p90Val, detDuration) {
+      const canvas = document.getElementById('qsraCumulativeChart');
+      if (!canvas) return;
+
+      if (qsraChartInstance) {
+        qsraChartInstance.destroy();
+      }
+
+      const minD = durations[0];
+      const maxD = durations[durations.length - 1];
+      const step = (maxD - minD) / 30;
+      const labels = [];
+      const dataPoints = [];
+      const startDate = new Date('2026-01-05').getTime();
+
+      for (let i = 0; i <= 30; i++) {
+        const targetD = minD + i * step;
+        const count = durations.filter(d => d <= targetD).length;
+        const pct = (count / durations.length) * 100;
+        const dateStr = new Date(startDate + targetD * 86400000).toISOString().split('T')[0];
+        labels.push(dateStr);
+        dataPoints.push(parseFloat(pct.toFixed(1)));
+      }
+
+      const ctx = canvas.getContext('2d');
+      qsraChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Cumulative Probability P(t)',
+              data: dataPoints,
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56, 189, 248, 0.12)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 2.5,
+              pointRadius: 2,
+              pointHoverRadius: 5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => `Probability: ${ctx.parsed.y}%`
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 9 }, maxTicksLimit: 7 },
+              grid: { color: 'rgba(51, 65, 85, 0.25)' }
+            },
+            y: {
+              min: 0,
+              max: 100,
+              ticks: {
+                color: '#94a3b8',
+                font: { family: 'JetBrains Mono', size: 9 },
+                callback: v => `${v}%`
+              },
+              grid: { color: 'rgba(51, 65, 85, 0.25)' }
+            }
+          }
+        }
+      });
+    }
+
+    function renderQsraTornado() {
+      const container = document.getElementById('qsra-tornado-container');
+      if (!container) return;
+
+      const items = [
+        { code: 'WBS-2.3', name: 'D-Wall North & DW-18 Concreting (BH-09 Boulder)', crit: state.qsra.criticality['WBS-2.3'] || 84.5, r: state.qsra.cruciality['WBS-2.3'] || 0.79, color: 'bg-rose-500' },
+        { code: 'WBS-3.2', name: 'Station Box Top-Down S2 Excavation & Slab', crit: state.qsra.criticality['WBS-3.2'] || 76.2, r: state.qsra.cruciality['WBS-3.2'] || 0.72, color: 'bg-rose-600' },
+        { code: 'WBS-4.1', name: 'Twin EPB TBM #1 Sakura Drive (Faulted Breccia)', crit: state.qsra.criticality['WBS-4.1'] || 69.8, r: state.qsra.cruciality['WBS-4.1'] || 0.66, color: 'bg-amber-500' },
+        { code: 'WBS-5.1', name: 'Base Slab RC Structure (-24.0m Base & Heave)', crit: state.qsra.criticality['WBS-5.1'] || 52.4, r: state.qsra.cruciality['WBS-5.1'] || 0.51, color: 'bg-sky-500' },
+        { code: 'WBS-2.1', name: 'Diaphragm Wall South & East Panels DW-01..17', crit: state.qsra.criticality['WBS-2.1'] || 36.1, r: state.qsra.cruciality['WBS-2.1'] || 0.34, color: 'bg-emerald-500' }
+      ];
+
+      container.innerHTML = items.map((it, idx) => `
+        <div class="space-y-1">
+          <div class="flex justify-between items-baseline text-[11px]">
+            <div class="truncate max-w-[260px]">
+              <span class="font-bold text-sky-300">#${idx + 1} ${it.code}</span>
+              <span class="text-slate-300 ml-1 font-sans">${it.name}</span>
+            </div>
+            <div class="text-[10px] space-x-2">
+              <span>Crit: <strong class="text-white">${it.crit.toFixed(1)}%</strong></span>
+              <span>Cruciality: <strong class="text-amber-400">r=${it.r.toFixed(2)}</strong></span>
+            </div>
+          </div>
+          <div class="w-full bg-slate-900 h-2 rounded-xs overflow-hidden border border-slate-800 flex">
+            <div class="${it.color} h-full transition-all duration-500" style="width: ${it.crit}%" title="Criticality Index: ${it.crit}%"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // -------------------------------------------------------------------------
+    // PILLAR 3: MULTI-METHOD FORENSIC DELAY & FIDIC CLAIMS ENGINE
+    // -------------------------------------------------------------------------
+    function switchForensicMethod(method) {
+      state.forensicMethod = method;
+      ['tia', 'window', 'collapsed'].forEach(m => {
+        const view = document.getElementById(`forensic-view-${m}`);
+        const btn = document.getElementById(`forensic-tab-btn-${m}`);
+        if (view) {
+          if (m === method) view.classList.remove('hidden');
+          else view.classList.add('hidden');
+        }
+        if (btn) {
+          if (m === method) {
+            btn.className = 'px-2.5 py-1 rounded bg-shimizu text-white font-bold transition flex items-center gap-1 shadow-sm';
+          } else {
+            btn.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-white transition flex items-center gap-1';
+          }
+        }
+      });
+      showNexusToast(`⚖️ AACE RP 29R-03 Protocol Switched: Method ${method.toUpperCase()}`);
+    }
+
+    function openFidicClaimModal() {
+      const modal = document.getElementById('fidic-claim-notice-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeFidicClaimModal() {
+      const modal = document.getElementById('fidic-claim-notice-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function copyFidicClaimNotice() {
+      const letter = document.getElementById('fidic-notice-letter-body');
+      if (!letter) return;
+      navigator.clipboard?.writeText(letter.innerText || letter.textContent);
+      showNexusToast('📋 Formal FIDIC Red Book Sub-Clause 20.1 EOT Notice Copied to Clipboard');
+    }
+
+    function printFidicClaimNotice() {
+      window.print();
+    }
+
+    // -------------------------------------------------------------------------
+    // PILLAR 4: RESOURCE-CONSTRAINED CRITICAL PATH (RC-CPM) ENGINE
+    // -------------------------------------------------------------------------
+    function autoLevelResources() {
+      state.rcCpm.leveled = true;
+
+      const clashBanner = document.getElementById('rc-cpm-clash-banner');
+      if (clashBanner) {
+        clashBanner.className = 'bg-emerald-950/80 border border-emerald-600/80 p-2.5 rounded-sm flex items-start gap-2.5 text-xs text-emerald-200 mono-num';
+        clashBanner.innerHTML = `
+          <span class="text-lg leading-none">✓</span>
+          <div class="flex-1">
+            <div class="font-bold text-white flex items-center justify-between">
+              <span>HEURISTIC SERIAL LEVELING APPLIED: Kobelco 250t Crane Contention Resolved</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-900 border border-emerald-700 font-bold">SERIAL LINK: WBS-2.3 → WBS-3.1</span>
+            </div>
+            <p class="text-[11px] text-emerald-300 mt-0.5">
+              WBS-2.3 D-Wall North Cage Hoist prioritized at W43–W45; WBS-3.1 King-Post Plunge Column Setting sequenced immediately following panel completion. True Resource Critical Path aligned with contract COD (2027-05-12). Artificial Float removed.
+            </p>
+          </div>
+        `;
+      }
+
+      const poolBadge = document.getElementById('pool-crane-badge');
+      const poolStatus = document.getElementById('pool-crane-status');
+      const pill = document.getElementById('rc-cpm-status-pill');
+      const unleveled = document.getElementById('rc-cpm-unleveled-finish');
+
+      if (poolBadge) {
+        poolBadge.textContent = '1/1 UNIT (100% LEVELED)';
+        poolBadge.className = 'text-emerald-400 font-bold';
+      }
+      if (poolStatus) {
+        poolStatus.textContent = 'Serialized: WBS-2.3 → WBS-3.1';
+        poolStatus.className = 'text-sm font-bold text-emerald-300 mt-1';
+      }
+      if (pill) {
+        pill.textContent = 'HEURISTICALLY LEVELED (FINISH: 2027-05-12)';
+        pill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/70';
+      }
+      if (unleveled) {
+        unleveled.innerHTML = '<span class="text-emerald-400">2027-05-12 (Resolved)</span>';
+      }
+
+      showNexusToast('⚡ Resources Auto-Leveled (Heuristic ELS): True Resource Critical Path Aligned to 2027-05-12');
+    }
+
+    function resetRcCpm() {
+      state.rcCpm.leveled = false;
+      const clashBanner = document.getElementById('rc-cpm-clash-banner');
+      if (clashBanner) {
+        clashBanner.className = 'bg-rose-950/80 border border-rose-600/80 p-2.5 rounded-sm flex items-start gap-2.5 text-xs text-rose-200 mono-num animate-pulse';
+        clashBanner.innerHTML = `
+          <span class="text-lg leading-none">⚠️</span>
+          <div class="flex-1">
+            <div class="font-bold text-white flex items-center justify-between">
+              <span>OVER-ALLOCATION CLASH DETECTED: Kobelco CKE2500G-2 (250t Crane)</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded bg-rose-900 border border-rose-700 font-bold">CAPACITY EXCEEDED: DEMAND 2.0 > CAP 1.0</span>
+            </div>
+            <p class="text-[11px] text-rose-300 mt-0.5">
+              Simultaneous demand from <strong class="text-white">WBS-2.3 (D-Wall North Cage Hoist)</strong> and <strong class="text-white">WBS-3.1 (King-Post Plunge Column Setting)</strong> during Weeks W43–W46. Classical CPM reports artificial Total Float ($TF = +10\\text{d}$) on WBS-3.1. Under physical 1-crane availability, True Resource Critical Path pushes completion date by <strong class="text-amber-300">+9 Calendar Days</strong> unless leveled.
+            </p>
+          </div>
+        `;
+      }
+
+      const poolBadge = document.getElementById('pool-crane-badge');
+      const poolStatus = document.getElementById('pool-crane-status');
+      const pill = document.getElementById('rc-cpm-status-pill');
+      const unleveled = document.getElementById('rc-cpm-unleveled-finish');
+
+      if (poolBadge) {
+        poolBadge.textContent = '2/1 UNIT (200% CLASH)';
+        poolBadge.className = 'text-rose-400 font-extrabold animate-pulse';
+      }
+      if (poolStatus) {
+        poolStatus.textContent = 'Contested: WBS-2.3 & WBS-3.1';
+        poolStatus.className = 'text-sm font-bold text-rose-300 mt-1';
+      }
+      if (pill) {
+        pill.textContent = 'RESOURCE OVER-ALLOCATION ACTIVE (+9d IMPACT)';
+        pill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-700/70';
+      }
+      if (unleveled) {
+        unleveled.textContent = '2027-05-21 (+9 Days)';
+      }
+
+      showNexusToast('↺ Reset to Classical CPM (Unconstrained Equipment Model)');
+    }
+
+    // -------------------------------------------------------------------------
+    // PILLAR 5: MONSOON CURFEW & HYDRAULIC HEAVE INTERLOCK ENGINE
+    // -------------------------------------------------------------------------
+    function onMuckRateChange(val) {
+      state.monsoon.muckRate = parseInt(val, 10);
+      const valLabel = document.getElementById('dishub-muck-val');
+      const statusBox = document.getElementById('dishub-curfew-status');
+      if (valLabel) valLabel.textContent = `${val} m³/night`;
+
+      if (state.monsoon.muckRate > 675 && !state.monsoon.bufferPit) {
+        if (statusBox) {
+          statusBox.className = 'text-[10.5px] px-2 py-1 rounded bg-amber-950/80 border border-amber-700/60 text-amber-300 flex items-center justify-between';
+          statusBox.innerHTML = `
+            <span>⚠️ MUCK HAULAGE CHOKEPOINT: Rate exceeds 675 m³/night (+4.5d bench delay)</span>
+            <button onclick="enableBufferPit()" id="btn-buffer-pit" class="px-2 py-0.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded font-bold text-[10px]">Enable Buffer Pit (Kaizen Opt-C)</button>
+          `;
+        }
+      } else {
+        if (statusBox) {
+          statusBox.className = 'text-[10.5px] px-2 py-1 rounded bg-emerald-950/80 border border-emerald-700/60 text-emerald-300 flex items-center justify-between';
+          statusBox.innerHTML = `
+            <span>✓ DISHUB CURFEW COMPLIANT: Muck clearance decoupled within legal transport limits</span>
+            <span class="text-[10px] text-emerald-400 font-bold">${state.monsoon.bufferPit ? 'Buffer Pit Active' : 'Optimal'}</span>
+          `;
+        }
+      }
+    }
+
+    function enableBufferPit() {
+      state.monsoon.bufferPit = !state.monsoon.bufferPit;
+      onMuckRateChange(state.monsoon.muckRate);
+      showNexusToast(state.monsoon.bufferPit ? '🏗️ 24/7 On-Site Acoustic Buffer Pit Activated: Curfew Decoupled' : 'Buffer Pit Deactivated');
+    }
+
+    function onPzHeaveChange(val) {
+      const head = parseFloat(val);
+      state.heave.head = head;
+      const elVal = document.getElementById('heave-head-val');
+      const elBadge = document.getElementById('heave-gradient-badge');
+      const elStatus = document.getElementById('heave-interlock-status');
+
+      if (elVal) elVal.textContent = `${head.toFixed(1)} m`;
+
+      const gradient = Math.max(0.3, Math.min(1.25, (Math.abs(head) - 14.0) / 7.0));
+      state.heave.gradient = gradient;
+
+      const isAlarm = gradient > 0.85 || head < -18.5;
+      state.heave.alarm = isAlarm;
+
+      if (elBadge) {
+        elBadge.textContent = `i = ${gradient.toFixed(2)} (${isAlarm ? 'ALARM > 0.85' : 'Safe < 0.85'})`;
+        elBadge.className = isAlarm ? 'font-bold text-rose-400 animate-pulse' : 'font-bold text-emerald-400';
+      }
+
+      const wbs51 = state.wbs.find(w => w.code === 'WBS-5.1');
+
+      if (isAlarm) {
+        if (elStatus) {
+          elStatus.className = 'text-[10.5px] px-2 py-1 rounded bg-rose-950 border border-rose-600 text-rose-200 flex items-center justify-between animate-pulse';
+          elStatus.innerHTML = `
+            <span>🚨 HYDRAULIC HEAVE ALARM: i = ${gradient.toFixed(2)} > 0.85. WBS-5.1 Base Slab Excavation LOCKED!</span>
+            <button onclick="onPzHeaveChange(-16.0)" class="px-2 py-0.5 bg-emerald-900 text-emerald-200 border border-emerald-600 rounded text-[10px]">Restore Equilibrium (-16.0m)</button>
+          `;
+        }
+        if (wbs51) wbs51.gate = 'HEAVE HOLD';
+        recalculateAll(true);
+        if (window.Nexus4DDigitalTwin) Nexus4DDigitalTwin.updateMaterials();
+        showNexusToast('🚨 PZ-02 Hydraulic Heave Safety Interlock Triggered! Base Slab Excavation Locked');
+      } else {
+        if (elStatus) {
+          elStatus.className = 'text-[10.5px] px-2 py-1 rounded bg-slate-900 border border-slate-700 text-emerald-300 flex items-center justify-between';
+          elStatus.innerHTML = `
+            <span>✓ BASE SLAB HYDRAULIC EQUILIBRIUM: WBS-5.1 Excavation Permitted</span>
+            <button onclick="testHeaveAlarm()" class="px-2 py-0.5 bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-700 rounded text-[10px]">Simulate Heave Alarm (-21.5m)</button>
+          `;
+        }
+        if (wbs51 && wbs51.gate === 'HEAVE HOLD') {
+          wbs51.gate = 'KYT+RFI OK';
+          recalculateAll(true);
+          if (window.Nexus4DDigitalTwin) Nexus4DDigitalTwin.updateMaterials();
+        }
+      }
+    }
+
+    function testHeaveAlarm() {
+      const slider = document.getElementById('heave-head-slider');
+      if (slider) slider.value = -21.5;
+      onPzHeaveChange(-21.5);
+    }
+
     // -------------------------------------------------------------------------
     // PILLAR 2: MULTI-ROLE RBAC PERSONA SWITCHER ENGINE
     // -------------------------------------------------------------------------
@@ -5652,6 +6787,13 @@ Excavation Frozen` }
       sliderValue: 303, // Corresponds to W43 (2026-11-03)
       meshes: [],
       selectedMesh: null,
+      excavationMesh: null,
+      dwallPanels: [],
+      slabs: { b1: null, b2: null, b3: null },
+      struts: [],
+      tbm1: { shield: null, cutter: null, rings: [] },
+      tbm2: { shield: null, rings: [] },
+      crossPassage: null,
       layers: {
         decking: true,
         dwalls: true,
@@ -5728,13 +6870,19 @@ Excavation Frozen` }
 
         this.initialized = true;
         this.animate();
-        this.updateMaterials();
+        this.onSliderInput(this.sliderValue);
       },
 
       buildProceduralModel() {
         const rootGroup = new THREE.Group();
         rootGroup.name = 'root_construction_model';
         this.scene.add(rootGroup);
+
+        this.meshes = [];
+        this.dwallPanels = [];
+        this.struts = [];
+        this.tbm1 = { shield: null, cutter: null, rings: [] };
+        this.tbm2 = { shield: null, rings: [] };
 
         // Materials cache
         const concreteMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8, metalness: 0.1 });
@@ -5754,6 +6902,26 @@ Excavation Frozen` }
         };
         rootGroup.add(deckingMesh);
         this.meshes.push(deckingMesh);
+
+        // Subsurface Earth Excavation Volume
+        const excGeo = new THREE.BoxGeometry(196, 24.5, 24.6);
+        const excMat = new THREE.MeshStandardMaterial({
+          color: 0x3d2817,
+          roughness: 0.95,
+          metalness: 0.05,
+          transparent: true,
+          opacity: 0.45,
+          depthWrite: false
+        });
+        this.excavationMesh = new THREE.Mesh(excGeo, excMat);
+        this.excavationMesh.position.set(0, -12.25, 0);
+        this.excavationMesh.userData = {
+          wbsCode: 'WBS-2.3',
+          name: 'Top-Down Subsurface Earth Excavation Volume (-24.5m)',
+          category: 'excavation'
+        };
+        rootGroup.add(this.excavationMesh);
+        this.meshes.push(this.excavationMesh);
 
         // B. Diaphragm Wall (D-Wall) Perimeter Panels (DW-01 to DW-36)
         // 18 panels East side, 18 panels West side
@@ -5781,6 +6949,14 @@ Excavation Frozen` }
           };
           rootGroup.add(eastMesh);
           this.meshes.push(eastMesh);
+          this.dwallPanels.push({
+            mesh: eastMesh,
+            id: pId,
+            isEast: true,
+            startDay: 60 + i * 10,
+            finishDay: 60 + i * 10 + 8,
+            wbsCode: wbsCode
+          });
 
           // West Panel
           const westGeo = new THREE.BoxGeometry(panelWidth - 0.2, panelHeight, panelThick);
@@ -5796,6 +6972,14 @@ Excavation Frozen` }
           };
           rootGroup.add(westMesh);
           this.meshes.push(westMesh);
+          this.dwallPanels.push({
+            mesh: westMesh,
+            id: pId + 18,
+            isEast: false,
+            startDay: 65 + i * 10,
+            finishDay: 65 + i * 10 + 8,
+            wbsCode: wbsCode
+          });
         }
 
         // End Closure Walls (North & South bulkheads)
@@ -5805,12 +6989,14 @@ Excavation Frozen` }
         southEnd.userData = { wbsCode: 'WBS-2.1', name: 'D-Wall South Bulkhead Closure (STA 14+000)', category: 'dwalls' };
         rootGroup.add(southEnd);
         this.meshes.push(southEnd);
+        this.dwallPanels.push({ mesh: southEnd, id: 0, isEast: false, startDay: 50, finishDay: 62, wbsCode: 'WBS-2.1' });
 
         const northEnd = new THREE.Mesh(endWallGeo, concreteMat.clone());
         northEnd.position.set(100, -13.0, 0);
         northEnd.userData = { wbsCode: 'WBS-2.3', name: 'D-Wall North TBM Launch Bulkhead (STA 14+350)', category: 'dwalls' };
         rootGroup.add(northEnd);
         this.meshes.push(northEnd);
+        this.dwallPanels.push({ mesh: northEnd, id: 99, isEast: false, startDay: 235, finishDay: 250, wbsCode: 'WBS-2.3' });
 
         // C. Multi-Level Station Slabs
         // B1 Concourse Slab (Y = -8m) -> WBS-3.1
@@ -5858,6 +7044,8 @@ Excavation Frozen` }
         rootGroup.add(b3Mesh);
         this.meshes.push(b3Mesh);
 
+        this.slabs = { b1: b1Mesh, b2: b2Mesh, b3: b3Mesh };
+
         // Vertical King Posts (Plunge Columns) Grid
         const colGeo = new THREE.BoxGeometry(0.7, 26, 0.7);
         for (let kx = -80; kx <= 80; kx += 20) {
@@ -5884,6 +7072,7 @@ Excavation Frozen` }
             };
             rootGroup.add(strutMesh);
             this.meshes.push(strutMesh);
+            this.struts.push({ mesh: strutMesh, tier: tierIdx + 1, sy: sy });
           }
         });
 
@@ -5910,6 +7099,7 @@ Excavation Frozen` }
           };
           nbRingsGroup.add(ringMesh);
           this.meshes.push(ringMesh);
+          this.tbm1.rings.push({ mesh: ringMesh, x: rx });
         }
 
         // TBM #1 Shield Machine Body & Cutterhead at X = 170
@@ -5926,6 +7116,7 @@ Excavation Frozen` }
         };
         rootGroup.add(shieldMesh);
         this.meshes.push(shieldMesh);
+        this.tbm1.shield = shieldMesh;
 
         // Cutterhead
         const cutterGeo = new THREE.CylinderGeometry(tbmRadius + 0.1, tbmRadius + 0.1, 1.2, 32);
@@ -5940,6 +7131,7 @@ Excavation Frozen` }
         };
         rootGroup.add(cutterMesh);
         this.meshes.push(cutterMesh);
+        this.tbm1.cutter = cutterMesh;
 
         // Southbound Tunnel: TBM #2 "Garuda-2" (Z = +7.0) -> WBS-4.2
         const sbRingsGroup = new THREE.Group();
@@ -5960,6 +7152,7 @@ Excavation Frozen` }
           };
           sbRingsGroup.add(ringMesh);
           this.meshes.push(ringMesh);
+          this.tbm2.rings.push({ mesh: ringMesh, x: rx });
         }
 
         // TBM #2 Shield Machine Body at X = 140
@@ -5976,6 +7169,7 @@ Excavation Frozen` }
         };
         rootGroup.add(shield2Mesh);
         this.meshes.push(shield2Mesh);
+        this.tbm2.shield = shield2Mesh;
 
         // Cross-Passage CP-01 (Connecting Tube between NB & SB at X = 190) -> WBS-5.2
         const cpGeo = new THREE.CylinderGeometry(1.8, 1.8, 14, 16);
@@ -5991,6 +7185,7 @@ Excavation Frozen` }
         };
         rootGroup.add(cpMesh);
         this.meshes.push(cpMesh);
+        this.crossPassage = cpMesh;
 
         // E. Subsurface Instrumentation Beacons (Sensors)
         // 1. INC-04: East D-Wall Lateral Deflection Sensor
@@ -6038,13 +7233,12 @@ Excavation Frozen` }
 
       updateMaterials() {
         if (!this.initialized || !this.meshes.length) return;
-
         const time = performance.now() * 0.003;
         const isAnomaly = state.geotechAnomaly;
 
+        // Keep pulsing emissive on active / alarm elements
         this.meshes.forEach(mesh => {
           if (!mesh.userData || !mesh.userData.wbsCode) return;
-
           const wbs = state.wbs.find(w => w.code === mesh.userData.wbsCode);
           if (!wbs) return;
 
@@ -6055,42 +7249,13 @@ Excavation Frozen` }
           const isAnomalyAffected = isAnomaly && (wbs.code === 'WBS-2.3' || wbs.code === 'WBS-3.2');
 
           if (isAnomalyAffected || hasHold) {
-            // 🟥 Crimson Pulsing: Hard Gated / Locked / Geotech Anomaly
             mat.color.setHex(0xef4444);
             if (mat.emissive) {
               mat.emissive.setHex(0xef4444);
               mat.emissiveIntensity = 0.4 + 0.4 * Math.sin(time * 3);
             }
-            mat.wireframe = false;
-            mat.transparent = false;
-            mat.opacity = 1.0;
-          } else if (wbs.actual >= 100) {
-            // 🟩 Emerald Solid: Completed
-            mat.color.setHex(0x10b981);
-            if (mat.emissive) {
-              mat.emissive.setHex(0x064e3b);
-              mat.emissiveIntensity = 0.2;
-            }
-            mat.wireframe = false;
-            mat.transparent = false;
-            mat.opacity = 1.0;
-          } else if (wbs.actual > 0) {
-            // 🟨 Amber Glowing: Active / In-Progress
-            mat.color.setHex(0xf59e0b);
-            if (mat.emissive) {
-              mat.emissive.setHex(0xf59e0b);
-              mat.emissiveIntensity = 0.25 + 0.25 * Math.sin(time);
-            }
-            mat.wireframe = false;
-            mat.transparent = false;
-            mat.opacity = 1.0;
-          } else {
-            // ⬜ Translucent Dark Wireframe: Not Started
-            mat.color.setHex(0x334155);
-            if (mat.emissive) mat.emissive.setHex(0x000000);
-            mat.wireframe = true;
-            mat.transparent = true;
-            mat.opacity = 0.35;
+          } else if (mat.emissive && mat.emissive.getHex() === 0xf59e0b) {
+            mat.emissiveIntensity = 0.25 + 0.25 * Math.sin(time);
           }
         });
       },
@@ -6228,75 +7393,26 @@ Excavation Frozen` }
         }
       },
 
-      onSliderInput(val) {
-        this.sliderValue = parseInt(val, 10);
-        const startDate = new Date('2026-01-05').getTime();
-        const targetDate = new Date(startDate + this.sliderValue * 86400000);
-        const dateStr = targetDate.toISOString().split('T')[0];
-
-        const dateLabel = document.getElementById('twin-sim-date-label');
-        if (dateLabel) {
-          dateLabel.textContent = `${dateStr} (Day ${this.sliderValue})`;
-        }
-
-        // Interpolate construction progress by date
-        this.meshes.forEach(mesh => {
-          if (!mesh.userData?.wbsCode) return;
-          const wbs = state.wbs.find(w => w.code === mesh.userData.wbsCode);
-          if (!wbs) return;
-
-          const esTime = new Date(wbs.es).getTime();
-          const efTime = new Date(wbs.ef).getTime();
-          const curTime = targetDate.getTime();
-
-          let simProg = 0;
-          if (curTime >= efTime) {
-            simProg = 100;
-          } else if (curTime <= esTime) {
-            simProg = 0;
-          } else {
-            simProg = ((curTime - esTime) / (efTime - esTime)) * 100;
-          }
-
-          const mat = mesh.material;
-          if (mat) {
-            if (simProg >= 100) {
-              mat.color.setHex(0x10b981);
-              mat.wireframe = false;
-              mat.opacity = 1.0;
-            } else if (simProg > 0) {
-              mat.color.setHex(0xf59e0b);
-              mat.wireframe = false;
-              mat.opacity = 0.9;
-            } else {
-              mat.color.setHex(0x334155);
-              mat.wireframe = true;
-              mat.opacity = 0.25;
-            }
-          }
-        });
+      jumpToStart() {
+        if (this.isPlaying) this.togglePlay();
+        const slider = document.getElementById('twin-timeline-slider');
+        if (slider) slider.value = 0;
+        this.onSliderInput(0);
       },
 
-      togglePlay() {
-        this.isPlaying = !this.isPlaying;
-        const icon = document.getElementById('twin-play-icon');
-        const label = document.getElementById('twin-play-label');
+      jumpToFinish() {
+        if (this.isPlaying) this.togglePlay();
+        const slider = document.getElementById('twin-timeline-slider');
+        if (slider) slider.value = 492;
+        this.onSliderInput(492);
+      },
 
-        if (this.isPlaying) {
-          if (icon) icon.textContent = '⏸';
-          if (label) label.textContent = 'Pause 4D';
-          this.playInterval = setInterval(() => {
-            let nextVal = this.sliderValue + (1 * this.playSpeed);
-            if (nextVal > 512) nextVal = 0;
-            const slider = document.getElementById('twin-timeline-slider');
-            if (slider) slider.value = nextVal;
-            this.onSliderInput(nextVal);
-          }, 80);
-        } else {
-          if (icon) icon.textContent = '▶';
-          if (label) label.textContent = 'Play 4D Sequence';
-          if (this.playInterval) clearInterval(this.playInterval);
-        }
+      stepDays(days) {
+        if (this.isPlaying) this.togglePlay();
+        const slider = document.getElementById('twin-timeline-slider');
+        let nextVal = Math.max(0, Math.min(492, (this.sliderValue || 303) + days));
+        if (slider) slider.value = nextVal;
+        this.onSliderInput(nextVal);
       },
 
       setSpeed(spd) {
@@ -6315,9 +7431,279 @@ Excavation Frozen` }
         const slider = document.getElementById('twin-timeline-slider');
         if (slider) slider.value = 303;
         this.onSliderInput(303);
+      },
+
+      togglePlay() {
+        this.isPlaying = !this.isPlaying;
+        const icon = document.getElementById('twin-play-icon');
+        const label = document.getElementById('twin-play-label');
+
+        if (this.isPlaying) {
+          if (icon) icon.textContent = '⏸';
+          if (label) label.textContent = 'Pause 4D';
+          this.playInterval = setInterval(() => {
+            let nextVal = this.sliderValue + (1 * this.playSpeed);
+            if (nextVal > 492) nextVal = 0;
+            const slider = document.getElementById('twin-timeline-slider');
+            if (slider) slider.value = nextVal;
+            this.onSliderInput(nextVal);
+          }, 70);
+        } else {
+          if (icon) icon.textContent = '▶';
+          if (label) label.textContent = 'Play 4D Sequence';
+          if (this.playInterval) clearInterval(this.playInterval);
+        }
+      },
+
+      onSliderInput(val) {
+        this.sliderValue = parseInt(val, 10);
+        const startEpoch = new Date('2026-01-05T00:00:00Z').getTime();
+        const curEpoch = startEpoch + this.sliderValue * 86400000;
+        const curDate = new Date(curEpoch);
+        const dateStr = curDate.toISOString().split('T')[0];
+        const simWeek = Math.min(72, Math.floor(this.sliderValue / 7) + 1);
+        const weekStr = `W${simWeek < 10 ? '0' + simWeek : simWeek} (of W72)`;
+
+        // Update Time Telemetry in Tab 10
         const dateLabel = document.getElementById('twin-sim-date-label');
-        if (dateLabel) dateLabel.textContent = '2026-11-03 (Cut-Off W43)';
-        this.updateMaterials();
+        if (dateLabel) dateLabel.textContent = dateStr;
+
+        const elapsedLabel = document.getElementById('twin-sim-elapsed-days');
+        if (elapsedLabel) elapsedLabel.textContent = `Day ${this.sliderValue} / 492 d`;
+
+        const weekLabel = document.getElementById('twin-sim-week-label');
+        if (weekLabel) weekLabel.textContent = weekStr;
+
+        // Cumulative S-Curves: S_Plan & S_Act
+        const u = Math.max(0, Math.min(1, this.sliderValue / 492));
+        const sPlan = Math.min(100, Math.max(0, 100 * (0.5 - 0.5 * Math.cos(Math.PI * u))));
+
+        let sAct = 0;
+        if (this.sliderValue <= 303) {
+          const uHist = this.sliderValue / 303;
+          sAct = Math.max(0, sPlan - (3.35 * Math.sin(Math.PI * uHist)));
+          if (this.sliderValue === 303) sAct = 44.85;
+        } else {
+          const uFut = (this.sliderValue - 303) / (516 - 303);
+          sAct = 44.85 + (100 - 44.85) * (0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, uFut)));
+        }
+        const delta = sAct - sPlan;
+
+        const sActEl = document.getElementById('twin-sim-s-act');
+        if (sActEl) sActEl.textContent = `${sAct.toFixed(2)}%`;
+
+        const sPlanEl = document.getElementById('twin-sim-s-plan');
+        if (sPlanEl) sPlanEl.textContent = `${sPlan.toFixed(2)}%`;
+
+        const varBadge = document.getElementById('twin-sim-var-badge');
+        if (varBadge) {
+          varBadge.textContent = `Δ ${delta >= 0 ? '+' : ''}${delta.toFixed(2)}%`;
+          if (delta >= 0) {
+            varBadge.className = 'px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-[10px]';
+          } else if (delta > -2.0) {
+            varBadge.className = 'px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-700 font-bold text-[10px]';
+          } else {
+            varBadge.className = 'px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-700 font-bold text-[10px]';
+          }
+        }
+
+        // 1. Modulate D-Wall Panels (DW-01 to DW-36 & Bulkheads)
+        if (this.dwallPanels && this.dwallPanels.length) {
+          this.dwallPanels.forEach(p => {
+            const mat = p.mesh.material;
+            if (!mat) return;
+            const isBoulderZone = state.geotechAnomaly && (p.id === 18 || p.id === 36) && this.sliderValue >= 210 && this.sliderValue <= 315;
+
+            if (isBoulderZone) {
+              mat.color.setHex(0xef4444);
+              if (mat.emissive) {
+                mat.emissive.setHex(0xef4444);
+                mat.emissiveIntensity = 0.6;
+              }
+              mat.wireframe = false;
+              mat.opacity = 1.0;
+            } else if (this.sliderValue >= p.finishDay) {
+              mat.color.setHex(0x10b981);
+              if (mat.emissive) mat.emissive.setHex(0x064e3b);
+              mat.wireframe = false;
+              mat.opacity = 1.0;
+            } else if (this.sliderValue >= p.startDay) {
+              mat.color.setHex(0xf59e0b);
+              if (mat.emissive) {
+                mat.emissive.setHex(0xf59e0b);
+                mat.emissiveIntensity = 0.5;
+              }
+              mat.wireframe = false;
+              mat.opacity = 1.0;
+            } else {
+              mat.color.setHex(0x1e293b);
+              if (mat.emissive) mat.emissive.setHex(0x000000);
+              mat.wireframe = true;
+              mat.opacity = 0.2;
+            }
+          });
+        }
+
+        // 2. Modulate Top-Down Subsurface Earth Excavation Volume
+        let excDepth = 0;
+        if (this.sliderValue < 80) {
+          excDepth = 0;
+        } else if (this.sliderValue < 130) {
+          excDepth = 3.5 * ((this.sliderValue - 80) / 50); // Down to -3.5m (Tier 1 strut)
+        } else if (this.sliderValue < 190) {
+          excDepth = 3.5 + 5.0 * ((this.sliderValue - 130) / 60); // Down to -8.5m (B1 Slab)
+        } else if (this.sliderValue < 260) {
+          excDepth = 8.5 + 3.5 * ((this.sliderValue - 190) / 70); // Down to -12.0m (Tier 2 strut)
+        } else if (this.sliderValue < 330) {
+          excDepth = 12.0 + 4.5 * ((this.sliderValue - 260) / 70); // Down to -16.5m (B2 Slab)
+        } else if (this.sliderValue < 380) {
+          excDepth = 16.5 + 5.5 * ((this.sliderValue - 330) / 50); // Down to -22.0m (Tier 4 strut)
+        } else if (this.sliderValue < 420) {
+          excDepth = 22.0 + 2.5 * ((this.sliderValue - 380) / 40); // Down to -24.5m (Base excavation)
+        } else {
+          excDepth = 24.5;
+        }
+
+        if (this.excavationMesh) {
+          if (excDepth >= 24.4) {
+            this.excavationMesh.visible = false;
+          } else {
+            this.excavationMesh.visible = true;
+            const remainingH = Math.max(0.2, 24.5 - excDepth);
+            this.excavationMesh.scale.y = remainingH / 24.5;
+            this.excavationMesh.position.y = -24.5 + (remainingH / 2);
+          }
+        }
+
+        // 3. Modulate Temporary Struts (Tiers 1 to 4)
+        if (this.struts && this.struts.length) {
+          this.struts.forEach(st => {
+            const mat = st.mesh.material;
+            if (!mat) return;
+            if (st.tier === 1) {
+              if (excDepth < 3.0) { st.mesh.visible = false; }
+              else if (excDepth < 7.0) { st.mesh.visible = true; mat.color.setHex(0xf59e0b); mat.wireframe = false; mat.opacity = 0.9; }
+              else { st.mesh.visible = true; mat.color.setHex(0x475569); mat.wireframe = false; mat.opacity = 1.0; }
+            } else if (st.tier === 2) {
+              if (excDepth < 10.0) { st.mesh.visible = false; }
+              else if (excDepth < 15.0) { st.mesh.visible = true; mat.color.setHex(0xf59e0b); mat.wireframe = false; mat.opacity = 0.9; }
+              else { st.mesh.visible = true; mat.color.setHex(0x475569); mat.wireframe = false; mat.opacity = 1.0; }
+            } else if (st.tier === 3) {
+              if (excDepth < 16.5) { st.mesh.visible = false; }
+              else if (excDepth < 20.0) { st.mesh.visible = true; mat.color.setHex(0xf59e0b); mat.wireframe = false; mat.opacity = 0.9; }
+              else { st.mesh.visible = true; mat.color.setHex(0x475569); mat.wireframe = false; mat.opacity = 1.0; }
+            } else if (st.tier === 4) {
+              if (excDepth < 21.0) { st.mesh.visible = false; }
+              else if (excDepth < 24.0) { st.mesh.visible = true; mat.color.setHex(0xf59e0b); mat.wireframe = false; mat.opacity = 0.9; }
+              else { st.mesh.visible = true; mat.color.setHex(0x475569); mat.wireframe = false; mat.opacity = 1.0; }
+            }
+          });
+        }
+
+        // 4. Modulate Station Slabs (B1, B2, B3)
+        if (this.slabs) {
+          if (this.slabs.b1) {
+            const mat = this.slabs.b1.material;
+            if (excDepth < 8.5 || this.sliderValue < 170) {
+              mat.wireframe = true; mat.opacity = 0.15; mat.color.setHex(0x1e293b);
+            } else if (this.sliderValue < 220) {
+              mat.wireframe = false; mat.opacity = 0.9; mat.color.setHex(0xf59e0b);
+            } else {
+              mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0x10b981);
+            }
+          }
+          if (this.slabs.b2) {
+            const mat = this.slabs.b2.material;
+            if (excDepth < 16.5 || this.sliderValue < 280) {
+              mat.wireframe = true; mat.opacity = 0.15; mat.color.setHex(0x1e293b);
+            } else if (this.sliderValue < 330) {
+              mat.wireframe = false; mat.opacity = 0.9; mat.color.setHex(0xf59e0b);
+            } else {
+              mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0x10b981);
+            }
+          }
+          if (this.slabs.b3) {
+            const mat = this.slabs.b3.material;
+            if (excDepth < 24.0 || this.sliderValue < 390) {
+              mat.wireframe = true; mat.opacity = 0.15; mat.color.setHex(0x1e293b);
+            } else if (this.sliderValue < 440) {
+              mat.wireframe = false; mat.opacity = 0.9; mat.color.setHex(0xf59e0b);
+            } else {
+              mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0x10b981);
+            }
+          }
+        }
+
+        // 5. Modulate Twin TBM Drives (Sakura & Garuda)
+        // TBM #1 "Sakura" (Launch day: 220)
+        if (this.tbm1 && this.tbm1.shield) {
+          const tbm1Launch = 220;
+          if (this.sliderValue < tbm1Launch) {
+            this.tbm1.shield.position.x = 100;
+            if (this.tbm1.cutter) this.tbm1.cutter.position.x = 105;
+            this.tbm1.rings.forEach(r => r.mesh.visible = false);
+            this.tbm1.shield.material.color.setHex(0x334155);
+            this.tbm1.shield.material.wireframe = true;
+          } else {
+            const advance = Math.min(140, (this.sliderValue - tbm1Launch) * 0.95);
+            const shieldX = 100 + advance;
+            this.tbm1.shield.position.x = shieldX;
+            if (this.tbm1.cutter) this.tbm1.cutter.position.x = shieldX + 5;
+            this.tbm1.shield.material.wireframe = false;
+            if (shieldX >= 238) {
+              this.tbm1.shield.material.color.setHex(0x10b981);
+            } else {
+              this.tbm1.shield.material.color.setHex(0x005bac);
+            }
+            this.tbm1.rings.forEach(r => {
+              r.mesh.visible = (r.x <= shieldX - 4.0);
+              if (r.mesh.visible) {
+                r.mesh.material.color.setHex(0x475569);
+                r.mesh.material.wireframe = false;
+              }
+            });
+          }
+        }
+
+        // TBM #2 "Garuda" (Launch day: 250)
+        if (this.tbm2 && this.tbm2.shield) {
+          const tbm2Launch = 250;
+          if (this.sliderValue < tbm2Launch) {
+            this.tbm2.shield.position.x = 100;
+            this.tbm2.rings.forEach(r => r.mesh.visible = false);
+            this.tbm2.shield.material.color.setHex(0x334155);
+            this.tbm2.shield.material.wireframe = true;
+          } else {
+            const advance = Math.min(125, (this.sliderValue - tbm2Launch) * 0.85);
+            const shieldX = 100 + advance;
+            this.tbm2.shield.position.x = shieldX;
+            this.tbm2.shield.material.wireframe = false;
+            if (shieldX >= 220) {
+              this.tbm2.shield.material.color.setHex(0x10b981);
+            } else {
+              this.tbm2.shield.material.color.setHex(0x0284c7);
+            }
+            this.tbm2.rings.forEach(r => {
+              r.mesh.visible = (r.x <= shieldX - 4.0);
+              if (r.mesh.visible) {
+                r.mesh.material.color.setHex(0x475569);
+                r.mesh.material.wireframe = false;
+              }
+            });
+          }
+        }
+
+        // 6. Cross-Passage CP-01 (Breakthrough ~Day 330)
+        if (this.crossPassage) {
+          const cpMat = this.crossPassage.material;
+          if (this.sliderValue < 330) {
+            cpMat.wireframe = true; cpMat.opacity = 0.15; cpMat.color.setHex(0x1e293b);
+          } else if (this.sliderValue < 370) {
+            cpMat.wireframe = false; cpMat.opacity = 0.9; cpMat.color.setHex(0xf59e0b);
+          } else {
+            cpMat.wireframe = false; cpMat.opacity = 1.0; cpMat.color.setHex(0x10b981);
+          }
+        }
       },
 
       onWindowResize() {
@@ -6335,6 +7721,11 @@ Excavation Frozen` }
         requestAnimationFrame(() => this.animate());
 
         if (this.controls) this.controls.update();
+
+        // Rotate TBM cutterhead if active
+        if (this.tbm1 && this.tbm1.cutter && this.sliderValue >= 220 && this.sliderValue < 380) {
+          this.tbm1.cutter.rotation.x += 0.04 * (this.isPlaying ? this.playSpeed : 1);
+        }
 
         // Pulsate active and alarm shaders
         const activeTab = document.getElementById('tab-twin');
@@ -6386,6 +7777,17 @@ Excavation Frozen` }
       updatePortfolioCockpit();
       recalculateAll(false);
       updateAiContextStrip();
+
+      // Pillar 2: QSRA Initialization
+      if (typeof renderQsraTornado === 'function') renderQsraTornado();
+      if (typeof renderQsraChart === 'function') renderQsraChart();
+
+      // Pillar 4: RC-CPM Pool Initialization
+      if (typeof resetRcCpm === 'function') resetRcCpm();
+
+      // Pillar 5: Monsoon & Curfew Initialization
+      if (typeof onMuckRateChange === 'function') onMuckRateChange(620);
+      if (typeof onPzHeaveChange === 'function') onPzHeaveChange(0.68);
     });
   </script>
 </body>
