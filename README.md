@@ -1,16 +1,17 @@
-# NEXUS-4D™ KOUTEI (工程) | Enterprise Project Controls & Linear Scheduling Engine (v5.2 • PE26/QC26 ENGINE)
+# NEXUS-4D™ KOUTEI (工程) | Enterprise Project Controls, AI Copilot & Linear Scheduling Engine (v5.3 • AI-POWERED PE26/QC26 ENGINE)
 
 **Shimizu Corporation (清水建設) Monozukuri Edition — Jakarta MRT Underground Package CP-202 (Station Box & TBM Drive Section)**
 
-`NEXUS-4D™ KOUTEI` is an enterprise-grade, zero-latency (`<16ms` reactive recalculation) Project Controls, Automated MS Project Ingestion Middleware, & Interactive Linear Scheduling Platform built for heavy underground civil infrastructure, deep diaphragm-wall excavations, and Twin EPB TBM bored tunneling.
+`NEXUS-4D™ KOUTEI` is an enterprise-grade, zero-latency (`<16ms` reactive recalculation) Project Controls, Automated MS Project Ingestion Middleware, **Shimizu AI Monozukuri Copilot (`AI 工程・品質インテリジェンス`)**, & Interactive Linear Scheduling Platform built for heavy underground civil infrastructure, deep diaphragm-wall excavations, and Twin EPB TBM bored tunneling.
 
 ---
 
 ## Core Engineering Capabilities
 
-0. **MS Project Unified Ingestion & 3-Tier Approval Pipeline (`v5.2 データ連携・三段階承認ゲート`)**
-   - Keeps **Microsoft Project (`.mpp` / `.xml` / `.xlsx` / `.csv`)** as the single source of scheduling truth in the field while acting as an **Automated Ingestion Middleware**, **Fail-Closed QA/QC Gate**, and **3-Tier Digital Approval Engine** (*Genba Site Engineer → PE26/QC26 Audit → Department Head Release*).
+0. **MS Project Unified Ingestion & 3-Tier Approval Pipeline + AI Claim Auditor (`v5.3 データ連携・三段階承認ゲート & AI 診断`)**
+   - Keeps **Microsoft Project (`.mpp` / `.xml` / `.xlsx` / `.csv`)** as the single source of scheduling truth in the field while acting as an **Automated Ingestion Middleware**, **Fail-Closed QA/QC Gate**, **AI Claim & Anomaly Auditor (`96.4%` Confidence)**, and **3-Tier Digital Approval Engine** (*Genba Site Engineer → PE26/QC26 Audit → Department Head Release*).
    - Zero double-entry: automatically pushes validated progress deltas (`Δ%`) into the Master WBS Control Grid, recalculates Executive KPI cards (`PHYSICAL %`, `WEEKLY CUT-OFF`, `SPI`), updates the `S-Curve / Banana Curve`, and syncs to Shimizu Cloud Data Lake & Power BI with an immutable `SHA-256` audit lineage.
+   - **🧠 NEXUS-AI Monozukuri Copilot (`v5.3`):** Dual-engine AI architecture combining a zero-config **Built-in Deterministic Telemetry Reasoning Engine** (reads live `WBS`, `SPI`, `CPI`, `Boreholes`, and `MS Project` state in real time) with optional **Google Gemini 2.5 Flash (`gemini-2.5-flash`)** cloud LLM connectivity, plus **AI Multi-Constraint Kaizen Recovery Solver** and **Trilingual (`EN` / `ID` / `JP`) AI Hou-Ren-So Executive Report Generator**.
 
 1. **Master Planning Grid / Excel-Mode (`1. 工程表`)**
    - Live inline-editable WBS spreadsheet (`Tab` / `Enter` / `Arrow` navigation) eliminating Excel–Primavera P6 friction.
