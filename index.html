@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXUS-4D™ KOUTEI (工程) v7.0 | Shimizu Corporation CP-202 Project Controls, Forensic & 4D BIM Simulation Engine</title>
+  <title>NEXUS-4D™ KOUTEI (工程) v8.0 | Shimizu Corporation CP-202 Project Controls, Forensic & 5D Commercial BIM Simulation Engine</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -159,7 +159,7 @@
             <div class="text-xs font-bold tracking-tight flex items-center gap-1">
               NEXUS-4D™ <span class="text-sky-200 font-jp">工程 KOUTEI</span>
             </div>
-            <div class="text-[10px] text-sky-100/90 mono-num">v7.0 • ULTIMATE FORENSIC, QSRA &amp; 4D BIM SIMULATION ENGINE</div>
+            <div class="text-[10px] text-sky-100/90 mono-num">v8.0 • 5D COMMERCIAL BIM, MULTI-BASELINE DRIFT &amp; LITHOLOGY MEGA-COCKPIT</div>
           </div>
         </div>
 
@@ -190,6 +190,21 @@
         <button onclick="openKytModal()" class="text-[10px] bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-700/60 px-1.5 py-0.5 rounded mono-num transition" title="Inspect Kiken Yochi (KYT) & RFI Hold Gate">
           KYT危険予知: <span id="kyt-status-pill">ACTIVE</span>
         </button>
+      </div>
+
+            <!-- TASK 5: SCHEDULE FRAGILITY RADAR WIDGET (SFI EARLY WARNING) -->
+      <div id="fragility-radar-widget" onclick="openFragilityModal()" class="flex items-center gap-2 bg-slate-950/90 border border-amber-500/70 hover:border-amber-400 px-2.5 py-1 rounded-sm cursor-pointer transition shadow-sm mono-num group" title="Schedule Fragility Radar (SFI): Early Warning Index">
+        <span id="fragility-pulse-dot" class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+        <div class="text-[11px] leading-tight">
+          <div class="text-[9.5px] text-slate-400 flex items-center justify-between gap-1.5">
+            <span class="font-bold tracking-wider text-slate-300">FRAGILITY SFI</span>
+            <span id="fragility-status-tag" class="text-amber-400 font-extrabold">VULNERABLE</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span id="fragility-score-val" class="text-xs font-black text-amber-300">68.4 / 100</span>
+            <span class="text-[9px] text-slate-400">14d Warning Alert</span>
+          </div>
+        </div>
       </div>
 
       <!-- PILLAR 2: RBAC PERSONA SWITCHER & PILLAR 4: CORRIDOR NAVIGATION TOGGLE -->
@@ -1098,7 +1113,8 @@
               <th class="py-2 px-2 border-r border-slate-800 w-24">WBS Code</th>
               <th class="py-2 px-2 border-r border-slate-800 min-w-[250px]">Activity Description (作業名称)</th>
               <th class="py-2 px-2 border-r border-slate-800 w-32">Chainage (距離)</th>
-              <th class="py-2 px-2 border-r border-slate-800 w-32">Discipline</th>
+              <th class="py-2 px-2 border-r border-slate-800 w-28">Discipline</th>
+              <th class="py-2 px-1.5 border-r border-slate-800 text-center w-20" title="Multi-Calendar: 24/7 Continuous Underground, 6D Surface, 5D Tech">Calendar</th>
               <th class="py-2 px-1.5 border-r border-slate-800 text-center w-14">Crit</th>
               <th class="py-2 px-2 border-r border-slate-800 w-28">Early Start</th>
               <th class="py-2 px-2 border-r border-slate-800 w-28">Early Finish</th>
@@ -1110,6 +1126,7 @@
               <th class="py-2 px-2 border-r border-slate-800 text-right w-20 bg-emerald-950/30">Actual %</th>
               <th class="py-2 px-2 border-r border-slate-800 text-right w-20">EV %</th>
               <th class="py-2 px-2 border-r border-slate-800 text-right w-20">Var Δ%</th>
+              <th class="py-2 px-2 border-r border-slate-800 text-right w-28 bg-amber-950/20" title="5D Cost Allocation from Contract BoQ (BAC IDR 420.00 B)">BoQ Item & Budget</th>
               <th class="py-2 px-2 border-r border-slate-800 text-center w-32">QA / KYT Gate</th>
               <th class="py-2 px-2 text-center w-24">現場 Genba</th>
             </tr>
@@ -1462,6 +1479,132 @@
           </div>
         </div>
       </div>
+          <!-- ========================================================================= -->
+      <!-- TASK 1: 5D COMMERCIAL BIM, FIDIC 14.3 IPC CERTIFICATION & OVERDRAFT S-CURVE -->
+      <!-- ========================================================================= -->
+      <div class="bg-panel border border-amber-600/70 p-3 rounded-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold bg-amber-950 text-amber-300 border border-amber-600/80 rounded-sm mono-num shadow-sm">
+              5D COMMERCIAL BIM &amp; FIDIC 14.3
+            </span>
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+                <span>FIDIC RED BOOK SUB-CLAUSE 14.3 INTERIM PAYMENT CERTIFICATE (IPC) &amp; OVERDRAFT S-CURVE</span>
+                <span class="text-amber-400 font-jp">(月次中間支払証明・資金繰りSカーブ)</span>
+              </h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">
+                Contract BAC: <strong class="text-slate-200 mono-num">IDR 420.00 B</strong> • 10% Mobilization Advance Recovery Amortization • 5% Retention Money Withholding • 30-Day Working Capital Overdraft
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="toggle5dViewMode('cashflow')" id="btn-5d-mode-cashflow" class="px-2.5 py-1 text-xs font-bold bg-amber-600 text-white rounded-sm border border-amber-400/50 shadow-sm mono-num transition">
+              💰 Working Capital S-Curve
+            </button>
+            <button onclick="toggle5dViewMode('ipc')" id="btn-5d-mode-ipc" class="px-2.5 py-1 text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 mono-num transition">
+              📑 IPC #11 Billing Ledger
+            </button>
+            <button onclick="openFidicIpcModal()" class="px-2.5 py-1 text-xs font-extrabold bg-emerald-700 hover:bg-emerald-600 text-white rounded-sm border border-emerald-400/50 shadow-sm flex items-center gap-1 mono-num transition" title="Generate formal printable FIDIC 14.3 Interim Payment Certificate">
+              <span>📄 Official IPC #11 Certificate</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5D Cash Flow & Overdraft S-Curve View -->
+        <div id="view-5d-cashflow" class="space-y-3">
+          <div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
+            <div class="lg:col-span-3 bg-slate-950/80 border border-slate-800 p-2.5 rounded-sm">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-200 mono-num flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  CASH IN (30-DAY IPC RECEIPT) VS. CASH OUT (CUMULATIVE AC) &amp; OVERDRAFT EXPOSURE
+                </span>
+                <span class="text-[10px] text-slate-400 mono-num">Lag: 30 Calendar Days (Clause 14.7)</span>
+              </div>
+              <div class="h-[280px] w-full">
+                <canvas id="overdraftChartCanvas"></canvas>
+              </div>
+            </div>
+
+            <!-- Overdraft KPI Summary Cards -->
+            <div class="space-y-2 text-xs mono-num">
+              <div class="bg-rose-950/40 border border-rose-700/60 p-2.5 rounded-sm">
+                <div class="text-[10px] text-rose-300 font-bold uppercase">MAX WORKING CAPITAL DEFICIT</div>
+                <div class="text-lg font-black text-rose-400 mt-0.5" id="kpi-peak-overdraft">-IDR 28.40 B</div>
+                <div class="text-[10.5px] text-slate-300 mt-1">Peak Overdraft Exposure: Month 8 (Aug 2026) during D-Wall peak pouring and TBM shield assembly.</div>
+              </div>
+
+              <div class="bg-emerald-950/40 border border-emerald-700/60 p-2.5 rounded-sm">
+                <div class="text-[10px] text-emerald-300 font-bold uppercase">FINANCIAL BREAK-EVEN DATE</div>
+                <div class="text-lg font-black text-emerald-400 mt-0.5" id="kpi-breakeven-date">Month 13 (Jan 2027)</div>
+                <div class="text-[10.5px] text-slate-300 mt-1">Cumulative IPC receipts overtake Cumulative Field AC (Cash Out) upon 55% tunnel ring completion.</div>
+              </div>
+
+              <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-sm">
+                <div class="flex justify-between text-[10px] text-slate-400">
+                  <span>CURRENT IPC #11 PAYABLE</span>
+                  <span class="text-emerald-400 font-bold">READY</span>
+                </div>
+                <div class="text-base font-extrabold text-white mt-0.5" id="kpi-current-ipc-net">IDR 12.86 B</div>
+                <div class="text-[10px] text-sky-400 mt-0.5">Gross IDR 20.35 B - Advance IDR 2.04 B - Ret IDR 1.02 B - Net IDR 12.86 B</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5D FIDIC Sub-Clause 14.3 IPC #11 Itemized Billing Ledger View (Toggleable) -->
+        <div id="view-5d-ipc" class="hidden space-y-2.5">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs mono-num">
+              <thead>
+                <tr class="bg-slate-900 border-b border-slate-700 text-[10px] text-slate-300 uppercase">
+                  <th class="py-1.5 px-2 border-r border-slate-800">BoQ Item</th>
+                  <th class="py-1.5 px-2 border-r border-slate-800 min-w-[240px]">Contract Item Description &amp; Technical Spec</th>
+                  <th class="py-1.5 px-2 border-r border-slate-800 text-center">Unit</th>
+                  <th class="py-1.5 px-2 border-r border-slate-800 text-right">Contract Qty</th>
+                  <th class="py-1.5 px-2 border-r border-slate-800 text-right">Unit Rate (IDR)</th>
+                  <th class="py-1.5 px-2 border-r border-slate-800 text-right bg-slate-800/40">Contract BAC (IDR B)</th>
+                  <th class="py-1.5 px-2 border-r border-slate-800 text-right bg-emerald-950/30">Earned Qty</th>
+                  <th class="py-1.5 px-2 border-r border-slate-800 text-right font-bold text-emerald-400 bg-emerald-950/40">Gross Value (IDR B)</th>
+                  <th class="py-1.5 px-2 text-center">Linked WBS</th>
+                </tr>
+              </thead>
+              <tbody id="fidic-boq-ledger-tbody" class="divide-y divide-slate-800 text-[11px]">
+                <!-- Populated dynamically via JS -->
+              </tbody>
+              <tfoot id="fidic-boq-ledger-tfoot" class="bg-slate-950 border-t-2 border-slate-700 font-bold">
+                <!-- Dynamically updated summary -->
+              </tfoot>
+            </table>
+          </div>
+
+          <!-- IPC Deductions Reconciliation Strip -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-xs mono-num bg-slate-950/90 border border-slate-800 p-2.5 rounded-sm">
+            <div class="border-r border-slate-800 pr-2">
+              <span class="text-[10px] text-slate-400">1. GROSS CERTIFIED WORKS</span>
+              <div class="text-sm font-extrabold text-white mt-0.5" id="ipc-strip-gross">IDR 188.37 B</div>
+              <div class="text-[9.5px] text-slate-400">Cumul. 44.85% of Contract BAC</div>
+            </div>
+            <div class="border-r border-slate-800 pr-2">
+              <span class="text-[10px] text-amber-400">2. ADVANCE AMORTIZATION (-10%)</span>
+              <div class="text-sm font-extrabold text-amber-300 mt-0.5" id="ipc-strip-advance">-IDR 18.84 B</div>
+              <div class="text-[9.5px] text-slate-400">Bal. to recover: IDR 23.16 B / 42.00 B</div>
+            </div>
+            <div class="border-r border-slate-800 pr-2">
+              <span class="text-[10px] text-purple-400">3. RETENTION WITHHELD (-5%)</span>
+              <div class="text-sm font-extrabold text-purple-300 mt-0.5" id="ipc-strip-retention">-IDR 9.42 B</div>
+              <div class="text-[9.5px] text-slate-400">Cap: IDR 21.00 B (5% Contract Sum)</div>
+            </div>
+            <div>
+              <span class="text-[10px] text-emerald-400 font-bold">4. CURRENT NET IPC #11 PAYABLE</span>
+              <div class="text-base font-black text-emerald-300 mt-0.5" id="ipc-strip-net">IDR 12.86 B</div>
+              <div class="text-[9.5px] text-emerald-400/90">After previous IPCs deduction (-147.25 B)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- ========================================================================= -->
@@ -1533,6 +1676,116 @@
           </div>
         </div>
       </div>
+    
+      <!-- ========================================================================= -->
+      <!-- TASK 4: LINEAR SCHEDULING 2.0 (LSM) SUBSURFACE LITHOLOGY & SLURRY HEATMAP -->
+      <!-- ========================================================================= -->
+      <div class="bg-panel border border-slate-800 p-3 rounded-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 text-[10px] font-extrabold bg-sky-950 text-sky-300 border border-sky-600/70 rounded-sm mono-num">LSM 2.0 SUBSURFACE STRATIGRAPHY</span>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white">Geological Profile Cross-Section &amp; TBM EPB Slurry Safety Envelope <span class="text-sky-400 font-jp">(地質縦断勾配・泥土圧管理包絡線)</span></h3>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">
+              Alignment Chainage STA 14+000 to STA 15+500 • Subsurface Depth 0.0m to -30.0m • Real-Time Slurry Support Face Pressure ($P_{face}$) vs. Active/Passive Overburden Safety Envelope ($C/D=2.48$)
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs mono-num">
+            <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 font-bold" id="slurry-envelope-badge">
+              ✓ SLURRY ENVELOPE: STABLE (P_face 2.55 bar)
+            </span>
+          </div>
+        </div>
+
+        <!-- Interactive 2D Geological Stratigraphy Cross-Section Canvas -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-[11px] text-slate-400 mono-num px-1">
+            <span>Ground Surface (EL +0.0m) • Jalan Gajah Mada Alignment</span>
+            <span>Subsurface Stratigraphy Profile (Depth: 0.0m to -30.0m)</span>
+          </div>
+          <div class="relative w-full h-[190px] bg-slate-950 border border-slate-800 rounded-sm overflow-hidden shadow-inner">
+            <canvas id="lithologyCrossSectionCanvas" class="w-full h-full block"></canvas>
+            <!-- Overlay Labels for Key Stations -->
+            <div class="absolute bottom-1 left-2 text-[9.5px] mono-num text-slate-400 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-800">
+              STA 14+000 (Harmoni Box)
+            </div>
+            <div class="absolute bottom-1 left-[23%] text-[9.5px] mono-num text-sky-400 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-800">
+              STA 14+350 (Launch Shaft)
+            </div>
+            <div class="absolute bottom-1 left-[52%] text-[9.5px] mono-num text-rose-400 bg-rose-950/80 px-1.5 py-0.5 rounded border border-rose-700/60 animate-pulse">
+              STA 14+780..860 (BH-09 Boulder Anomaly)
+            </div>
+            <div class="absolute bottom-1 right-2 text-[9.5px] mono-num text-slate-400 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-800">
+              STA 15+500 (Reception Shaft)
+            </div>
+          </div>
+
+          <!-- Stratigraphy Legend & Geotechnical Properties -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs mono-num pt-1">
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-xs shrink-0" style="background-color: #8B5A2B;"></span>
+              <div>
+                <div class="text-[10px] text-slate-300 font-bold">Stratum 1: Topsoil &amp; Fill</div>
+                <div class="text-[9.5px] text-slate-400">0.0m to -4.5m • N=8–14 • γ=17.5 kN/m³</div>
+              </div>
+            </div>
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-xs shrink-0" style="background-color: #1e3a5f;"></span>
+              <div>
+                <div class="text-[10px] text-sky-300 font-bold">Stratum 2: Marine Silty Clay</div>
+                <div class="text-[9.5px] text-slate-400">-4.5m to -14.0m • High Plasticity • N=12–18</div>
+              </div>
+            </div>
+            <div class="bg-slate-900/90 border border-slate-800 p-2 rounded-sm flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-xs shrink-0" style="background-color: #d97706;"></span>
+              <div>
+                <div class="text-[10px] text-amber-300 font-bold">Stratum 3: Volcanic Aquifer Sand</div>
+                <div class="text-[9.5px] text-slate-400">-14.0m to -22.0m • Dense • N=32–48 • Water Ingress</div>
+              </div>
+            </div>
+            <div class="bg-rose-950/40 border border-rose-700/60 p-2 rounded-sm flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-xs shrink-0 bg-rose-600 animate-pulse"></span>
+              <div>
+                <div class="text-[10px] text-rose-300 font-bold">Stratum 4: Basalt Boulder Lens</div>
+                <div class="text-[9.5px] text-rose-200">STA 14+780–860 (BH-09) • N &gt; 60 • UCS 140 MPa</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TBM Slurry Support Pressure Safety Envelope Telemetry Bar -->
+        <div class="bg-slate-950/90 border border-slate-800 p-2.5 rounded-sm space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2 text-xs mono-num">
+            <span class="font-bold text-white flex items-center gap-1.5">
+              <span>🛡️ TBM EPB Chamber Face Support Pressure ($P_{face}$) Safety Envelope:</span>
+              <span class="text-emerald-400 font-extrabold" id="slurry-current-pface-text">2.55 bar</span>
+            </span>
+            <span class="text-[11px] text-slate-400">
+              Active Collapse Limit $P_{collapse} = 1.95	ext{ bar}$ | Passive Blowout Limit $P_{heave} = 3.15	ext{ bar}$
+            </span>
+          </div>
+
+          <!-- Dynamic Visual Pressure Gradient Bar -->
+          <div class="relative w-full h-4 bg-slate-900 rounded-sm overflow-hidden border border-slate-700">
+            <!-- Danger Collapse Zone (< 1.95 bar) -->
+            <div class="absolute left-0 top-0 bottom-0 w-[25%] bg-rose-950/80 border-r border-rose-600/70" title="Collapse / Surface Subsidence Risk"></div>
+            <!-- Stable Green Envelope (1.95 to 3.15 bar) -->
+            <div class="absolute left-[25%] top-0 bottom-0 w-[55%] bg-emerald-950/60 border-r border-amber-600/70" title="Stable Support Window (2.40 - 2.80 bar Target)"></div>
+            <!-- Danger Blowout Zone (> 3.15 bar) -->
+            <div class="absolute left-[80%] top-0 bottom-0 right-0 bg-rose-950/80" title="Heave / Slurry Blowout Hazard"></div>
+            <!-- Current Pressure Marker Needle -->
+            <div id="slurry-needle-marker" class="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_8px_#ffffff] z-10 transition-all duration-300" style="left: 45%;"></div>
+          </div>
+
+          <div class="flex items-center justify-between text-[10px] text-slate-400 mono-num">
+            <span class="text-rose-400 font-bold">1.50 bar (Severe Collapse)</span>
+            <span class="text-emerald-400 font-bold">Target Operational Window: 2.40 – 2.80 bar</span>
+            <span class="text-rose-400 font-bold">3.50 bar (Pavement Heave)</span>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- ========================================================================= -->
@@ -1775,6 +2028,67 @@
           </div>
         </div>
       </div>
+          <!-- ========================================================================= -->
+      <!-- TASK 3: "LEBARAN MUDIK" CULTURAL WORKFORCE DROP SIMULATOR (14-DAY WINDOW)   -->
+      <!-- ========================================================================= -->
+      <div class="bg-panel border border-amber-600/70 p-3 rounded-sm space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold bg-amber-950 text-amber-300 border border-amber-600/80 rounded-sm mono-num shadow-sm">
+              INDONESIAN CULTURAL CALENDAR ENGINE
+            </span>
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+                <span>"LEBARAN MUDIK" (帰省) NATIONWIDE HOLIDAY WORKFORCE DROP SIMULATOR</span>
+                <span class="text-amber-400 font-jp">(レバラン帰省・労働力75%減衰シミュレーター)</span>
+              </h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">
+                Simulation Window: <strong class="text-slate-200 mono-num">24 March 2027 – 07 April 2027 (14 Days)</strong> • 75% Direct Labor Outflow (420 → 105 Personnel) • Mucking &amp; Concreting Productivity Decay
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-xs mono-num">
+            <button onclick="toggleMudikSimulation()" id="btn-toggle-mudik" class="px-2.5 py-1 font-bold bg-amber-600 hover:bg-amber-500 text-white rounded-sm border border-amber-400/50 shadow-sm transition">
+              ⚡ Simulate Mudik Holiday Window
+            </button>
+            <button onclick="toggleMudikMitigation()" id="btn-toggle-mudik-mitigation" class="px-2.5 py-1 font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 transition">
+              🛡️ Activate Kaizen Mitigation Plan
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-xs mono-num">
+          <div class="bg-slate-950/90 border border-slate-800 p-2 rounded-sm">
+            <div class="text-[10px] text-slate-400">ACTIVE DIRECT LABOR FORCE</div>
+            <div class="text-base font-extrabold text-white mt-0.5" id="mudik-labor-count">420 Personnel (100%)</div>
+            <div class="text-[10px] text-slate-400 mt-0.5" id="mudik-labor-sub">Baseline Operational Strength</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 p-2 rounded-sm">
+            <div class="text-[10px] text-slate-400">DAILY MUCKING PRODUCTIVITY</div>
+            <div class="text-base font-extrabold text-emerald-400 mt-0.5" id="mudik-muck-rate">820 m³/day (Nominal)</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Fleet: 18 Hydro-Muck Haulers</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 p-2 rounded-sm">
+            <div class="text-[10px] text-slate-400">TBM SHIELD ADVANCE RATE</div>
+            <div class="text-base font-extrabold text-sky-400 mt-0.5" id="mudik-tbm-rate">10.8 m/day (2.5 bar)</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">3 Shifts x 8h Underground (24/7)</div>
+          </div>
+          <div class="bg-slate-950/90 border border-slate-800 p-2 rounded-sm">
+            <div class="text-[10px] text-slate-400">CRITICAL PATH OVERLAP RISK</div>
+            <div class="text-base font-extrabold text-emerald-400 mt-0.5" id="mudik-risk-badge">LOW / BUFFER CLEAR</div>
+            <div class="text-[10px] text-slate-400 mt-0.5" id="mudik-risk-sub">WBS-5.1 Base Pouring buffered</div>
+          </div>
+        </div>
+
+        <div id="mudik-alert-banner" class="hidden p-2 rounded-sm bg-rose-950/60 border border-rose-700/80 text-rose-200 text-xs mono-num flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+            <span><strong>CRITICAL PATH OVERLAP ALERT:</strong> Mudik holiday drops mucking to 205 m³/day and TBM advance to 3.2 m/day! Base slab pour WBS-5.1 at risk of +9 days float erosion.</span>
+          </div>
+          <button onclick="toggleMudikMitigation()" class="px-2 py-0.5 bg-rose-800 hover:bg-rose-700 text-white rounded text-[10px] font-bold">Apply Overtime Incentive →</button>
+        </div>
+      </div>
+
     </section>
 
     <!-- ========================================================================= -->
@@ -1870,6 +2184,67 @@
           </div>
         </div>
       </div>
+          <!-- ========================================================================= -->
+      <!-- TASK 2: MULTI-BASELINE SCHEDULE DIFF & REVISION AUDIT LEDGER               -->
+      <!-- ========================================================================= -->
+      <div class="bg-panel border border-sky-800/70 p-3 rounded-sm space-y-3 mt-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2 py-0.5 text-[10px] font-extrabold bg-sky-950 text-sky-300 border border-sky-600/80 rounded-sm mono-num shadow-sm">
+              MULTI-BASELINE FORENSIC DIFF
+            </span>
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+                <span>MULTI-BASELINE SCHEDULE DRIFT &amp; LOGIC MANIPULATION AUDITOR</span>
+                <span class="text-sky-400 font-jp">(複数ベースライン比較・ロジック改変監査)</span>
+              </h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">
+                Compare Original Award Target (Rev 0) vs Approved EOT-1 (Rev 1) vs Active Working Schedule (Rev 2) • Logic Softening &amp; Float Erosion Detection
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-xs mono-num">
+            <div class="flex items-center gap-1 bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-sm">
+              <span class="text-[10px] text-slate-400">BASE:</span>
+              <select id="select-baseline-base" onchange="updateMultiBaselineDiff()" class="bg-transparent text-sky-300 font-bold focus:outline-none cursor-pointer text-xs">
+                <option value="rev0" selected>Baseline Rev 0 (Award 2025-11-15)</option>
+                <option value="rev1">Baseline Rev 1 (EOT-1 2026-08-20)</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1 bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-sm">
+              <span class="text-[10px] text-slate-400">COMPARE:</span>
+              <select id="select-baseline-compare" onchange="updateMultiBaselineDiff()" class="bg-transparent text-emerald-300 font-bold focus:outline-none cursor-pointer text-xs">
+                <option value="rev2" selected>Baseline Rev 2 (Active Working 2026-11-03)</option>
+                <option value="rev1">Baseline Rev 1 (EOT-1 2026-08-20)</option>
+              </select>
+            </div>
+            <button onclick="toggleSplitGanttView()" id="btn-toggle-split-gantt" class="px-2.5 py-1 bg-shimizu hover:bg-sky-500 text-white font-bold rounded-sm border border-sky-400/40 transition">
+              📊 Dual Split-Gantt Bars: ON
+            </button>
+          </div>
+        </div>
+
+        <!-- Schedule Drift & Logic Shift Audit Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs mono-num">
+            <thead>
+              <tr class="bg-slate-900 border-b border-slate-700 text-[10px] text-slate-300 uppercase">
+                <th class="py-1.5 px-2 border-r border-slate-800">WBS Code</th>
+                <th class="py-1.5 px-2 border-r border-slate-800 min-w-[220px]">Activity Description</th>
+                <th class="py-1.5 px-2 border-r border-slate-800 text-center">Base Schedule Dates</th>
+                <th class="py-1.5 px-2 border-r border-slate-800 text-center">Compare Schedule Dates</th>
+                <th class="py-1.5 px-2 border-r border-slate-800 text-right">Variance Δ (Days)</th>
+                <th class="py-1.5 px-2 border-r border-slate-800 min-w-[200px]">Logic Shift Audit</th>
+                <th class="py-1.5 px-2 text-center">Float Erosion Radar</th>
+              </tr>
+            </thead>
+            <tbody id="baseline-diff-tbody" class="divide-y divide-slate-800 text-[11px]">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </section>
 
     <!-- ========================================================================= -->
@@ -2720,21 +3095,31 @@
           </button>
         </div>
 
-        <!-- Center: Dynamic Material / Shader Legend -->
-        <div class="flex items-center gap-3 bg-slate-950 px-2.5 py-1 rounded-sm border border-slate-800 text-[10.5px]">
-          <span class="text-slate-400 font-bold uppercase text-[9.5px]">Live WBS Shader:</span>
-          <span class="flex items-center gap-1 text-emerald-400 font-bold">
-            <span class="w-2.5 h-2.5 rounded-sm bg-emerald-500 border border-emerald-300"></span> 100% Done
-          </span>
-          <span class="flex items-center gap-1 text-amber-400 font-bold">
-            <span class="w-2.5 h-2.5 rounded-sm bg-amber-500 border border-amber-300 animate-pulse"></span> 1–99% Active
-          </span>
-          <span class="flex items-center gap-1 text-rose-400 font-bold">
-            <span class="w-2.5 h-2.5 rounded-sm bg-rose-500 border border-rose-300 animate-ping"></span> Gate / Hold
-          </span>
-          <span class="flex items-center gap-1 text-slate-400">
-            <span class="w-2.5 h-2.5 rounded-sm bg-slate-700/60 border border-slate-600"></span> 0% Not Started
-          </span>
+        <!-- Center: Dynamic 4D / 5D Shader Mode Toggle & Legend -->
+        <div class="flex items-center gap-2 bg-slate-950 px-2.5 py-1 rounded-sm border border-slate-800 text-[10.5px]">
+          <!-- Mode Toggle -->
+          <div class="flex items-center bg-slate-900 p-0.5 rounded-xs border border-slate-700 mr-1">
+            <button id="btn-twin-mode-4d" onclick="setTwinColorMode('4d')" class="px-2 py-0.5 font-bold rounded-xs bg-shimizu text-white text-[10px] transition">
+              4D Schedule
+            </button>
+            <button id="btn-twin-mode-5d" onclick="setTwinColorMode('5d')" class="px-2 py-0.5 font-medium text-slate-400 hover:text-white text-[10px] transition">
+              5D Cost Density
+            </button>
+          </div>
+
+          <!-- Dynamic Legend container -->
+          <div id="twin-dynamic-legend" class="flex items-center gap-2.5">
+            <span class="text-slate-400 font-bold uppercase text-[9px]">4D Shader:</span>
+            <span class="flex items-center gap-1 text-emerald-400 font-bold text-[10px]">
+              <span class="w-2 h-2 rounded-sm bg-emerald-500"></span> 100% Done
+            </span>
+            <span class="flex items-center gap-1 text-amber-400 font-bold text-[10px]">
+              <span class="w-2 h-2 rounded-sm bg-amber-500 animate-pulse"></span> Active
+            </span>
+            <span class="flex items-center gap-1 text-rose-400 font-bold text-[10px]">
+              <span class="w-2 h-2 rounded-sm bg-rose-500 animate-ping"></span> Hold
+            </span>
+          </div>
         </div>
 
         <!-- Right: Viewport Actions -->
@@ -3494,7 +3879,7 @@
   <script>
     const CONTRACT_BAC = 420.00; // IDR 420.00 Billion
     const ACTUAL_COST_AC = 184.32; // Certified Field Expenditure to Date (IDR Billion)
-    const STORAGE_KEY = 'NEXUS4D_KOUTEI_CP202_STATE_V52';
+    const STORAGE_KEY = 'NEXUS4D_KOUTEI_CP202_STATE_V80';
 
     // Default Master WBS Dataset (Calibrated so Weighted PV = 48.20%, EV = 44.85%, Last Wk = 44.20%, SPI = 0.931)
     // Syncing WBS-2.3 (+4.5%) & WBS-4.1 (+2.0%) mutates EV to 46.15% & SPI to 0.958
@@ -3639,6 +4024,142 @@
       { id: 'BH-14', sta: 'STA 15+460', wbs: 'WBS-5.2', strata: 'Hard Cemented Claystone (Reception)', spt: 61, ert: 'Nominal (140 Ω·m)', head: '-5.6m GL', status: 'CLEARED' }
     ];
 
+    // =========================================================================
+    // TASK 1: CONTRACT BILL OF QUANTITIES (BoQ) DATA BINDING (BAC IDR 420.00 B)
+    // =========================================================================
+    const DEFAULT_BOQ = [
+      {
+        code: 'BoQ-01',
+        description: 'Diaphragm Wall (D-Wall) Cast-In-Situ Concrete Grade B45 (1.2m Panel)',
+        unit: 'm³',
+        rate: 2850000, // IDR 2.85 M / m³
+        contractQty: 14200,
+        totalAmount: 40470000000, // IDR 40.470 B
+        linkedWbs: ['WBS-2.1', 'WBS-2.3'],
+        spec: 'Concrete Grade B45, W/C ratio 0.40, Cross-Hole Sonic Logging 100%'
+      },
+      {
+        code: 'BoQ-02',
+        description: 'High-Tensile Deformed Steel Rebars Grade SD490 / TS500 (D16 to D36)',
+        unit: 'Tons',
+        rate: 16500000, // IDR 16.50 M / Ton
+        contractQty: 4650,
+        totalAmount: 76725000000, // IDR 76.725 B
+        linkedWbs: ['WBS-2.1', 'WBS-2.3', 'WBS-3.1', 'WBS-3.2', 'WBS-5.1'],
+        spec: 'JIS G3112 / SNI 2052, Yield Strength ≥ 490 MPa, Hot-Rolled'
+      },
+      {
+        code: 'BoQ-03',
+        description: 'Deep Subsurface Excavation, Hydro-Transport Mucking & Off-Site Disposal',
+        unit: 'm³',
+        rate: 385000, // IDR 385,000 / m³
+        contractQty: 182000,
+        totalAmount: 70070000000, // IDR 70.070 B
+        linkedWbs: ['WBS-2.3', 'WBS-3.1', 'WBS-3.2'],
+        spec: 'Top-down multi-bench excavation to -24.5m with acoustic noise damping'
+      },
+      {
+        code: 'BoQ-04',
+        description: 'Precast Steel-Fiber Reinforced Segmental Tunnel Rings (Ø6.65m OD x 1.5m)',
+        unit: 'Rings',
+        rate: 85000000, // IDR 85.0 M / Ring
+        contractQty: 2450,
+        totalAmount: 208250000000, // IDR 208.250 B
+        linkedWbs: ['WBS-4.1', 'WBS-4.2'],
+        spec: 'C50/60 SFRC, 7+1 universal tapered ring configuration with EPDM gasket'
+      },
+      {
+        code: 'BoQ-05',
+        description: 'Site Mobilization, Heavy Traffic Decking, Guide Walls & Deep Dewatering Curtains',
+        unit: 'LS',
+        rate: 12485000000,
+        contractQty: 1,
+        totalAmount: 12485000000, // IDR 12.485 B
+        linkedWbs: ['WBS-1.1', 'WBS-1.2'],
+        spec: 'Decking 200m length, Guide walls 1.5m depth, 14 deep dewatering wells'
+      },
+      {
+        code: 'BoQ-06',
+        description: 'Cross-Passage Excavation, Jet Grouting Ground Freezing & Tunnel MEP First-Fix',
+        unit: 'LS',
+        rate: 12000000000,
+        contractQty: 1,
+        totalAmount: 12000000000, // IDR 12.000 B
+        linkedWbs: ['WBS-5.2'],
+        spec: 'CP-01/02 openings with cryogenic ground freezing break-in seal & MEP brackets'
+      }
+    ];
+
+    // =========================================================================
+    // TASK 2: MULTI-BASELINE SNAPSHOT REPOSITORY (REV 0, REV 1, REV 2)
+    // =========================================================================
+    const DEFAULT_BASELINES = {
+      rev0: {
+        id: 'rev0',
+        name: 'Baseline Rev 0 (Target - Contract Award)',
+        dataDate: '2025-11-15',
+        finishDate: '2027-05-11',
+        durationDays: 542,
+        status: 'CONTRACT AWARD BASELINE',
+        description: 'Original Contract Award Baseline without geological boulder encounter.',
+        items: [
+          { code: 'WBS-1.1', es: '2026-01-05', ef: '2026-03-15', tf: 0, logic: 'FS-0d to WBS-2.1' },
+          { code: 'WBS-1.2', es: '2026-02-01', ef: '2026-04-30', tf: 10, logic: 'SS+25d to WBS-1.1' },
+          { code: 'WBS-2.1', es: '2026-03-10', ef: '2026-07-25', tf: 0, logic: 'FS-0d to WBS-2.3' },
+          { code: 'WBS-2.3', es: '2026-06-01', ef: '2026-10-15', tf: 0, logic: 'FS-0d to WBS-3.1' },
+          { code: 'WBS-3.1', es: '2026-07-15', ef: '2026-10-30', tf: 0, logic: 'SS+45d to WBS-2.3' },
+          { code: 'WBS-3.2', es: '2026-09-01', ef: '2026-12-10', tf: 18, logic: 'FS-0d to WBS-5.1' },
+          { code: 'WBS-4.1', es: '2026-08-15', ef: '2027-01-30', tf: 0, logic: 'FS-0d to Reception' },
+          { code: 'WBS-4.2', es: '2026-09-20', ef: '2027-03-05', tf: 28, logic: 'SS+35d to WBS-4.1' },
+          { code: 'WBS-5.1', es: '2026-11-15', ef: '2027-03-25', tf: 18, logic: 'FS-0d to WBS-5.2' },
+          { code: 'WBS-5.2', es: '2027-01-10', ef: '2027-05-11', tf: 25, logic: 'Completion 2027-05-11' }
+        ]
+      },
+      rev1: {
+        id: 'rev1',
+        name: 'Baseline Rev 1 (EOT-1 Approved BH-09 Boulder Encounter)',
+        dataDate: '2026-08-20',
+        finishDate: '2027-06-22',
+        durationDays: 584,
+        status: 'APPROVED (+42 Days EOT)',
+        description: 'Formal EOT granted under FIDIC Clause 8.4 due to BH-09 unforeseen volcanic boulder lens (Clause 4.12).',
+        items: [
+          { code: 'WBS-1.1', es: '2026-01-05', ef: '2026-03-15', tf: 0, logic: 'FS-0d to WBS-2.1' },
+          { code: 'WBS-1.2', es: '2026-02-01', ef: '2026-04-30', tf: 10, logic: 'SS+25d to WBS-1.1' },
+          { code: 'WBS-2.1', es: '2026-03-10', ef: '2026-07-25', tf: 0, logic: 'FS-0d to WBS-2.3' },
+          { code: 'WBS-2.3', es: '2026-06-01', ef: '2026-12-15', tf: 0, logic: 'FS-0d to WBS-3.1' },
+          { code: 'WBS-3.1', es: '2026-07-15', ef: '2026-11-20', tf: 0, logic: 'SS+45d to WBS-2.3' },
+          { code: 'WBS-3.2', es: '2026-09-01', ef: '2027-01-20', tf: 6, logic: 'FS-0d to WBS-5.1' },
+          { code: 'WBS-4.1', es: '2026-08-15', ef: '2027-03-15', tf: 0, logic: 'FS-0d to Reception' },
+          { code: 'WBS-4.2', es: '2026-09-20', ef: '2027-04-25', tf: 16, logic: 'SS+35d to WBS-4.1' },
+          { code: 'WBS-5.1', es: '2026-11-15', ef: '2027-05-05', tf: 8, logic: 'FS-0d to WBS-5.2' },
+          { code: 'WBS-5.2', es: '2027-01-10', ef: '2027-06-22', tf: 12, logic: 'Completion 2027-06-22' }
+        ]
+      },
+      rev2: {
+        id: 'rev2',
+        name: 'Baseline Rev 2 (Target Recovery - Active Working Schedule)',
+        dataDate: '2026-11-03',
+        finishDate: '2027-05-25',
+        durationDays: 556,
+        status: 'ACTIVE WORKING FORECAST',
+        description: 'Active Kaizen working schedule with accelerated night mucking, fast-track strutting and recovered completion.',
+        items: [
+          { code: 'WBS-1.1', es: '2026-01-05', ef: '2026-03-15', tf: 0, logic: 'FS-0d' },
+          { code: 'WBS-1.2', es: '2026-02-01', ef: '2026-04-30', tf: 10, logic: 'SS+25d' },
+          { code: 'WBS-2.1', es: '2026-03-10', ef: '2026-07-25', tf: 0, logic: 'FS-0d' },
+          { code: 'WBS-2.3', es: '2026-06-01', ef: '2026-11-20', tf: 0, logic: 'SS+15d Logic Softened' },
+          { code: 'WBS-3.1', es: '2026-07-15', ef: '2026-10-30', tf: 0, logic: 'SS+45d' },
+          { code: 'WBS-3.2', es: '2026-09-01', ef: '2026-12-28', tf: 0, logic: 'FS-0d (Float Eroded 18d->0d)' },
+          { code: 'WBS-4.1', es: '2026-08-15', ef: '2027-02-20', tf: 0, logic: 'FS-0d' },
+          { code: 'WBS-4.2', es: '2026-09-20', ef: '2027-03-25', tf: 14, logic: 'SS+35d (Float Eroded 28d->14d)' },
+          { code: 'WBS-5.1', es: '2026-11-15', ef: '2027-04-10', tf: 18, logic: 'FS-0d' },
+          { code: 'WBS-5.2', es: '2027-01-10', ef: '2027-05-25', tf: 25, logic: 'Target Completion 2027-05-25' }
+        ]
+      }
+    };
+
+
     const DEFAULT_LOOKAHEAD = [
       { id: 'lh-1', wbs: 'WBS-2.3', task: 'Diaphragm Wall Panel DW-18 Concreting & DW-33..34 Trenching', w42: 'DONE', w43: 'ACTIVE', w44: 'PLAN', w45: '-', shop: 'Approved Code A', ptw: 'KYT Signed / Valid', rfi: 'RFI-118 & Slurry QC Passed', mat: '100% Cage Ready' },
       { id: 'lh-2', wbs: 'WBS-3.2', task: 'Station Box Top-Down Slab Level S2 Pouring & Stage 2 Excavation', w42: 'PREP', w43: 'HOLD', w44: 'ACTIVE', w45: 'ACTIVE', shop: 'Approved Code A', ptw: 'KYT Signed / Valid', rfi: 'HOLD: Missing Slump & Rebar RFI-124', mat: 'H-400 Beams On-Site' },
@@ -3706,7 +4227,7 @@
                 queue: JSON.parse(JSON.stringify(DEFAULT_MSP_QUEUE))
               };
             }
-            ensureV7StateExtensions();
+            ensureV8StateExtensions();
             return;
           }
         }
@@ -3727,10 +4248,84 @@
           queue: JSON.parse(JSON.stringify(DEFAULT_MSP_QUEUE))
         }
       };
-      ensureV7StateExtensions();
+      ensureV8StateExtensions();
     }
 
-    function ensureV7StateExtensions() {
+    function ensureV8StateExtensions() {
+      // TASK 1: Ensure BoQ Data Binding
+      if (!state.boq || !Array.isArray(state.boq) || state.boq.length === 0) {
+        state.boq = JSON.parse(JSON.stringify(DEFAULT_BOQ));
+      }
+
+      // TASK 2: Ensure Multi-Baseline Snapshots
+      if (!state.baselines) {
+        state.baselines = JSON.parse(JSON.stringify(DEFAULT_BASELINES));
+      }
+      if (!state.selectedBaseBaseline) state.selectedBaseBaseline = 'rev0';
+      if (!state.selectedCompareBaseline) state.selectedCompareBaseline = 'rev2';
+      if (typeof state.splitGanttEnabled === 'undefined') state.splitGanttEnabled = true;
+
+      // TASK 3: Ensure Multi-Calendar and Mudik
+      const calMap = {
+        'WBS-1.1': { cal: 'CAL-B', boqId: 'BoQ-05' },
+        'WBS-1.2': { cal: 'CAL-B', boqId: 'BoQ-05' },
+        'WBS-2.1': { cal: 'CAL-B', boqId: 'BoQ-01' },
+        'WBS-2.3': { cal: 'CAL-B', boqId: 'BoQ-01' },
+        'WBS-3.1': { cal: 'CAL-B', boqId: 'BoQ-03' },
+        'WBS-3.2': { cal: 'CAL-B', boqId: 'BoQ-03' },
+        'WBS-4.1': { cal: 'CAL-A', boqId: 'BoQ-04' },
+        'WBS-4.2': { cal: 'CAL-A', boqId: 'BoQ-04' },
+        'WBS-5.1': { cal: 'CAL-B', boqId: 'BoQ-02' },
+        'WBS-5.2': { cal: 'CAL-C', boqId: 'BoQ-06' }
+      };
+
+      state.wbs.forEach(item => {
+        if (calMap[item.code]) {
+          item.cal = item.cal || calMap[item.code].cal;
+          item.boqId = item.boqId || calMap[item.code].boqId;
+        } else {
+          item.cal = item.cal || 'CAL-B';
+          item.boqId = item.boqId || 'BoQ-01';
+        }
+      });
+
+      if (!state.mudik) {
+        state.mudik = {
+          active: false,
+          mitigated: false,
+          laborCount: 420,
+          muckRate: 820,
+          tbmRate: 10.8
+        };
+      }
+
+      // TASK 4: Slurry Safety Envelope
+      if (!state.slurry) {
+        state.slurry = {
+          pFace: 2.55,
+          pCollapse: 1.95,
+          pHeave: 3.15,
+          depthRatioCD: 2.48,
+          status: 'STABLE'
+        };
+      }
+
+      // TASK 5: Fragility Radar
+      if (!state.fragility) {
+        state.fragility = {
+          sfi: 68.4,
+          floatBurn: 68.0,
+          rfiLag: 85.0,
+          rigAlloc: 50.0,
+          status: 'VULNERABLE',
+          warning14d: true
+        };
+      }
+
+      if (!state.twinColorMode) {
+        state.twinColorMode = '4d';
+      }
+
       if (!state.qsra) {
         state.qsra = {
           iterations: 2000,
@@ -3803,6 +4398,801 @@
     }
 
     // Core <16ms Reactive Calculation Engine
+
+    // =========================================================================
+    // v8.0 TASK 1: 5D COMMERCIAL BIM, BoQ BINDING & FIDIC 14.3 IPC ENGINE
+    // =========================================================================
+    let overdraftChartInstance = null;
+
+    function renderFidicBoqLedger() {
+      const tbody = document.getElementById('fidic-boq-ledger-tbody');
+      const tfoot = document.getElementById('fidic-boq-ledger-tfoot');
+      if (!tbody || !state.boq) return;
+
+      let totalContractBac = 0;
+      let totalGrossEarned = 0;
+      let rowsHtml = '';
+
+      state.boq.forEach(boq => {
+        totalContractBac += boq.totalAmount;
+
+        // Calculate progress based on linked WBS items
+        let linkedWbsItems = state.wbs.filter(w => boq.linkedWbs.includes(w.code));
+        let avgActual = 0;
+        if (linkedWbsItems.length > 0) {
+          avgActual = linkedWbsItems.reduce((acc, curr) => acc + (parseFloat(curr.actual) || 0), 0) / linkedWbsItems.length;
+        }
+
+        const earnedQty = (boq.contractQty * avgActual) / 100;
+        const grossValueIdr = earnedQty * boq.rate;
+        totalGrossEarned += grossValueIdr;
+
+        rowsHtml += `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="py-1.5 px-2 font-bold text-amber-400 border-r border-slate-800">${boq.code}</td>
+            <td class="py-1.5 px-2 border-r border-slate-800">
+              <div class="font-bold text-slate-200">${boq.description}</div>
+              <div class="text-[10px] text-slate-400">${boq.spec}</div>
+            </td>
+            <td class="py-1.5 px-2 text-center text-slate-300 border-r border-slate-800">${boq.unit}</td>
+            <td class="py-1.5 px-2 text-right text-slate-300 border-r border-slate-800">${boq.contractQty.toLocaleString()}</td>
+            <td class="py-1.5 px-2 text-right text-slate-300 border-r border-slate-800">IDR ${boq.rate.toLocaleString()}</td>
+            <td class="py-1.5 px-2 text-right text-slate-200 border-r border-slate-800 bg-slate-900/40">IDR ${(boq.totalAmount / 1e9).toFixed(2)} B</td>
+            <td class="py-1.5 px-2 text-right text-emerald-300 border-r border-slate-800 bg-emerald-950/20">${Math.round(earnedQty).toLocaleString()} ${boq.unit} (${avgActual.toFixed(1)}%)</td>
+            <td class="py-1.5 px-2 text-right font-bold text-emerald-400 border-r border-slate-800 bg-emerald-950/30">IDR ${(grossValueIdr / 1e9).toFixed(2)} B</td>
+            <td class="py-1.5 px-2 text-center">
+              <span class="px-1.5 py-0.5 rounded bg-slate-800 text-sky-300 text-[10px]">${boq.linkedWbs.join(', ')}</span>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rowsHtml;
+
+      const grossEarnedB = totalGrossEarned / 1e9;
+      const advanceAmortizationB = grossEarnedB * 0.10; // 10% advance recovery
+      const retentionWithheldB = Math.min(21.00, grossEarnedB * 0.05); // 5% retention capped at 21.0 B
+      const cumulativeNetCertifiedB = grossEarnedB - advanceAmortizationB - retentionWithheldB;
+      const previousIpcPaidB = 147.25; // Cumulative IPC 01-10
+      const currentNetIpc11B = cumulativeNetCertifiedB - previousIpcPaidB;
+
+      if (tfoot) {
+        tfoot.innerHTML = `
+          <tr class="text-white border-b border-slate-800">
+            <td colspan="5" class="py-2 px-2 text-right uppercase">Contract BAC Sub-Total:</td>
+            <td class="py-2 px-2 text-right text-amber-300">IDR ${(totalContractBac / 1e9).toFixed(2)} B</td>
+            <td class="py-2 px-2 text-right text-slate-300">Gross Valuation:</td>
+            <td class="py-2 px-2 text-right font-black text-emerald-400">IDR ${grossEarnedB.toFixed(2)} B</td>
+            <td class="py-2 px-2 text-center text-emerald-400 font-bold">${((grossEarnedB / (totalContractBac / 1e9)) * 100).toFixed(2)}% EV</td>
+          </tr>
+        `;
+      }
+
+      // Update Strip KPI badges
+      const stripGross = document.getElementById('ipc-strip-gross');
+      if (stripGross) stripGross.textContent = `IDR ${grossEarnedB.toFixed(2)} B`;
+      const stripAdv = document.getElementById('ipc-strip-advance');
+      if (stripAdv) stripAdv.textContent = `-IDR ${advanceAmortizationB.toFixed(2)} B`;
+      const stripRet = document.getElementById('ipc-strip-retention');
+      if (stripRet) stripRet.textContent = `-IDR ${retentionWithheldB.toFixed(2)} B`;
+      const stripNet = document.getElementById('ipc-strip-net');
+      if (stripNet) stripNet.textContent = `IDR ${currentNetIpc11B.toFixed(2)} B`;
+
+      const kpiNet = document.getElementById('kpi-current-ipc-net');
+      if (kpiNet) kpiNet.textContent = `IDR ${currentNetIpc11B.toFixed(2)} B`;
+
+      // Update Modal Values if open
+      const mGross = document.getElementById('ipc-modal-gross');
+      if (mGross) mGross.textContent = `IDR ${(grossEarnedB * 1e9).toLocaleString()}`;
+      const mAdv = document.getElementById('ipc-modal-adv');
+      if (mAdv) mAdv.textContent = `-IDR ${(advanceAmortizationB * 1e9).toLocaleString()}`;
+      const mRet = document.getElementById('ipc-modal-ret');
+      if (mRet) mRet.textContent = `-IDR ${(retentionWithheldB * 1e9).toLocaleString()}`;
+      const mCumNet = document.getElementById('ipc-modal-cum-net');
+      if (mCumNet) mCumNet.textContent = `IDR ${(cumulativeNetCertifiedB * 1e9).toLocaleString()}`;
+      const mCurNet = document.getElementById('ipc-modal-current-net');
+      if (mCurNet) mCurNet.textContent = `IDR ${(currentNetIpc11B * 1e9).toLocaleString()}`;
+
+      renderOverdraftChart();
+    }
+
+    function renderOverdraftChart() {
+      const canvas = document.getElementById('overdraftChartCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const months = ['Jan 26', 'Feb 26', 'Mar 26', 'Apr 26', 'May 26', 'Jun 26', 'Jul 26', 'Aug 26', 'Sep 26', 'Oct 26', 'Nov 26', 'Dec 26', 'Jan 27', 'Feb 27', 'Mar 27', 'Apr 27', 'May 27'];
+
+      // Cumulative Field Actual Cost (Cash Out)
+      const cashOutAC = [8.5, 20.4, 38.6, 61.2, 88.5, 114.2, 142.8, 168.4, 184.32, 205.0, 228.0, 255.0, 282.0, 315.0, 352.0, 388.0, 420.0];
+
+      // Certified IPC Receipts (Cash In) with 30-day payment cycle lag (Month m certified, received at Month m+1)
+      const cashInReceipts = [0.0, 7.2, 18.0, 34.5, 56.0, 81.2, 108.5, 140.0, 165.2, 192.4, 218.0, 246.5, 285.0, 324.0, 365.0, 402.0, 420.0];
+
+      // Working Capital Curve: Cash In - Cash Out (Negative = Overdraft)
+      const workingCapitalDeficit = cashInReceipts.map((cin, idx) => Number((cin - cashOutAC[idx]).toFixed(2)));
+
+      if (overdraftChartInstance) overdraftChartInstance.destroy();
+
+      overdraftChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [
+            {
+              label: 'Cash Out: Cumulative Field AC (IDR B)',
+              data: cashOutAC,
+              borderColor: '#f43f5e',
+              backgroundColor: 'rgba(244, 63, 94, 0.05)',
+              borderWidth: 2.5,
+              pointRadius: 2,
+              tension: 0.25
+            },
+            {
+              label: 'Cash In: Certified IPC Receipts (30d Lag) (IDR B)',
+              data: cashInReceipts,
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.08)',
+              borderWidth: 3,
+              pointRadius: 3,
+              tension: 0.25
+            },
+            {
+              label: 'Net Working Capital Deficit / Surplus (IDR B)',
+              data: workingCapitalDeficit,
+              borderColor: '#f59e0b',
+              backgroundColor: 'rgba(245, 158, 11, 0.15)',
+              borderWidth: 2,
+              borderDash: [5, 4],
+              fill: true,
+              pointRadius: 3,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: '#cbd5e1', font: { size: 11, family: 'JetBrains Mono' } }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => `${ctx.dataset.label}: IDR ${ctx.parsed.y} B`
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } },
+              grid: { color: 'rgba(51,65,85,0.3)' }
+            },
+            y: {
+              title: { display: true, text: 'IDR Billion (Cumul)', color: '#94a3b8', font: { size: 11 } },
+              ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } },
+              grid: { color: 'rgba(51,65,85,0.3)' }
+            }
+          }
+        }
+      });
+    }
+
+    function toggle5dViewMode(mode) {
+      const viewCashflow = document.getElementById('view-5d-cashflow');
+      const viewIpc = document.getElementById('view-5d-ipc');
+      const btnCash = document.getElementById('btn-5d-mode-cashflow');
+      const btnIpc = document.getElementById('btn-5d-mode-ipc');
+
+      if (mode === 'cashflow') {
+        if (viewCashflow) viewCashflow.classList.remove('hidden');
+        if (viewIpc) viewIpc.classList.add('hidden');
+        if (btnCash) {
+          btnCash.className = 'px-2.5 py-1 text-xs font-bold bg-amber-600 text-white rounded-sm border border-amber-400/50 shadow-sm mono-num transition';
+        }
+        if (btnIpc) {
+          btnIpc.className = 'px-2.5 py-1 text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 mono-num transition';
+        }
+        if (overdraftChartInstance) overdraftChartInstance.resize();
+      } else {
+        if (viewCashflow) viewCashflow.classList.add('hidden');
+        if (viewIpc) viewIpc.classList.remove('hidden');
+        if (btnCash) {
+          btnCash.className = 'px-2.5 py-1 text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 mono-num transition';
+        }
+        if (btnIpc) {
+          btnIpc.className = 'px-2.5 py-1 text-xs font-bold bg-amber-600 text-white rounded-sm border border-amber-400/50 shadow-sm mono-num transition';
+        }
+      }
+    }
+
+    function openFidicIpcModal() {
+      const modal = document.getElementById('modal-fidic-ipc');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+
+      // Populate itemized table in modal
+      const tbody = document.getElementById('ipc-modal-tbody');
+      if (tbody && state.boq) {
+        let html = '';
+        state.boq.forEach(boq => {
+          let linkedWbsItems = state.wbs.filter(w => boq.linkedWbs.includes(w.code));
+          let avgActual = 0;
+          if (linkedWbsItems.length > 0) {
+            avgActual = linkedWbsItems.reduce((acc, curr) => acc + (parseFloat(curr.actual) || 0), 0) / linkedWbsItems.length;
+          }
+          const earnedQty = (boq.contractQty * avgActual) / 100;
+          const grossVal = earnedQty * boq.rate;
+
+          html += `
+            <tr class="hover:bg-slate-900/60">
+              <td class="p-1.5 font-bold text-amber-400 border-r border-slate-800">${boq.code}</td>
+              <td class="p-1.5 text-slate-200 border-r border-slate-800">${boq.description}</td>
+              <td class="p-1.5 text-center text-slate-400 border-r border-slate-800">${boq.unit}</td>
+              <td class="p-1.5 text-right text-slate-300 border-r border-slate-800">IDR ${(boq.totalAmount / 1e9).toFixed(2)} B</td>
+              <td class="p-1.5 text-right text-slate-200 border-r border-slate-800">${Math.round(earnedQty).toLocaleString()}</td>
+              <td class="p-1.5 text-right text-sky-300 border-r border-slate-800">${avgActual.toFixed(1)}%</td>
+              <td class="p-1.5 text-right font-bold text-emerald-400">IDR ${grossVal.toLocaleString()}</td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      }
+    }
+
+    function closeFidicIpcModal() {
+      const modal = document.getElementById('modal-fidic-ipc');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function printFidicIpcCertificate() {
+      window.print();
+    }
+
+    // =========================================================================
+    // v8.0 TASK 2: MULTI-BASELINE SCHEDULE DIFF & LOGIC MANIPULATION AUDITOR
+    // =========================================================================
+    function updateMultiBaselineDiff() {
+      const baseKey = document.getElementById('select-baseline-base')?.value || state.selectedBaseBaseline || 'rev0';
+      const compKey = document.getElementById('select-baseline-compare')?.value || state.selectedCompareBaseline || 'rev2';
+      state.selectedBaseBaseline = baseKey;
+      state.selectedCompareBaseline = compKey;
+
+      const baseSchedule = state.baselines?.[baseKey];
+      const compSchedule = state.baselines?.[compKey];
+      const tbody = document.getElementById('baseline-diff-tbody');
+      if (!tbody || !baseSchedule || !compSchedule) return;
+
+      let html = '';
+      compSchedule.items.forEach(compItem => {
+        const baseItem = baseSchedule.items.find(b => b.code === compItem.code);
+        const wbsLive = state.wbs.find(w => w.code === compItem.code);
+
+        const baseES = baseItem ? baseItem.es : compItem.es;
+        const baseEF = baseItem ? baseItem.ef : compItem.ef;
+        const compES = compItem.es;
+        const compEF = compItem.ef;
+
+        const baseDuration = calcDuration(baseES, baseEF);
+        const compDuration = calcDuration(compES, compEF);
+        const slipDays = Math.round((new Date(compEF).getTime() - new Date(baseEF).getTime()) / 86400000);
+
+        let logicNote = compItem.logic || 'FS-0d Normal';
+        let logicBadge = '<span class="text-slate-400">Normal FS Logic</span>';
+        if (compItem.code === 'WBS-2.3') {
+          logicBadge = '<span class="px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-700 font-bold">Logic Softened: FS→SS+15d</span>';
+        } else if (compItem.code === 'WBS-3.2') {
+          logicBadge = '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700">RFI-124 Critical Hold</span>';
+        }
+
+        let floatErosionBadge = '<span class="text-emerald-400">TF Stable</span>';
+        const baseTf = baseItem ? baseItem.tf : 0;
+        const compTf = compItem.tf;
+        const tfErosion = baseTf - compTf;
+
+        if (tfErosion >= 10) {
+          floatErosionBadge = `<span class="px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-700 font-bold animate-pulse">Eroded: -${tfErosion}d (${baseTf}d→${compTf}d)</span>`;
+        } else if (tfErosion > 0) {
+          floatErosionBadge = `<span class="text-amber-400">-${tfErosion}d (${baseTf}d→${compTf}d)</span>`;
+        }
+
+        html += `
+          <tr class="hover:bg-slate-900/60 transition">
+            <td class="py-1.5 px-2 font-bold text-sky-300 border-r border-slate-800">${compItem.code}</td>
+            <td class="py-1.5 px-2 font-medium text-slate-200 border-r border-slate-800">${wbsLive ? wbsLive.name : compItem.code}</td>
+            <td class="py-1.5 px-2 text-center text-slate-300 border-r border-slate-800">${baseES} → ${baseEF} (${baseDuration}d)</td>
+            <td class="py-1.5 px-2 text-center text-slate-200 border-r border-slate-800 font-bold">${compES} → ${compEF} (${compDuration}d)</td>
+            <td class="py-1.5 px-2 text-right border-r border-slate-800 ${slipDays > 0 ? 'text-rose-400 font-bold' : slipDays < 0 ? 'text-emerald-400 font-bold' : 'text-slate-400'}">
+              ${slipDays > 0 ? '+' : ''}${slipDays} Days
+            </td>
+            <td class="py-1.5 px-2 border-r border-slate-800">${logicBadge}</td>
+            <td class="py-1.5 px-2 text-center">${floatErosionBadge}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function toggleSplitGanttView() {
+      state.splitGanttEnabled = !state.splitGanttEnabled;
+      const btn = document.getElementById('btn-toggle-split-gantt');
+      if (btn) {
+        btn.textContent = state.splitGanttEnabled ? '📊 Dual Split-Gantt Bars: ON' : '📊 Dual Split-Gantt Bars: OFF';
+        btn.className = state.splitGanttEnabled
+          ? 'px-2.5 py-1 bg-shimizu hover:bg-sky-500 text-white font-bold rounded-sm border border-sky-400/40 transition'
+          : 'px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-sm border border-slate-700 transition';
+      }
+      renderCpmGantt();
+    }
+
+    // =========================================================================
+    // v8.0 TASK 3: "LEBARAN MUDIK" WORKFORCE DROP SIMULATOR
+    // =========================================================================
+    function toggleMudikSimulation() {
+      state.mudik.active = !state.mudik.active;
+      const btn = document.getElementById('btn-toggle-mudik');
+      const banner = document.getElementById('mudik-alert-banner');
+      const laborCount = document.getElementById('mudik-labor-count');
+      const laborSub = document.getElementById('mudik-labor-sub');
+      const muckRate = document.getElementById('mudik-muck-rate');
+      const tbmRate = document.getElementById('mudik-tbm-rate');
+      const riskBadge = document.getElementById('mudik-risk-badge');
+      const riskSub = document.getElementById('mudik-risk-sub');
+
+      if (state.mudik.active) {
+        if (btn) {
+          btn.textContent = '🛑 Deactivate Mudik Simulator';
+          btn.className = 'px-2.5 py-1 font-bold bg-rose-700 hover:bg-rose-600 text-white rounded-sm border border-rose-400/50 shadow-sm transition animate-pulse';
+        }
+        if (banner) banner.classList.remove('hidden');
+
+        if (state.mudik.mitigated) {
+          if (laborCount) laborCount.textContent = '195 Personnel (46%)';
+          if (laborSub) laborSub.textContent = 'Skeleton Crew + Overtime Incentive';
+          if (muckRate) muckRate.textContent = '680 m³/day (83%)';
+          if (tbmRate) tbmRate.textContent = '9.2 m/day (Buffered)';
+          if (riskBadge) {
+            riskBadge.textContent = 'MITIGATED (OVERTIME)';
+            riskBadge.className = 'text-base font-extrabold text-amber-400 mt-0.5';
+          }
+          if (riskSub) riskSub.textContent = 'Pre-cast rings buffer deployed';
+        } else {
+          if (laborCount) laborCount.textContent = '105 Personnel (25%)';
+          if (laborSub) laborSub.textContent = '75% Nationwide Mudik Outflow';
+          if (muckRate) muckRate.textContent = '205 m³/day (-75%)';
+          if (tbmRate) tbmRate.textContent = '3.2 m/day (-70%)';
+          if (riskBadge) {
+            riskBadge.textContent = 'CRITICAL OVERLAP RISK';
+            riskBadge.className = 'text-base font-extrabold text-rose-400 mt-0.5 animate-pulse';
+          }
+          if (riskSub) riskSub.textContent = 'WBS-5.1 Base Pouring threatened';
+        }
+        showNexusToast('⚠️ Lebaran Mudik Simulator Active: Direct labor reduced by 75%!');
+      } else {
+        if (btn) {
+          btn.textContent = '⚡ Simulate Mudik Holiday Window';
+          btn.className = 'px-2.5 py-1 font-bold bg-amber-600 hover:bg-amber-500 text-white rounded-sm border border-amber-400/50 shadow-sm transition';
+        }
+        if (banner) banner.classList.add('hidden');
+        if (laborCount) laborCount.textContent = '420 Personnel (100%)';
+        if (laborSub) laborSub.textContent = 'Baseline Operational Strength';
+        if (muckRate) muckRate.textContent = '820 m³/day (Nominal)';
+        if (tbmRate) tbmRate.textContent = '10.8 m/day (2.5 bar)';
+        if (riskBadge) {
+          riskBadge.textContent = 'LOW / BUFFER CLEAR';
+          riskBadge.className = 'text-base font-extrabold text-emerald-400 mt-0.5';
+        }
+        if (riskSub) riskSub.textContent = 'WBS-5.1 Base Pouring buffered';
+        showNexusToast('✓ Normal Work Schedule Restored (420 Active Personnel)');
+      }
+      saveState();
+    }
+
+    function toggleMudikMitigation() {
+      state.mudik.mitigated = !state.mudik.mitigated;
+      const btn = document.getElementById('btn-toggle-mudik-mitigation');
+      if (btn) {
+        btn.textContent = state.mudik.mitigated ? '✓ Kaizen Plan Active (Overtime Paid)' : '🛡️ Activate Kaizen Mitigation Plan';
+        btn.className = state.mudik.mitigated
+          ? 'px-2.5 py-1 font-bold bg-emerald-800 text-emerald-200 rounded-sm border border-emerald-500 transition'
+          : 'px-2.5 py-1 font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-sm border border-slate-700 transition';
+      }
+      if (state.mudik.active) {
+        state.mudik.active = false;
+        toggleMudikSimulation();
+      }
+    }
+
+    // =========================================================================
+    // v8.0 TASK 4: LSM 2.0 SUBSURFACE LITHOLOGY & SLURRY SAFETY ENVELOPE
+    // =========================================================================
+    function renderLithologyCrossSection() {
+      const canvas = document.getElementById('lithologyCrossSectionCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const w = canvas.width = canvas.parentElement.clientWidth || 900;
+      const h = canvas.height = canvas.parentElement.clientHeight || 190;
+
+      // Coordinate mappings:
+      // STA 14+000 -> 0px, STA 15+500 -> w
+      // Depth 0.0m -> 0px, Depth -30.0m -> h
+      const toX = sta => ((sta - 14000) / 1500) * w;
+      const toY = depth => ((-depth) / 30.0) * h;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Stratum 1: Topsoil & Alluvial Fill (0.0 to -4.5m)
+      ctx.fillStyle = '#8B5A2B';
+      ctx.fillRect(0, toY(0), w, toY(-4.5) - toY(0));
+
+      // Stratum 2: Marine Silty Clay (-4.5m to -14.0m)
+      ctx.fillStyle = '#1e3a5f';
+      ctx.fillRect(0, toY(-4.5), w, toY(-14.0) - toY(-4.5));
+
+      // Stratum 3: Dense Volcanic Aquifer Sand (-14.0m to -22.0m)
+      ctx.fillStyle = '#d97706';
+      ctx.fillRect(0, toY(-14.0), w, toY(-22.0) - toY(-14.0));
+
+      // Stratum 4: Hard Tuffaceous Siltstone Base (-22.0m to -30.0m)
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(0, toY(-22.0), w, toY(-30.0) - toY(-22.0));
+
+      // Stratum 4 Boulder Lens Anomaly: STA 14+780 to 14+860 (-18.0m to -24.5m)
+      const bx1 = toX(14780);
+      const bx2 = toX(14860);
+      const by1 = toY(-18.0);
+      const by2 = toY(-24.5);
+
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.7)';
+      ctx.fillRect(bx1, by1, bx2 - bx1, by2 - by1);
+
+      // Crimson hatch pattern
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1;
+      for (let x = bx1; x < bx2; x += 6) {
+        ctx.beginPath();
+        ctx.moveTo(x, by1);
+        ctx.lineTo(x + 6, by2);
+        ctx.stroke();
+      }
+
+      // Station Box Excavation Outline: STA 14+000 to STA 14+350 (-24.5m depth)
+      const sbW = toX(14350) - toX(14000);
+      const sbH = toY(-24.5);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(toX(14000), 0, sbW, sbH);
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+      ctx.fillRect(toX(14000), 0, sbW, sbH);
+
+      // D-Wall boundary lines
+      ctx.strokeStyle = '#005bac';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(toX(14350), 0);
+      ctx.lineTo(toX(14350), toY(-26.0));
+      ctx.stroke();
+
+      // Twin TBM Tunnel Drives Line at elevation -16.5m (Ø6.65m)
+      const tunnelY = toY(-16.5);
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.moveTo(toX(14350), tunnelY);
+      ctx.lineTo(toX(15500), tunnelY);
+      ctx.stroke();
+
+      // TBM #1 Sakura-1 Face Marker: STA 14+762.5
+      const tbm1X = toX(14762.5);
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.arc(tbm1X, tunnelY, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // TBM #2 Garuda-2 Face Marker: STA 14+577.5
+      const tbm2X = toX(14577.5);
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.arc(tbm2X, tunnelY, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Elevation Reference Grid Lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1;
+      [-5, -10, -15, -20, -25].forEach(d => {
+        const y = toY(d);
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '9px JetBrains Mono';
+        ctx.fillText(`${d}m`, 4, y - 2);
+      });
+    }
+
+    function updateSlurrySafetyEnvelope(pFace = 2.55) {
+      if (!state.slurry) state.slurry = {};
+      state.slurry.pFace = pFace;
+
+      const pColl = 1.95;
+      const pHeave = 3.15;
+
+      const needle = document.getElementById('slurry-needle-marker');
+      const text = document.getElementById('slurry-current-pface-text');
+      const badge = document.getElementById('slurry-envelope-badge');
+
+      if (text) text.textContent = `${pFace.toFixed(2)} bar`;
+
+      // Map 1.50 bar to 0% and 3.50 bar to 100%
+      const pct = Math.max(0, Math.min(100, ((pFace - 1.50) / (3.50 - 1.50)) * 100));
+      if (needle) needle.style.left = `${pct}%`;
+
+      if (pFace < pColl) {
+        state.slurry.status = 'ALARM: COLLAPSE RISK';
+        if (badge) {
+          badge.textContent = `⚠️ SLURRY ENVELOPE: COLLAPSE HAZARD (${pFace.toFixed(2)} bar < ${pColl} bar)`;
+          badge.className = 'px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600 font-bold animate-pulse';
+        }
+      } else if (pFace > pHeave) {
+        state.slurry.status = 'ALARM: HEAVE RISK';
+        if (badge) {
+          badge.textContent = `⚠️ SLURRY ENVELOPE: HEAVE / BLOWOUT HAZARD (${pFace.toFixed(2)} bar > ${pHeave} bar)`;
+          badge.className = 'px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600 font-bold animate-pulse';
+        }
+      } else {
+        state.slurry.status = 'STABLE';
+        if (badge) {
+          badge.textContent = `✓ SLURRY ENVELOPE: STABLE (${pFace.toFixed(2)} bar in 2.4–2.8 envelope)`;
+          badge.className = 'px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 font-bold';
+        }
+      }
+    }
+
+    // =========================================================================
+    // v8.0 TASK 5: BUILDINGSMART BCF 2.1 EXPORTER & SCHEDULE FRAGILITY RADAR
+    // =========================================================================
+    let currentBcfWbsCode = 'WBS-3.2';
+
+    function generateBcf21Xml(wbsCode) {
+      const wbs = state.wbs.find(w => w.code === wbsCode) || state.wbs[0];
+      const guid = 'c3a4f6d2-' + Math.random().toString(16).substring(2, 6) + '-42e1-a07e-128456f912c4';
+      const cam = window.Nexus4DDigitalTwin?.camera?.position || { x: 160, y: 110, z: 150 };
+
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<bcf:Topic xmlns:bcf="http://www.buildingsmart-tech.org/specifications/bcf/2.1"
+           Guid="${guid}"
+           TopicType="Construction Schedule Hold"
+           TopicStatus="${wbs.gate.includes('HOLD') ? 'Open' : 'Closed'}">
+  <Title>[${wbs.code}] ${wbs.name}</Title>
+  <Priority>${wbs.gate.includes('HOLD') ? 'Critical' : 'Normal'}</Priority>
+  <CreationDate>${new Date().toISOString()}</CreationDate>
+  <CreationAuthor>Shimizu Corporation PE26 / Lead Project Controls Director</CreationAuthor>
+  <ModifiedDate>${new Date().toISOString()}</ModifiedDate>
+  <AssignedTo>Shimizu GC / ${wbs.discipline} Division</AssignedTo>
+  <Stage>Underground Top-Down Excavation &amp; Tunneling</Stage>
+  <Description>${wbs.genba?.note || 'Component inspected under Shimizu QC26 protocol.'} Total Float: ${wbs.tf}d.</Description>
+  <BimSnippet SnippetType="IFC" isExternal="false">CP202_BIM_StationBox_LOD400.ifc</BimSnippet>
+  <VisualizationInfo Guid="${guid}-viz">
+    <CameraViewPoint X="${cam.x.toFixed(2)}" Y="${cam.y.toFixed(2)}" Z="${cam.z.toFixed(2)}"/>
+    <CameraDirection X="-0.707" Y="-0.500" Z="-0.500"/>
+    <CameraUpVector X="0.000" Y="1.000" Z="0.000"/>
+    <ComponentSelection IfcGuid="1A2B3C4D-5E6F-7A8B-9C0D-1E2F3A4B5C6D" WbsCode="${wbs.code}"/>
+  </VisualizationInfo>
+</bcf:Topic>`;
+    }
+
+    function openBcfModalForWbs(wbsCode) {
+      currentBcfWbsCode = wbsCode;
+      const modal = document.getElementById('modal-bcf-export');
+      const wbs = state.wbs.find(w => w.code === wbsCode) || state.wbs[0];
+      if (!modal || !wbs) return;
+
+      const xml = generateBcf21Xml(wbsCode);
+      const preview = document.getElementById('bcf-xml-preview');
+      if (preview) preview.textContent = xml;
+
+      const codeEl = document.getElementById('bcf-wbs-code');
+      if (codeEl) codeEl.textContent = `${wbs.code} — ${wbs.name}`;
+
+      const subEl = document.getElementById('bcf-assigned-sub');
+      if (subEl) subEl.textContent = `Shimizu GC / ${wbs.discipline} Team`;
+
+      const priEl = document.getElementById('bcf-priority-status');
+      if (priEl) priEl.textContent = `${wbs.gate.includes('HOLD') ? 'CRITICAL / RFI HOLD' : 'NORMAL / PROGRESS 100%'}`;
+
+      modal.classList.remove('hidden');
+    }
+
+    function exportBcfTicketFromHud() {
+      const selectedWbs = window.Nexus4DDigitalTwin?.selectedMesh?.userData?.wbsCode || 'WBS-3.2';
+      openBcfModalForWbs(selectedWbs);
+    }
+
+    function closeBcfModal() {
+      const modal = document.getElementById('modal-bcf-export');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function copyBcfPayload() {
+      const text = document.getElementById('bcf-xml-preview')?.textContent || '';
+      navigator.clipboard?.writeText(text).then(() => {
+        showNexusToast('✓ BCF 2.1 XML Payload Copied to Clipboard!');
+      });
+    }
+
+    function downloadBcfFile() {
+      const text = document.getElementById('bcf-xml-preview')?.textContent || '';
+      const blob = new Blob([text], { type: 'application/xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `BCF_Ticket_${currentBcfWbsCode}.bcf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showNexusToast(`✓ BCF File Downloaded: BCF_Ticket_${currentBcfWbsCode}.bcf`);
+    }
+
+    function calculateScheduleFragility() {
+      // SFI = 0.35 * Float Burn + 0.35 * RFI Lag + 0.30 * Rig Over-Allocation
+      // Calculate float burn across critical items that eroded float:
+      const wbs32 = state.wbs.find(w => w.code === 'WBS-3.2');
+      const hasRfiHold = wbs32 && wbs32.gate.includes('HOLD');
+
+      const floatBurn = hasRfiHold ? 78.0 : 35.0;
+      const rfiLag = hasRfiHold ? 88.0 : 20.0;
+      const rigAlloc = state.rcCpm?.leveled ? 25.0 : 65.0;
+
+      const sfi = 0.35 * floatBurn + 0.35 * rfiLag + 0.30 * rigAlloc;
+      state.fragility = {
+        sfi: Number(sfi.toFixed(1)),
+        floatBurn: Number(floatBurn.toFixed(1)),
+        rfiLag: Number(rfiLag.toFixed(1)),
+        rigAlloc: Number(rigAlloc.toFixed(1)),
+        status: sfi > 70 ? 'CRITICAL' : sfi >= 40 ? 'VULNERABLE' : 'ROBUST',
+        warning14d: sfi >= 40
+      };
+
+      // Update Header Widget
+      const scoreVal = document.getElementById('fragility-score-val');
+      const statusTag = document.getElementById('fragility-status-tag');
+      const pulseDot = document.getElementById('fragility-pulse-dot');
+      const widget = document.getElementById('fragility-radar-widget');
+
+      if (scoreVal) scoreVal.textContent = `${state.fragility.sfi.toFixed(1)} / 100`;
+      if (statusTag) {
+        statusTag.textContent = state.fragility.status;
+        statusTag.className = state.fragility.sfi > 70
+          ? 'text-rose-400 font-extrabold animate-pulse'
+          : state.fragility.sfi >= 40
+          ? 'text-amber-400 font-extrabold'
+          : 'text-emerald-400 font-extrabold';
+      }
+      if (pulseDot) {
+        pulseDot.className = state.fragility.sfi > 70
+          ? 'inline-block w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping'
+          : state.fragility.sfi >= 40
+          ? 'inline-block w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse'
+          : 'inline-block w-2.5 h-2.5 rounded-full bg-emerald-400';
+      }
+      if (widget) {
+        widget.className = state.fragility.sfi > 70
+          ? 'flex items-center gap-2 bg-slate-950/90 border border-rose-600 px-2.5 py-1 rounded-sm cursor-pointer transition shadow-sm mono-num group animate-pulse'
+          : 'flex items-center gap-2 bg-slate-950/90 border border-amber-500/70 hover:border-amber-400 px-2.5 py-1 rounded-sm cursor-pointer transition shadow-sm mono-num group';
+      }
+
+      // Update Modal
+      const mSfi = document.getElementById('modal-sfi-value');
+      if (mSfi) mSfi.textContent = `${state.fragility.sfi.toFixed(1)} / 100`;
+      const mFb = document.getElementById('sfi-float-burn-score');
+      if (mFb) mFb.textContent = `${state.fragility.floatBurn.toFixed(1)}% (WBS-3.2, 4.2 Total Float Burn)`;
+      const mRfi = document.getElementById('sfi-rfi-lag-score');
+      if (mRfi) mRfi.textContent = `${state.fragility.rfiLag.toFixed(1)}% (RFI-124 12d past SLA)`;
+      const mRig = document.getElementById('sfi-rig-alloc-score');
+      if (mRig) mRig.textContent = `${state.fragility.rigAlloc.toFixed(1)}% (Heavy Crawler Crane 2 demand vs 1 cap)`;
+    }
+
+    function openFragilityModal() {
+      const modal = document.getElementById('modal-fragility-radar');
+      if (!modal) return;
+      calculateScheduleFragility();
+
+      const tbody = document.getElementById('sfi-breakdown-tbody');
+      if (tbody) {
+        let html = '';
+        state.wbs.forEach(w => {
+          const isHold = w.gate.includes('HOLD');
+          const isCrit = w.tf === 0;
+          let pkgSfi = isHold ? 84.5 : isCrit ? 62.0 : 28.0;
+          let levelTag = pkgSfi > 70
+            ? '<span class="text-rose-400 font-bold">CRITICAL THREAT</span>'
+            : pkgSfi >= 40
+            ? '<span class="text-amber-400 font-bold">VULNERABLE</span>'
+            : '<span class="text-emerald-400">ROBUST</span>';
+
+          html += `
+            <tr class="hover:bg-slate-900/60">
+              <td class="p-1 font-bold text-sky-300 border-r border-slate-800">${w.code}</td>
+              <td class="p-1 text-slate-200 border-r border-slate-800">${w.name}</td>
+              <td class="p-1 text-right text-slate-300 border-r border-slate-800">${w.tf}d</td>
+              <td class="p-1 text-center border-r border-slate-800">${w.gate}</td>
+              <td class="p-1 text-right font-bold text-amber-300 border-r border-slate-800">${pkgSfi.toFixed(1)}</td>
+              <td class="p-1 text-center">${levelTag}</td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeFragilityModal() {
+      const modal = document.getElementById('modal-fragility-radar');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // =========================================================================
+    // v8.0 TASK 1.4: 5D COST DENSITY MODE (THREE.JS SHADING)
+    // =========================================================================
+    function setTwinColorMode(mode) {
+      state.twinColorMode = mode;
+      const btn4d = document.getElementById('btn-twin-mode-4d');
+      const btn5d = document.getElementById('btn-twin-mode-5d');
+      const legContainer = document.getElementById('twin-dynamic-legend');
+
+      if (mode === '5d') {
+        if (btn5d) btn5d.className = 'px-2 py-0.5 font-bold rounded-xs bg-amber-600 text-white text-[10px] transition shadow-sm';
+        if (btn4d) btn4d.className = 'px-2 py-0.5 font-medium text-slate-400 hover:text-white text-[10px] transition';
+
+        if (legContainer) {
+          legContainer.innerHTML = `
+            <span class="text-amber-400 font-bold uppercase text-[9px]">5D Cost Intensity:</span>
+            <span class="flex items-center gap-1 text-amber-300 font-bold text-[10px]">
+              <span class="w-2 h-2 rounded-sm bg-yellow-400"></span> &gt; IDR 50 B (Base/TBM)
+            </span>
+            <span class="flex items-center gap-1 text-purple-300 font-bold text-[10px]">
+              <span class="w-2 h-2 rounded-sm bg-purple-500"></span> IDR 10–30 B (Slabs/DW)
+            </span>
+            <span class="flex items-center gap-1 text-blue-300 font-bold text-[10px]">
+              <span class="w-2 h-2 rounded-sm bg-blue-600"></span> &lt; IDR 10 B (Deck/Struts)
+            </span>
+          `;
+        }
+      } else {
+        if (btn4d) btn4d.className = 'px-2 py-0.5 font-bold rounded-xs bg-shimizu text-white text-[10px] transition shadow-sm';
+        if (btn5d) btn5d.className = 'px-2 py-0.5 font-medium text-slate-400 hover:text-white text-[10px] transition';
+
+        if (legContainer) {
+          legContainer.innerHTML = `
+            <span class="text-slate-400 font-bold uppercase text-[9px]">4D Shader:</span>
+            <span class="flex items-center gap-1 text-emerald-400 font-bold text-[10px]">
+              <span class="w-2 h-2 rounded-sm bg-emerald-500"></span> 100% Done
+            </span>
+            <span class="flex items-center gap-1 text-amber-400 font-bold text-[10px]">
+              <span class="w-2 h-2 rounded-sm bg-amber-500 animate-pulse"></span> Active
+            </span>
+            <span class="flex items-center gap-1 text-rose-400 font-bold text-[10px]">
+              <span class="w-2 h-2 rounded-sm bg-rose-500 animate-ping"></span> Hold
+            </span>
+          `;
+        }
+      }
+
+      if (window.Nexus4DDigitalTwin && typeof Nexus4DDigitalTwin.onSliderInput === 'function') {
+        Nexus4DDigitalTwin.onSliderInput(Nexus4DDigitalTwin.sliderValue);
+      }
+    }
+
     function recalculateAll(skipGridRebuild = false) {
       const t0 = performance.now();
 
@@ -3943,6 +5333,10 @@
       }
 
       updateCharts(weightedEV, weightedPV, pvIdr, evIdr, acIdr);
+      renderFidicBoqLedger();
+      updateMultiBaselineDiff();
+      calculateScheduleFragility();
+      renderLithologyCrossSection();
       renderCpmGantt();
       renderMilestones(spi);
       runKaizenSimulation(spi);
@@ -4005,6 +5399,17 @@
 
         const isFlashed = flashedRowIndices.has(idx);
 
+        // v8.0 Multi-Calendar Badge
+        const calBadge = item.cal === 'CAL-A'
+          ? '<span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-purple-950 text-purple-300 border border-purple-700/60 mono-num" title="Calendar A: 24/7/365 Continuous Underground">24/7 UG</span>'
+          : item.cal === 'CAL-C'
+          ? '<span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-slate-800 text-slate-300 border border-slate-700 mono-num" title="Calendar C: 5-Day Technical (Mon-Fri)">5D TECH</span>'
+          : '<span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-sky-950 text-sky-300 border border-sky-700/60 mono-num" title="Calendar B: 6-Day Surface (Mon-Sat, Sun Off per AMDAL)">6D SURF</span>';
+
+        // v8.0 BoQ Item Allocation
+        const boqItem = state.boq ? state.boq.find(b => b.code === item.boqId) : null;
+        const boqText = boqItem ? `<span class="text-[10px] mono-num text-amber-300 font-bold">${boqItem.code}</span><br><span class="text-[9px] text-slate-400">IDR ${(boqItem.totalAmount/1e9).toFixed(1)}B</span>` : '<span class="text-slate-500">-</span>';
+
         rowsHtml += `
           <tr id="wbs-row-${idx}" class="hover:bg-slate-900/70 transition-colors ${isCrit ? 'bg-rose-950/10' : ''} ${isFlashed ? 'row-flash-emerald' : ''}" data-row-idx="${idx}">
             <td class="py-1.5 px-1.5 border-r border-slate-800">
@@ -4024,6 +5429,9 @@
             </td>
             <td class="py-1.5 px-2 border-r border-slate-800 font-sans text-[11px] text-slate-300">
               ${item.discipline}
+            </td>
+            <td class="py-1.5 px-1 border-r border-slate-800 text-center">
+              ${calBadge}
             </td>
             <td class="py-1.5 px-1 border-r border-slate-800 text-center">
               ${isCrit
@@ -4072,6 +5480,9 @@
             <td class="py-1.5 px-2 border-r border-slate-800 text-right font-semibold ${rowVar >= 0 ? 'text-emerald-400' : 'text-rose-400'}" id="row-var-${idx}">
               ${rowVar >= 0 ? '+' : ''}${rowVar.toFixed(2)}%
             </td>
+            <td class="py-1.5 px-2 border-r border-slate-800 text-right bg-amber-950/10 leading-tight">
+              ${boqText}
+            </td>
             <td class="py-1.5 px-1.5 border-r border-slate-800 text-center">
               <button onclick="toggleRowGate(${idx})" class="px-2 py-0.5 text-[10px] font-bold rounded border ${gateClass} transition">
                 ${item.gate}
@@ -4084,6 +5495,9 @@
                 </button>
                 <button onclick="openGenbaModal(${idx})" class="px-2 py-0.5 text-[10px] bg-slate-800 hover:bg-shimizu text-sky-300 hover:text-white rounded border border-slate-700 transition">
                   📋 Log
+                </button>
+                <button onclick="openBcfModalForWbs('${item.code}')" class="px-1.5 py-0.5 text-[10px] bg-emerald-950 hover:bg-emerald-800 text-emerald-300 hover:text-white rounded border border-emerald-700/70 transition" title="Export buildingSMART BCF 2.1 Issue Ticket">
+                  BCF
                 </button>
               </div>
             </td>
@@ -4536,7 +5950,7 @@
       }
     }
 
-    // Render Interactive CPM Gantt Chart
+    // Render Interactive CPM Gantt Chart (v8.0 Dual Split-Gantt Support)
     function renderCpmGantt() {
       const container = document.getElementById('cpm-gantt-container');
       if (!container) return;
@@ -4545,11 +5959,15 @@
       const maxDate = new Date('2027-06-01').getTime();
       const totalSpan = maxDate - minDate;
       const cutOffPos = ((new Date('2026-11-03').getTime() - minDate) / totalSpan) * 100;
+      const isSplit = state.splitGanttEnabled !== false;
+      const rev0Baseline = state.baselines?.rev0?.items || [];
 
       let html = `
-        <div class="min-w-[900px] space-y-1.5 relative text-xs mono-num">
+        <div class="min-w-[950px] space-y-1.5 relative text-xs mono-num">
           <div class="grid grid-cols-12 border-b border-slate-700 pb-1 text-[10px] text-slate-400">
-            <div class="col-span-4 font-bold text-slate-200">WBS Activity & Chainage</div>
+            <div class="col-span-4 font-bold text-slate-200">
+              WBS Activity & Chainage ${isSplit ? '<span class="text-sky-400 font-normal">(Top: Rev 0 / Bottom: Forecast)</span>' : ''}
+            </div>
             <div class="col-span-8 flex justify-between px-1">
               <span>Jan 26</span><span>Mar 26</span><span>May 26</span><span>Jul 26</span><span>Sep 26</span><span class="text-sky-400 font-bold">Nov 26 (W43)</span><span>Jan 27</span><span>Mar 27</span><span>May 27</span>
             </div>
@@ -4566,22 +5984,49 @@
         const isCrit = tfDays === 0;
         const barColor = isCrit ? 'bg-rose-700/80 border-rose-500' : 'bg-shimizu/80 border-sky-400';
 
+        // Baseline Rev 0 Span
+        const b0 = rev0Baseline.find(b => b.code === item.code);
+        let b0Left = leftPct;
+        let b0Width = widthPct;
+        let slipDelta = 0;
+        if (b0) {
+          const b0EsTime = new Date(b0.es).getTime();
+          const b0EfTime = new Date(b0.ef).getTime();
+          b0Left = Math.max(0, Math.min(95, ((b0EsTime - minDate) / totalSpan) * 100));
+          b0Width = Math.max(2, Math.min(100 - b0Left, ((b0EfTime - b0EsTime) / totalSpan) * 100));
+          slipDelta = Math.round((efTime - b0EfTime) / 86400000);
+        }
+
         html += `
           <div class="grid grid-cols-12 items-center py-1 border-b border-slate-800/60 hover:bg-slate-900/50">
             <div class="col-span-4 pr-2 truncate">
               <span class="font-bold ${isCrit ? 'text-rose-400' : 'text-sky-300'}">${item.code}</span>
               <span class="font-sans text-slate-200 ml-1">${item.name}</span>
+              ${isSplit && slipDelta > 0 ? `<span class="ml-1 text-[9.5px] px-1 rounded bg-rose-950 text-rose-300 border border-rose-800">+${slipDelta}d slip</span>` : ''}
             </div>
-            <div class="col-span-8 relative h-6 bg-slate-900/90 rounded-xs overflow-hidden">
+            <div class="col-span-8 relative ${isSplit ? 'h-9' : 'h-6'} bg-slate-900/90 rounded-xs overflow-hidden">
               <!-- Data Date Cut-off Line -->
               <div class="absolute top-0 bottom-0 w-[1.5px] bg-amber-400 z-20" style="left:${cutOffPos}%" title="Data Date W43"></div>
-              <!-- Early Schedule Bar -->
-              <div class="absolute top-1 bottom-1 rounded-xs border ${barColor} overflow-hidden" style="left:${leftPct}%; width:${widthPct}%">
-                <div class="h-full bg-emerald-500/90" style="width:${item.actual}%"></div>
-              </div>
+
+              ${isSplit ? `
+                <!-- Upper Bar: Baseline Rev 0 (Target) -->
+                <div class="absolute top-0.5 h-3 rounded-xs border border-slate-500/80 bg-slate-700/60 overflow-hidden" style="left:${b0Left}%; width:${b0Width}%" title="Baseline Rev 0 Target: ${b0 ? b0.es + ' to ' + b0.ef : ''}">
+                  <span class="absolute text-[8px] text-slate-300 top-0 left-1 leading-none">Rev 0</span>
+                </div>
+                <!-- Lower Bar: Active Forecast / Working Schedule -->
+                <div class="absolute bottom-0.5 h-4.5 rounded-xs border ${barColor} overflow-hidden" style="left:${leftPct}%; width:${widthPct}%">
+                  <div class="h-full bg-emerald-500/90" style="width:${item.actual}%"></div>
+                </div>
+              ` : `
+                <!-- Single Early Schedule Bar -->
+                <div class="absolute top-1 bottom-1 rounded-xs border ${barColor} overflow-hidden" style="left:${leftPct}%; width:${widthPct}%">
+                  <div class="h-full bg-emerald-500/90" style="width:${item.actual}%"></div>
+                </div>
+              `}
+
               <!-- Total Float Buffer Tail -->
-              ${floatWidthPct > 0 ? `<div class="absolute top-1.5 bottom-1.5 border border-dashed border-purple-400/80 bg-purple-950/30 rounded-xs" style="left:${leftPct + widthPct}%; width:${floatWidthPct}%"></div>` : ''}
-              <span class="absolute text-[10px] text-white font-semibold top-1 z-10" style="left:${Math.min(88, leftPct + 1)}%">${item.actual}% (TF:${tfDays}d)</span>
+              ${floatWidthPct > 0 ? `<div class="absolute ${isSplit ? 'bottom-1 h-3.5' : 'top-1.5 bottom-1.5'} border border-dashed border-purple-400/80 bg-purple-950/30 rounded-xs" style="left:${leftPct + widthPct}%; width:${floatWidthPct}%"></div>` : ''}
+              <span class="absolute text-[10px] text-white font-semibold ${isSplit ? 'bottom-0.5' : 'top-1'} z-10" style="left:${Math.min(88, leftPct + 1)}%">${item.actual}% (TF:${tfDays}d)</span>
             </div>
           </div>
         `;
@@ -4853,6 +6298,9 @@
           if (typeof renderQsraTornado === 'function') {
             renderQsraTornado();
           }
+        }
+                if (tabId === 'march') {
+          if (typeof renderLithologyCrossSection === 'function') renderLithologyCrossSection();
         }
         if (tabId === 'twin' && window.Nexus4DDigitalTwin) {
           window.Nexus4DDigitalTwin.init();
@@ -7615,13 +9063,20 @@ Excavation Frozen` }
         if (badge) badge.textContent = wbsCode || 'WBS';
         if (disc) disc.textContent = wbs?.discipline || mesh.userData.category || 'Civil';
         if (title) title.textContent = mesh.userData.name || wbs?.name || 'CP-202 Work Component';
-        if (chainage) chainage.textContent = `${mesh.userData.chainage || wbs?.chainage || 'STA 14+000'} • ${mesh.userData.elev || 'Subsurface'}`;
+
+        const boqItem = state.boq ? state.boq.find(b => b.linkedWbs.includes(wbsCode)) : null;
+        const boqCostStr = boqItem ? ` • BoQ: ${boqItem.code} (IDR ${(boqItem.totalAmount/1e9).toFixed(1)}B)` : '';
+
+        if (chainage) chainage.textContent = `${mesh.userData.chainage || wbs?.chainage || 'STA 14+000'} • ${mesh.userData.elev || 'Subsurface'}${boqCostStr}`;
         if (weight) weight.textContent = `${wbs?.weight?.toFixed(1) || '0.0'}%`;
         if (finish) finish.textContent = wbs?.ef || '2026-11-20';
         if (actual) actual.textContent = `${wbs?.actual?.toFixed(1) || '0.0'}%`;
         if (plan) plan.textContent = `${wbs?.plan?.toFixed(1) || '0.0'}%`;
         if (tf) tf.textContent = `${wbs?.tf ?? 0} Days ${wbs?.tf === 0 ? '(Critical Path)' : ''}`;
-        if (note) note.textContent = wbs?.genba?.note || 'Component inspected by Shimizu QC26 / PE26.';
+        if (note) {
+          const capTier = (boqItem?.totalAmount || 0) > 50e9 ? 'Gold (> IDR 50 B)' : (boqItem?.totalAmount || 0) >= 10e9 ? 'Violet (IDR 10-30 B)' : 'Dark Blue (< IDR 10 B)';
+          note.textContent = `${wbs?.genba?.note || 'Component inspected by Shimizu QC26 / PE26.'} [5D Capital Tier: ${capTier}]`;
+        }
 
         if (status) {
           if (wbs?.gate?.includes('HOLD') || wbs?.gate?.includes('ALARM')) {
@@ -7779,32 +9234,47 @@ Excavation Frozen` }
             if (!mat) return;
             const isBoulderZone = state.geotechAnomaly && (p.id === 18 || p.id === 36) && this.sliderValue >= 210 && this.sliderValue <= 315;
 
-            if (isBoulderZone) {
-              mat.color.setHex(0xef4444);
-              if (mat.emissive) {
-                mat.emissive.setHex(0xef4444);
-                mat.emissiveIntensity = 0.6;
+            // 5D Cost Density Mode: Violet (10–30 B) for D-Wall Panels (BoQ-01 IDR 40.47 B distributed)
+            if (state.twinColorMode === '5d') {
+              if (this.sliderValue >= p.startDay) {
+                mat.color.setHex(0x8b5cf6); // Violet
+                if (mat.emissive) { mat.emissive.setHex(0x6d28d9); mat.emissiveIntensity = 0.4; }
+                mat.wireframe = false;
+                mat.opacity = 0.95;
+              } else {
+                mat.color.setHex(0x2e1065);
+                if (mat.emissive) mat.emissive.setHex(0x000000);
+                mat.wireframe = true;
+                mat.opacity = 0.25;
               }
-              mat.wireframe = false;
-              mat.opacity = 1.0;
-            } else if (this.sliderValue >= p.finishDay) {
-              mat.color.setHex(0x10b981);
-              if (mat.emissive) mat.emissive.setHex(0x064e3b);
-              mat.wireframe = false;
-              mat.opacity = 1.0;
-            } else if (this.sliderValue >= p.startDay) {
-              mat.color.setHex(0xf59e0b);
-              if (mat.emissive) {
-                mat.emissive.setHex(0xf59e0b);
-                mat.emissiveIntensity = 0.5;
-              }
-              mat.wireframe = false;
-              mat.opacity = 1.0;
             } else {
-              mat.color.setHex(0x1e293b);
-              if (mat.emissive) mat.emissive.setHex(0x000000);
-              mat.wireframe = true;
-              mat.opacity = 0.2;
+              if (isBoulderZone) {
+                mat.color.setHex(0xef4444);
+                if (mat.emissive) {
+                  mat.emissive.setHex(0xef4444);
+                  mat.emissiveIntensity = 0.6;
+                }
+                mat.wireframe = false;
+                mat.opacity = 1.0;
+              } else if (this.sliderValue >= p.finishDay) {
+                mat.color.setHex(0x10b981);
+                if (mat.emissive) mat.emissive.setHex(0x064e3b);
+                mat.wireframe = false;
+                mat.opacity = 1.0;
+              } else if (this.sliderValue >= p.startDay) {
+                mat.color.setHex(0xf59e0b);
+                if (mat.emissive) {
+                  mat.emissive.setHex(0xf59e0b);
+                  mat.emissiveIntensity = 0.5;
+                }
+                mat.wireframe = false;
+                mat.opacity = 1.0;
+              } else {
+                mat.color.setHex(0x1e293b);
+                if (mat.emissive) mat.emissive.setHex(0x000000);
+                mat.wireframe = true;
+                mat.opacity = 0.2;
+              }
             }
           });
         }
@@ -7865,36 +9335,64 @@ Excavation Frozen` }
           });
         }
 
-        // 4. Modulate Station Slabs (B1, B2, B3)
+        // 4. Modulate Station Slabs (B1, B2, B3) (v8.0 5D Cost Density Support)
         if (this.slabs) {
           if (this.slabs.b1) {
             const mat = this.slabs.b1.material;
-            if (excDepth < 8.5 || this.sliderValue < 170) {
-              mat.wireframe = true; mat.opacity = 0.15; mat.color.setHex(0x1e293b);
-            } else if (this.sliderValue < 220) {
-              mat.wireframe = false; mat.opacity = 0.9; mat.color.setHex(0xf59e0b);
+            if (state.twinColorMode === '5d') {
+              // Violet tier (IDR 10-30 B)
+              if (excDepth < 8.5 || this.sliderValue < 170) {
+                mat.wireframe = true; mat.opacity = 0.2; mat.color.setHex(0x2e1065);
+              } else {
+                mat.wireframe = false; mat.opacity = 0.95; mat.color.setHex(0x8b5cf6);
+              }
             } else {
-              mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0x10b981);
+              if (excDepth < 8.5 || this.sliderValue < 170) {
+                mat.wireframe = true; mat.opacity = 0.15; mat.color.setHex(0x1e293b);
+              } else if (this.sliderValue < 220) {
+                mat.wireframe = false; mat.opacity = 0.9; mat.color.setHex(0xf59e0b);
+              } else {
+                mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0x10b981);
+              }
             }
           }
           if (this.slabs.b2) {
             const mat = this.slabs.b2.material;
-            if (excDepth < 16.5 || this.sliderValue < 280) {
-              mat.wireframe = true; mat.opacity = 0.15; mat.color.setHex(0x1e293b);
-            } else if (this.sliderValue < 330) {
-              mat.wireframe = false; mat.opacity = 0.9; mat.color.setHex(0xf59e0b);
+            if (state.twinColorMode === '5d') {
+              // Violet tier (IDR 10-30 B)
+              if (excDepth < 16.5 || this.sliderValue < 280) {
+                mat.wireframe = true; mat.opacity = 0.2; mat.color.setHex(0x2e1065);
+              } else {
+                mat.wireframe = false; mat.opacity = 0.95; mat.color.setHex(0x8b5cf6);
+              }
             } else {
-              mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0x10b981);
+              if (excDepth < 16.5 || this.sliderValue < 280) {
+                mat.wireframe = true; mat.opacity = 0.15; mat.color.setHex(0x1e293b);
+              } else if (this.sliderValue < 330) {
+                mat.wireframe = false; mat.opacity = 0.9; mat.color.setHex(0xf59e0b);
+              } else {
+                mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0x10b981);
+              }
             }
           }
           if (this.slabs.b3) {
             const mat = this.slabs.b3.material;
-            if (excDepth < 24.0 || this.sliderValue < 390) {
-              mat.wireframe = true; mat.opacity = 0.15; mat.color.setHex(0x1e293b);
-            } else if (this.sliderValue < 440) {
-              mat.wireframe = false; mat.opacity = 0.9; mat.color.setHex(0xf59e0b);
+            if (state.twinColorMode === '5d') {
+              // Gold tier (> IDR 50 B: Base Slab + Waterproofing)
+              if (excDepth < 24.0 || this.sliderValue < 390) {
+                mat.wireframe = true; mat.opacity = 0.2; mat.color.setHex(0x713f12);
+              } else {
+                mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0xeab308);
+                if (mat.emissive) { mat.emissive.setHex(0xca8a04); mat.emissiveIntensity = 0.4; }
+              }
             } else {
-              mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0x10b981);
+              if (excDepth < 24.0 || this.sliderValue < 390) {
+                mat.wireframe = true; mat.opacity = 0.15; mat.color.setHex(0x1e293b);
+              } else if (this.sliderValue < 440) {
+                mat.wireframe = false; mat.opacity = 0.9; mat.color.setHex(0xf59e0b);
+              } else {
+                mat.wireframe = false; mat.opacity = 1.0; mat.color.setHex(0x10b981);
+              }
             }
           }
         }
@@ -7923,7 +9421,13 @@ Excavation Frozen` }
             this.tbm1.rings.forEach(r => {
               r.mesh.visible = (r.x <= shieldX - 4.0);
               if (r.mesh.visible) {
-                r.mesh.material.color.setHex(0x475569);
+                if (state.twinColorMode === '5d') {
+                  // Gold tier (> IDR 50 B: BoQ-04 Precast Rings IDR 208.25 B)
+                  r.mesh.material.color.setHex(0xeab308);
+                  if (r.mesh.material.emissive) { r.mesh.material.emissive.setHex(0xa16207); r.mesh.material.emissiveIntensity = 0.35; }
+                } else {
+                  r.mesh.material.color.setHex(0x475569);
+                }
                 r.mesh.material.wireframe = false;
               }
             });
@@ -7951,7 +9455,12 @@ Excavation Frozen` }
             this.tbm2.rings.forEach(r => {
               r.mesh.visible = (r.x <= shieldX - 4.0);
               if (r.mesh.visible) {
-                r.mesh.material.color.setHex(0x475569);
+                if (state.twinColorMode === '5d') {
+                  r.mesh.material.color.setHex(0xeab308);
+                  if (r.mesh.material.emissive) { r.mesh.material.emissive.setHex(0xa16207); r.mesh.material.emissiveIntensity = 0.35; }
+                } else {
+                  r.mesh.material.color.setHex(0x475569);
+                }
                 r.mesh.material.wireframe = false;
               }
             });
@@ -8055,5 +9564,274 @@ Excavation Frozen` }
       if (typeof onPzHeaveChange === 'function') onPzHeaveChange(0.68);
     });
   </script>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: FIDIC SUB-CLAUSE 14.3 INTERIM PAYMENT CERTIFICATE (IPC #11)        -->
+  <!-- ========================================================================= -->
+  <div id="modal-fidic-ipc" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 backdrop-blur-sm no-print">
+    <div class="bg-panel border border-amber-600/80 rounded-sm max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <!-- Modal Header -->
+      <div class="p-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="px-2 py-0.5 text-xs font-bold bg-amber-950 text-amber-300 border border-amber-600 rounded mono-num">FIDIC SUB-CLAUSE 14.3</span>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Interim Payment Certificate (IPC No. 11)</h3>
+          <span class="text-xs text-sky-400 font-jp">(月次中間出来高証明書)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="printFidicIpcCertificate()" class="px-2.5 py-1 text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white rounded-sm border border-amber-400 flex items-center gap-1 transition">
+            🖨️ Print Formal IPC
+          </button>
+          <button onclick="closeFidicIpcModal()" class="text-slate-400 hover:text-white text-lg font-bold px-1">✕</button>
+        </div>
+      </div>
+
+      <!-- Printable Document Container -->
+      <div class="p-4 overflow-y-auto space-y-3.5 text-xs mono-num bg-slate-950 text-slate-200">
+        <!-- Certificate Official Banner -->
+        <div class="border border-slate-700 p-3 bg-slate-900/60 rounded-sm flex justify-between items-center">
+          <div>
+            <div class="text-base font-extrabold text-white tracking-wide">INTERIM PAYMENT CERTIFICATE NO. 11</div>
+            <div class="text-[11px] text-slate-300 mt-0.5">Contract: Jakarta MRT Underground Package CP-202 (Harmoni – Mangga Besar)</div>
+            <div class="text-[10px] text-slate-400">Employer: PT MRT Jakarta (Perseroda) • Contractor: Shimizu – Adhi Karya JV</div>
+          </div>
+          <div class="text-right">
+            <div class="text-[11px] font-bold text-amber-400">CUT-OFF DATE: 31 OCT 2026 (W43)</div>
+            <div class="text-[10px] text-slate-400">Valuation Period: 01 Oct 2026 – 31 Oct 2026</div>
+            <div class="text-[10px] text-emerald-400 font-bold">STATUS: RECOMMENDED FOR CERTIFICATION</div>
+          </div>
+        </div>
+
+        <!-- BoQ Breakdown -->
+        <div>
+          <div class="text-[11px] font-bold text-slate-300 uppercase mb-1">Contract Bill of Quantities (BoQ) Progress Valuation</div>
+          <table class="w-full text-left border-collapse border border-slate-700 text-[11px]">
+            <thead>
+              <tr class="bg-slate-900 border-b border-slate-700 text-[10px] text-slate-300">
+                <th class="p-1.5 border-r border-slate-800">BoQ Item</th>
+                <th class="p-1.5 border-r border-slate-800">Description</th>
+                <th class="p-1.5 border-r border-slate-800 text-center">Unit</th>
+                <th class="p-1.5 border-r border-slate-800 text-right">Contract BAC</th>
+                <th class="p-1.5 border-r border-slate-800 text-right">Actual Qty</th>
+                <th class="p-1.5 border-r border-slate-800 text-right">Actual %</th>
+                <th class="p-1.5 text-right font-bold text-emerald-300">Certified Gross (IDR)</th>
+              </tr>
+            </thead>
+            <tbody id="ipc-modal-tbody" class="divide-y divide-slate-800">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Financial Summary & Deductions Box -->
+        <div class="grid grid-cols-2 gap-3 bg-slate-900/90 border border-slate-700 p-3 rounded-sm">
+          <div class="space-y-1.5">
+            <div class="flex justify-between border-b border-slate-800 pb-1">
+              <span class="text-slate-400">A. Gross Cumulative Certified Value:</span>
+              <strong class="text-white" id="ipc-modal-gross">IDR 188,370,000,000</strong>
+            </div>
+            <div class="flex justify-between border-b border-slate-800 pb-1">
+              <span class="text-amber-400">B. Less 10% Mobilization Advance Recovery:</span>
+              <strong class="text-amber-300" id="ipc-modal-adv">-IDR 18,837,000,000</strong>
+            </div>
+            <div class="flex justify-between border-b border-slate-800 pb-1">
+              <span class="text-purple-400">C. Less 5% Retention Money Withholding:</span>
+              <strong class="text-purple-300" id="ipc-modal-ret">-IDR 9,418,500,000</strong>
+            </div>
+            <div class="flex justify-between font-bold text-sky-300 pt-1">
+              <span>D. Cumulative Net Certified Value (A - B - C):</span>
+              <span id="ipc-modal-cum-net">IDR 160,114,500,000</span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex justify-between border-b border-slate-800 pb-1">
+              <span class="text-slate-400">E. Less Previous Certified IPCs Paid (01–10):</span>
+              <strong class="text-slate-300" id="ipc-modal-prev">-IDR 147,250,000,000</strong>
+            </div>
+            <div class="flex justify-between border-b border-slate-800 pb-1">
+              <span class="text-slate-400">F. Net IPC #11 Amount Payable This Period:</span>
+              <strong class="text-emerald-400 text-sm font-extrabold" id="ipc-modal-current-net">IDR 12,864,500,000</strong>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-400 pt-1">
+              <span>Payment Due Date (30 Days Sub-Clause 14.7):</span>
+              <span class="text-sky-300 font-bold">30 November 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hanko Inkan & Three-Tier Sign-Off Seals -->
+        <div class="border border-slate-700 p-2.5 rounded-sm bg-slate-900/60">
+          <div class="text-[10px] font-bold text-slate-400 uppercase mb-2">Tripartite Contractual Verification &amp; Inkan Consensus Seals</div>
+          <div class="grid grid-cols-3 gap-3 text-center">
+            <!-- Contractor -->
+            <div class="border border-slate-800 p-2 rounded bg-slate-950/60 flex flex-col items-center">
+              <div class="text-[10px] font-bold text-sky-400">SUBMITTED BY CONTRACTOR</div>
+              <div class="text-[9.5px] text-slate-400 mb-1">Shimizu Corporation (PE26)</div>
+              <div class="hanko-stamp scale-75 my-0.5">
+                <span class="text-[9px]">清水</span>
+                <span class="text-[12px] font-black">所長</span>
+                <span class="text-[8px]">承認</span>
+              </div>
+              <div class="text-[9.5px] text-slate-300 font-sans mt-0.5">Eng. Takahashi (Project Director)</div>
+            </div>
+
+            <!-- Consultant -->
+            <div class="border border-slate-800 p-2 rounded bg-slate-950/60 flex flex-col items-center">
+              <div class="text-[10px] font-bold text-amber-400">CERTIFIED BY ENGINEER</div>
+              <div class="text-[9.5px] text-slate-400 mb-1">Supervision Consultant (OC/NK)</div>
+              <div class="hanko-stamp scale-75 my-0.5 border-amber-500 text-amber-500">
+                <span class="text-[9px]">監理</span>
+                <span class="text-[12px] font-black">検認</span>
+                <span class="text-[8px]">PASS</span>
+              </div>
+              <div class="text-[9.5px] text-slate-300 font-sans mt-0.5">Dr. Harada (Lead Resident Engineer)</div>
+            </div>
+
+            <!-- Employer -->
+            <div class="border border-slate-800 p-2 rounded bg-slate-950/60 flex flex-col items-center">
+              <div class="text-[10px] font-bold text-emerald-400">ACCEPTED BY EMPLOYER</div>
+              <div class="text-[9.5px] text-slate-400 mb-1">PT MRT Jakarta (Perseroda)</div>
+              <div class="hanko-stamp scale-75 my-0.5 border-emerald-500 text-emerald-500">
+                <span class="text-[9px]">MRTJ</span>
+                <span class="text-[12px] font-black">承認</span>
+                <span class="text-[8px]">OK</span>
+              </div>
+              <div class="text-[9.5px] text-slate-300 font-sans mt-0.5">Ir. Bambang S. (Construction Director)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: BUILDINGSMART BCF 2.1 ISSUE TICKET EXPORTER                         -->
+  <!-- ========================================================================= -->
+  <div id="modal-bcf-export" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 backdrop-blur-sm no-print">
+    <div class="bg-panel border border-emerald-600/80 rounded-sm max-w-2xl w-full flex flex-col shadow-2xl overflow-hidden">
+      <!-- Modal Header -->
+      <div class="p-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-600 rounded mono-num">buildingSMART BCF 2.1</span>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Export BIM Collaboration Format Ticket</h3>
+        </div>
+        <button onclick="closeBcfModal()" class="text-slate-400 hover:text-white text-lg font-bold px-1">✕</button>
+      </div>
+
+      <div class="p-4 space-y-3 text-xs mono-num bg-slate-950 text-slate-200">
+        <div class="bg-slate-900/80 border border-slate-800 p-2.5 rounded-sm space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-400">TOPIC GUID:</span>
+            <span class="text-sky-300 font-bold" id="bcf-topic-guid">c3a4f6d2-9b81-42e1-a07e-128456f912c4</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">WBS ELEMENT:</span>
+            <span class="text-white font-bold" id="bcf-wbs-code">WBS-3.2</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">ASSIGNED SUBCONTRACTOR:</span>
+            <span class="text-amber-300" id="bcf-assigned-sub">Shimizu GC / Concrete Division</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">PRIORITY / STATUS:</span>
+            <span class="text-rose-400 font-bold" id="bcf-priority-status">CRITICAL / RFI HOLD</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-[11px] text-slate-400">BCF 2.1 XML Payload Preview (ISO 19650 OpenBIM Compatible):</span>
+            <button onclick="copyBcfPayload()" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-sky-300 rounded text-[10px]">Copy XML</button>
+          </div>
+          <pre id="bcf-xml-preview" class="p-2.5 bg-slate-900 border border-slate-800 rounded-sm text-[10px] text-emerald-300 font-mono overflow-x-auto max-h-[200px] select-all"></pre>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-1">
+          <button onclick="closeBcfModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-sm text-xs">Close</button>
+          <button onclick="downloadBcfFile()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-sm text-xs flex items-center gap-1">
+            <span>💾 Download .BCF Ticket</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: SCHEDULE FRAGILITY RADAR (SFI) BREAKDOWN & 14-DAY WARNING           -->
+  <!-- ========================================================================= -->
+  <div id="modal-fragility-radar" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 backdrop-blur-sm no-print">
+    <div class="bg-panel border border-amber-600/80 rounded-sm max-w-2xl w-full flex flex-col shadow-2xl overflow-hidden">
+      <!-- Modal Header -->
+      <div class="p-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 text-xs font-bold bg-amber-950 text-amber-300 border border-amber-600 rounded mono-num">AACE RP 29R-03 / SFI</span>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Schedule Fragility Radar (Early Warning Index)</h3>
+        </div>
+        <button onclick="closeFragilityModal()" class="text-slate-400 hover:text-white text-lg font-bold px-1">✕</button>
+      </div>
+
+      <div class="p-4 space-y-3.5 text-xs mono-num bg-slate-950 text-slate-200">
+        <!-- Composite Score Card -->
+        <div class="bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/40 border border-amber-600/60 p-3 rounded-sm flex items-center justify-between">
+          <div>
+            <div class="text-[10px] text-amber-400 font-bold uppercase">COMPOSITE SCHEDULE FRAGILITY INDEX (SFI)</div>
+            <div class="text-2xl font-black text-amber-300 mt-0.5" id="modal-sfi-value">68.4 / 100</div>
+            <div class="text-[10px] text-slate-300">Status: <strong class="text-amber-400 font-bold">VULNERABLE (40 ≤ SFI ≤ 70)</strong> • Imminent LD Threat Triggered at SFI &gt; 70</div>
+          </div>
+          <div class="text-right">
+            <span class="px-2.5 py-1 bg-amber-500/20 border border-amber-500/70 text-amber-300 text-xs font-extrabold rounded">
+              ⚠️ 14-DAY BREACH WARNING ACTIVE
+            </span>
+          </div>
+        </div>
+
+        <!-- Formula Breakdown -->
+        <div class="bg-slate-900/80 border border-slate-800 p-2.5 rounded-sm space-y-2">
+          <div class="text-[10.5px] font-bold text-slate-300">MATHEMATICAL SFI COMPONENT WEIGHTING:</div>
+          <p class="text-[10px] text-slate-400 font-mono">$SFI = 0.35 	imes (	ext{Float Burn Rate}) + 0.35 	imes (	ext{Open RFI Lag Days}) + 0.30 	imes (	ext{Heavy Rig Over-Allocation})$</p>
+
+          <div class="space-y-1 text-[11px] pt-1">
+            <div class="flex justify-between items-center bg-slate-950 p-1.5 rounded">
+              <span>1. Float Burn Rate (0.35 weight):</span>
+              <strong class="text-rose-400" id="sfi-float-burn-score">68.0% (TF Eroded on WBS-3.2, 4.2)</strong>
+            </div>
+            <div class="flex justify-between items-center bg-slate-950 p-1.5 rounded">
+              <span>2. Open RFI Lag Days past SLA (0.35 weight):</span>
+              <strong class="text-amber-400" id="sfi-rfi-lag-score">85.0% (RFI-124 12d past SLA)</strong>
+            </div>
+            <div class="flex justify-between items-center bg-slate-950 p-1.5 rounded">
+              <span>3. Heavy Rig Over-Allocation (0.30 weight):</span>
+              <strong class="text-sky-300" id="sfi-rig-alloc-score">50.0% (Crawler Crane 2 demand vs 1 cap)</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Package-Level Fragility Table -->
+        <div>
+          <div class="text-[10.5px] font-bold text-slate-300 uppercase mb-1">Active Package Fragility Vulnerability Trace</div>
+          <table class="w-full text-left border-collapse border border-slate-800 text-[10.5px]">
+            <thead>
+              <tr class="bg-slate-900 border-b border-slate-700 text-slate-400">
+                <th class="p-1 border-r border-slate-800">WBS</th>
+                <th class="p-1 border-r border-slate-800">Package Description</th>
+                <th class="p-1 border-r border-slate-800 text-right">TF (d)</th>
+                <th class="p-1 border-r border-slate-800 text-center">RFI Status</th>
+                <th class="p-1 border-r border-slate-800 text-right">SFI Score</th>
+                <th class="p-1 text-center">Threat Level</th>
+              </tr>
+            </thead>
+            <tbody id="sfi-breakdown-tbody" class="divide-y divide-slate-800">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex justify-end pt-1">
+          <button onclick="closeFragilityModal()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
